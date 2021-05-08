@@ -69,6 +69,7 @@ class LoginScreen extends StatelessWidget {
                 'IF YOU ARE NEW PLAYER',
                 style: TextStyle(
                   color: kTextColor,
+                  fontFamily: 'rapier zero',
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),

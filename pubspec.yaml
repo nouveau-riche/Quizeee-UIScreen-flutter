@@ -57,6 +57,11 @@ flutter:
     - assets/images/poster.png
     - assets/images/pos1.png
     - assets/images/pos2.png
+    - assets/images/home.png
+    - assets/images/wallet.png
+    - assets/images/create.png
+    - assets/images/account.png
+    - assets/images/hamburger.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -78,6 +83,10 @@ flutter:
     - family: Bungee
       fonts:
          - asset: assets/fonts/Bungee-Regular.ttf
+
+    - family: rapier zero
+      fonts:
+         - asset: assets/fonts/rapier zero italic.otf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

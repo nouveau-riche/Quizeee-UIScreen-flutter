@@ -6,6 +6,27 @@ import 'component/quiz_model.dart';
 import '../../constant.dart';
 
 class HomeScreen extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  List<Widget> allQuizes = [
+    QuizBox(
+      image: 'assets/images/pos2.png',
+      category: 'SCIENCE',
+      time: '12H: 34M: 30S',
+      entryPrize: '10',
+      slots: '20',
+      prize: '100',
+    ),
+    QuizBox(
+      image: 'assets/images/pos1.png',
+      category: 'HISTORY',
+      time: '03H: 12M: 02S',
+      entryPrize: '5',
+      slots: '4',
+      prize: '49',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -15,6 +36,7 @@ class HomeScreen extends StatelessWidget {
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
           backgroundColor: kPrimaryColor,
@@ -25,11 +47,14 @@ class HomeScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
-              icon: Icon(
-                CupertinoIcons.line_horizontal_3_decrease,
-                color: kPrimaryColor,
+              icon: Container(
+                height: 40,
+                width: 40,
+                child: Image.asset('assets/images/hamburger.png'),
               ),
-              onPressed: () {},
+              onPressed: () {
+                _scaffoldKey.currentState.openDrawer();
+              },
             ),
           ),
           centerTitle: true,
@@ -58,7 +83,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         drawer: Drawer(),
-        body: ListView(
+        body: Column(
           children: [
             buildPoster(mq.height * 0.16, mq.width),
             SizedBox(
@@ -70,6 +95,7 @@ class HomeScreen extends StatelessWidget {
                 const Text(
                   'PLAY ANY QUIZ',
                   style: TextStyle(
+                    fontFamily: 'rapier zero',
                     color: kPrimaryLightColor,
                     fontSize: 21,
                     fontWeight: FontWeight.w600,
@@ -80,22 +106,12 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: mq.height * 0.018,
             ),
-            QuizBox(
-              image: 'assets/images/pos2.png',
-              category: 'SCIENCE',
-              time: '12H: 34M: 30S',
-              entryPrize: '10',
-              slots: '20',
-              prize: '100',
-            ),
-            QuizBox(
-              image: 'assets/images/pos1.png',
-              category: 'HISTORY',
-              time: '03H: 12M: 02S',
-              entryPrize: '5',
-              slots: '4',
-              prize: '49',
-            ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (ctx, index) => allQuizes[index],
+                itemCount: allQuizes.length,
+              ),
+            )
           ],
         ),
       ),
@@ -115,5 +131,4 @@ Widget buildPoster(double height, double width) {
           fit: BoxFit.cover,
         )),
   );
-
 }
