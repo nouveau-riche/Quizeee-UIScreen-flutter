@@ -1,12 +1,11 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:otp_count_down/otp_count_down.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 import '../../constant.dart';
 import '../tabs_screen.dart';
-
 
 class OTPScreen extends StatefulWidget {
   final String type;
@@ -36,10 +35,6 @@ class OTPScreen extends StatefulWidget {
 class _OTPScreenState extends State<OTPScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String _countDown = '';
-  OTPCountDown _otpCountDown;
-  final int _otpTimeInMS = 1000 * 2 * 60;
-
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
 
@@ -48,16 +43,24 @@ class _OTPScreenState extends State<OTPScreen> {
     borderRadius: BorderRadius.circular(10.0),
   );
 
+  Timer _timer;
+  int _start;
 
-  void _startCountDown() {
-    _otpCountDown = OTPCountDown.startOTPTimer(
-      timeInMS: _otpTimeInMS,
-      currentCountDown: (String countDown) {
-        _countDown = countDown;
-        setState(() {});
-      },
-      onFinish: () {
-        print("Count down finished!");
+  void startTimer() {
+    _start = 140;
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
       },
     );
   }
@@ -65,12 +68,12 @@ class _OTPScreenState extends State<OTPScreen> {
   @override
   void initState() {
     super.initState();
-    _startCountDown();
+    startTimer();
   }
 
   @override
   void dispose() {
-    _otpCountDown.cancelTimer();
+    _timer.cancel();
     _pinPutController.dispose();
     _pinPutFocusNode.dispose();
     super.dispose();
@@ -94,7 +97,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 Container(
                   height: 45,
                   width: 40,
-                  margin: EdgeInsets.only(left: mq.width*0.07),
+                  margin: EdgeInsets.only(left: mq.width * 0.07),
                   decoration: BoxDecoration(
                     color: kSecondaryColor,
                     borderRadius: BorderRadius.circular(10),
@@ -148,8 +151,11 @@ class _OTPScreenState extends State<OTPScreen> {
               padding: const EdgeInsets.all(30.0),
               child: PinPut(
                 fieldsCount: 6,
-                textStyle:
-                    const TextStyle(fontSize: 25.0, color: kPrimaryColor,fontFamily: 'Bungee',),
+                textStyle: const TextStyle(
+                  fontSize: 25.0,
+                  color: kPrimaryColor,
+                  fontFamily: 'Bungee',
+                ),
                 eachFieldWidth: 40.0,
                 eachFieldHeight: 48.0,
                 focusNode: _pinPutFocusNode,
@@ -180,12 +186,13 @@ class _OTPScreenState extends State<OTPScreen> {
                 text: "OTP VALID ",
                 children: [
                   TextSpan(
-                    text: _countDown,
+                    text: '${_start}S',
                     style:
                         const TextStyle(color: kSecondaryColor, fontSize: 20),
                   ),
                 ],
-                style: const TextStyle(color: kTextColor, fontFamily: 'Bungee',fontSize: 11),
+                style: const TextStyle(
+                    color: kTextColor, fontFamily: 'Bungee', fontSize: 11),
               ),
               textAlign: TextAlign.center,
             ),
@@ -204,11 +211,12 @@ class _OTPScreenState extends State<OTPScreen> {
               ),
               onPressed: () {
 
-
                 // re-verify phone
 
-                _startCountDown();
-                _pinPutController.clear();
+                if (_start == 0) {
+                  startTimer();
+                  _pinPutController.clear();
+                }
               },
             ),
             SizedBox(
@@ -226,12 +234,10 @@ class _OTPScreenState extends State<OTPScreen> {
       constraints: BoxConstraints.tightFor(width: 68, height: 55),
       child: ElevatedButton(
         onPressed: () {
-
           Navigator.pushAndRemoveUntil(
               context,
               CupertinoPageRoute(builder: (context) => TabsScreen()),
-                  (route) => false);
-
+              (route) => false);
         },
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
