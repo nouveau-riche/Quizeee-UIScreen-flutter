@@ -249,7 +249,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
     final authPro = Provider.of<Auth>(context, listen: false);
     final response = await authPro.sendVerificationOtp(body, false);
-    toast(response['msg'],isError: false);
+    toast(response['msg'],isError: response['status']);
   }
 
   Future<void> submitOtp() async {
@@ -323,7 +323,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
 
     if (response['status']) {
-      toast(response['msg'],isError: false);
+      toast(response['msg'],isError: response['status']);
       Future.delayed(Duration(seconds: 1), () {
         Navigator.pushAndRemoveUntil(
             context,
@@ -331,7 +331,7 @@ class _OTPScreenState extends State<OTPScreen> {
             (route) => false);
       });
     } else {
-      toast(response['msg'],isError: true);
+      toast(response['msg'],isError: response['status']);
     }
   }
 
