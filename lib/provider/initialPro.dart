@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:quizeee_ui/models/userModel.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   // Loader states
@@ -49,6 +50,7 @@ class Auth with ChangeNotifier {
         if (response['status']) {
           _userModel.clear();
           _userModel.add(UserModel.fromJson(response['user']));
+          await saveUserId(_userModel[0].userId);
         } else {
           return reponseData(true, response['message']);
         }
@@ -71,6 +73,7 @@ class Auth with ChangeNotifier {
         if (result.data['status']) {
           _userModel.clear();
           _userModel.add(UserModel.fromJson(result.data['user']));
+          await saveUserId(_userModel[0].userId);
           return reponseData(true, result.data['message']);
         } else {
           return reponseData(false, result.data['message']);
@@ -83,6 +86,56 @@ class Auth with ChangeNotifier {
     } catch (e) {
       return reponseData(false, "Something went wrong please try again!!");
     }
+  }
+
+  Future<Map<String, dynamic>> getUserDetails() async {
+    try {
+      final userId = await getKeyValue("userId");
+      final result = await http.get(
+        ApiUrls.baseUrl + ApiUrls.getUserDetails + userId.toString(),
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (checkStatus(result)) {
+        print(response);
+        if (response['status']) {
+          _userModel.clear();
+          _userModel.add(UserModel.fromJson(response['user']));
+          await saveUserId(_userModel[0].userId);
+        } else {
+          return reponseData(true, response['message']);
+        }
+        return reponseData(true, response['message']);
+      } else {
+        return reponseData(true, response['message']);
+      }
+    } catch (e) {
+      return reponseData(false, "Something went wrong please try again!!");
+    }
+  }
+
+  void saveUserId(int userId) async {
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    await _sharedPreferences.setInt("userId", userId);
+  }
+
+  Future<dynamic> getKeyValue(String key) async {
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    return _sharedPreferences.getInt(key);
+  }
+
+  void removePreferences() async {
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    await _sharedPreferences.clear();
+  }
+
+  Future<bool> checkKeyExist(String key) async {
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    return _sharedPreferences.containsKey(key);
   }
 
   Map<String, dynamic> reponseData(bool status, String msg) {

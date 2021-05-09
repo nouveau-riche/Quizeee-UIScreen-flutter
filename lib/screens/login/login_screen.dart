@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quizeee_ui/provider/initialPro.dart';
+import 'package:quizeee_ui/provider/states.dart';
 
 import '../../constant.dart';
 import '../otp/otp_screen.dart';
