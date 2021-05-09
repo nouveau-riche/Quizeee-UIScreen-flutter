@@ -31,8 +31,7 @@ dependencies:
   http:
   provider:
   dio:
-  shared_preferences:
-
+  localstorage: ^3.0.6
 
 
   # The following adds the Cupertino Icons font to your application.

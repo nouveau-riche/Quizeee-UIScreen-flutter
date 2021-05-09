@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
 import 'package:quizeee_ui/models/userModel.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   // Loader states
@@ -16,6 +16,9 @@ class Auth with ChangeNotifier {
   List<UserModel> get userModel {
     return [..._userModel];
   }
+
+  //Local Storage
+  final LocalStorage storage = new LocalStorage(ApiUrls.localStorageKey);
 
   Future<Map<String, dynamic>> sendVerificationOtp(
       Map<String, dynamic> body, bool isLogin) async {
@@ -115,27 +118,25 @@ class Auth with ChangeNotifier {
   }
 
   void saveUserId(int userId) async {
-    SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
-    await _sharedPreferences.setInt("userId", userId);
+    await storage.ready;
+    await storage.setItem("userId", userId);
   }
 
   Future<dynamic> getKeyValue(String key) async {
-    SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
-    return _sharedPreferences.getInt(key);
+    await storage.ready;
+
+    return await storage.getItem(key);
   }
 
   void removePreferences() async {
-    SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
-    await _sharedPreferences.clear();
+    await storage.ready;
+
+    await storage.clear();
   }
 
-  Future<bool> checkKeyExist(String key) async {
-    SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
-    return _sharedPreferences.containsKey(key);
+  Future<dynamic> checkKeyExist(String key) async {
+    await storage.ready;
+    return await storage.getItem(key);
   }
 
   Map<String, dynamic> reponseData(bool status, String msg) {
