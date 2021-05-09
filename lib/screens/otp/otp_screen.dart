@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -42,10 +43,6 @@ class OTPScreen extends StatefulWidget {
 class _OTPScreenState extends State<OTPScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String _countDown = '';
-  // OTPCountDown _otpCountDown;
-  final int _otpTimeInMS = 1000 * 2 * 60;
-
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
 
@@ -54,28 +51,37 @@ class _OTPScreenState extends State<OTPScreen> {
     borderRadius: BorderRadius.circular(10.0),
   );
 
-  void _startCountDown() {
-    // _otpCountDown = OTPCountDown.startOTPTimer(
-    //   timeInMS: _otpTimeInMS,
-    //   currentCountDown: (String countDown) {
-    //     _countDown = countDown;
-    //     setState(() {});
-    //   },
-    //   onFinish: () {
-    //     print("Count down finished!");
-    //   },
-    // );
+  Timer _timer;
+  int _start;
+
+  void startTimer() {
+    _start = 140;
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    _startCountDown();
+    startTimer();
   }
 
   @override
   void dispose() {
-    // _otpCountDown.cancelTimer();
+    _timer.cancel();
     _pinPutController.dispose();
     _pinPutFocusNode.dispose();
     super.dispose();
@@ -188,7 +194,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 text: "OTP VALID ",
                 children: [
                   TextSpan(
-                    text: _countDown,
+                    text: '${_start}S',
                     style:
                         const TextStyle(color: kSecondaryColor, fontSize: 20),
                   ),
@@ -214,9 +220,15 @@ class _OTPScreenState extends State<OTPScreen> {
               onPressed: () {
                 // re-verify phone
 
-                _startCountDown();
                 _pinPutController.clear();
                 resendOtp();
+
+                // re-verify phone
+
+                if (_start == 0) {
+                  startTimer();
+                  _pinPutController.clear();
+                }
               },
             ),
             SizedBox(
