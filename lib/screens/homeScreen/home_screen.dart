@@ -40,6 +40,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
           backgroundColor: kPrimaryColor,
+          elevation: 0,
           leading: Container(
             margin: EdgeInsets.only(left: 8, top: 7, bottom: 7, right: 7),
             decoration: BoxDecoration(

@@ -28,7 +28,7 @@ dependencies:
   fluttertoast:
   otp_count_down:
   image_picker:
-  http:
+  http: ^0.12.1
   provider:
   dio:
   localstorage: ^3.0.6
