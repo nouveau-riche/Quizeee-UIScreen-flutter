@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/initialPro.dart';
 
 import '../../constant.dart';
 import '../otp/otp_screen.dart';
@@ -201,39 +203,67 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget buildNextButton(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints.tightFor(width: 68, height: 55),
-      child: ElevatedButton(
-        onPressed: () {
-          login(context);
-        },
-        style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          primary: kTextColor,
-        ),
-        child: const Text(
-          'NEXT',
-          style: const TextStyle(
-              fontSize: 12.8, fontWeight: FontWeight.w600, color: Colors.black),
-        ),
-      ),
+    return Consumer<Auth>(
+      builder: (con, auth, _) => auth.isLoading
+          ? CircularProgressIndicator()
+          : ConstrainedBox(
+              constraints: const BoxConstraints.tightFor(width: 68, height: 55),
+              child: ElevatedButton(
+                onPressed: () {
+                  login(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  primary: kTextColor,
+                ),
+                child: const Text(
+                  'NEXT',
+                  style: const TextStyle(
+                      fontSize: 12.8,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black),
+                ),
+              ),
+            ),
     );
   }
 
   /// add logic for login in this method
-  void login(BuildContext context) {
-
+  void login(BuildContext context) async {
     bool emailValid = emailValidatorRegExp.hasMatch(_controller.text);
 
-    if (_controller.text.isEmpty || (_controller.text.length != 10 && emailValid == false)) {
+    if (_controller.text.isEmpty ||
+        (_controller.text.length != 10 && emailValid == false)) {
       // show toast when user give invalid credentials
       toast('Enter Correct phone or email');
     } else {
-      Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (ctx) => OTPScreen(type: 'login', phone: _controller.text),
-        ),
-      );
+      var body;
+      if (_controller.text.contains("@")) {
+        body = {"email": _controller.text};
+      } else {
+        body = {"phone": "+91" + _controller.text};
+      }
+      final authPro = Provider.of<Auth>(context, listen: false);
+      authPro.setLoading(true);
+      final response = await authPro.sendVerificationOtp(body, true);
+      authPro.setLoading(false);
+
+      if (response['status']) {
+        toast(response['message']);
+        Future.delayed(Duration(seconds: 1), () {
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (ctx) => OTPScreen(
+                type: 'login',
+                phone: _controller.text,
+                otp: response['otp'],
+              ),
+            ),
+          );
+        });
+      } else {
+        toast(response['msg']);
+      }
     }
   }
 }

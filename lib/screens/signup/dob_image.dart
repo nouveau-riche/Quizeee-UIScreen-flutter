@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/initialPro.dart';
+import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../constant.dart';
 import '../otp/otp_screen.dart';
@@ -77,6 +80,39 @@ class _DOBImageState extends State<DOBImage> {
       setState(() {
         image = File(imageFile.path);
       });
+    }
+  }
+
+  Future<void> sendOtp() async {
+    var body = {
+      "phone": "+91" + widget.phoneNumber,
+    };
+    final authPro = Provider.of<Auth>(context, listen: false);
+    authPro.setLoading(true);
+
+    final response = await authPro.sendVerificationOtp(body, false);
+    authPro.setLoading(false);
+
+    if (response['status']) {
+      toast(response['msg']);
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (ctx) => OTPScreen(
+              type: 'signup',
+              phone: widget.phoneNumber,
+              username: widget.username,
+              location: widget.location,
+              email: widget.email,
+              referralCode: widget.referralCode,
+              dob: _selectedDateTime,
+              image: image,
+            ),
+          ),
+        );
+      });
+    } else {
+      toast(response['msg']);
     }
   }
 
@@ -241,46 +277,29 @@ class _DOBImageState extends State<DOBImage> {
             SizedBox(
               height: mq.height * 0.02,
             ),
-            ConstrainedBox(
-              constraints: BoxConstraints.tightFor(width: 68, height: 55),
-              child: ElevatedButton(
-                onPressed: () {
-                  print(widget.phoneNumber);
-                  print(widget.username,);
-                  print(widget.location,);
-                  print(widget.email);
-                  print(widget.referralCode);
-                  print(_selectedDateTime);
-                  print(image);
-
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (ctx) => OTPScreen(
-                        type: 'signup',
-                        phone: widget.phoneNumber,
-                        username: widget.username,
-                        location: widget.location,
-                        email: widget.email,
-                        referralCode: widget.referralCode,
-                        dob: _selectedDateTime,
-                        image: image,
+            Consumer<Auth>(
+              builder: (con, auth, _) => auth.isLoading
+                  ? CircularProgressIndicator()
+                  : ConstrainedBox(
+                      constraints:
+                          BoxConstraints.tightFor(width: 68, height: 55),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          sendOtp();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          primary: kTextColor,
+                        ),
+                        child: const Text(
+                          'NEXT',
+                          style: TextStyle(
+                              fontSize: 12.8,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black),
+                        ),
                       ),
                     ),
-                  );
-
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                  primary: kTextColor,
-                ),
-                child: const Text(
-                  'NEXT',
-                  style: TextStyle(
-                      fontSize: 12.8,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black),
-                ),
-              ),
             ),
           ],
         ),

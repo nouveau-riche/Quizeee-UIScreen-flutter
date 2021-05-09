@@ -1,0 +1,3 @@
+class APIStrings {
+  // Login msgs
+}

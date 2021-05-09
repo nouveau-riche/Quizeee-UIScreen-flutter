@@ -1,14 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:otp_count_down/otp_count_down.dart';
+// import 'package:otp_count_down/otp_count_down.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/initialPro.dart';
+import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../constant.dart';
 import '../tabs_screen.dart';
 
-
 class OTPScreen extends StatefulWidget {
+  final String otp;
   final String type;
   final String phone;
   final String username;
@@ -19,6 +24,7 @@ class OTPScreen extends StatefulWidget {
   final File image;
 
   OTPScreen({
+    this.otp,
     @required this.type,
     this.username,
     this.location,
@@ -37,7 +43,7 @@ class _OTPScreenState extends State<OTPScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String _countDown = '';
-  OTPCountDown _otpCountDown;
+  // OTPCountDown _otpCountDown;
   final int _otpTimeInMS = 1000 * 2 * 60;
 
   final TextEditingController _pinPutController = TextEditingController();
@@ -48,18 +54,17 @@ class _OTPScreenState extends State<OTPScreen> {
     borderRadius: BorderRadius.circular(10.0),
   );
 
-
   void _startCountDown() {
-    _otpCountDown = OTPCountDown.startOTPTimer(
-      timeInMS: _otpTimeInMS,
-      currentCountDown: (String countDown) {
-        _countDown = countDown;
-        setState(() {});
-      },
-      onFinish: () {
-        print("Count down finished!");
-      },
-    );
+    // _otpCountDown = OTPCountDown.startOTPTimer(
+    //   timeInMS: _otpTimeInMS,
+    //   currentCountDown: (String countDown) {
+    //     _countDown = countDown;
+    //     setState(() {});
+    //   },
+    //   onFinish: () {
+    //     print("Count down finished!");
+    //   },
+    // );
   }
 
   @override
@@ -70,7 +75,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   void dispose() {
-    _otpCountDown.cancelTimer();
+    // _otpCountDown.cancelTimer();
     _pinPutController.dispose();
     _pinPutFocusNode.dispose();
     super.dispose();
@@ -94,7 +99,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 Container(
                   height: 45,
                   width: 40,
-                  margin: EdgeInsets.only(left: mq.width*0.07),
+                  margin: EdgeInsets.only(left: mq.width * 0.07),
                   decoration: BoxDecoration(
                     color: kSecondaryColor,
                     borderRadius: BorderRadius.circular(10),
@@ -148,8 +153,11 @@ class _OTPScreenState extends State<OTPScreen> {
               padding: const EdgeInsets.all(30.0),
               child: PinPut(
                 fieldsCount: 6,
-                textStyle:
-                    const TextStyle(fontSize: 25.0, color: kPrimaryColor,fontFamily: 'Bungee',),
+                textStyle: const TextStyle(
+                  fontSize: 25.0,
+                  color: kPrimaryColor,
+                  fontFamily: 'Bungee',
+                ),
                 eachFieldWidth: 40.0,
                 eachFieldHeight: 48.0,
                 focusNode: _pinPutFocusNode,
@@ -185,7 +193,8 @@ class _OTPScreenState extends State<OTPScreen> {
                         const TextStyle(color: kSecondaryColor, fontSize: 20),
                   ),
                 ],
-                style: const TextStyle(color: kTextColor, fontFamily: 'Bungee',fontSize: 11),
+                style: const TextStyle(
+                    color: kTextColor, fontFamily: 'Bungee', fontSize: 11),
               ),
               textAlign: TextAlign.center,
             ),
@@ -203,12 +212,11 @@ class _OTPScreenState extends State<OTPScreen> {
                 ),
               ),
               onPressed: () {
-
-
                 // re-verify phone
 
                 _startCountDown();
                 _pinPutController.clear();
+                resendOtp();
               },
             ),
             SizedBox(
@@ -221,28 +229,128 @@ class _OTPScreenState extends State<OTPScreen> {
     );
   }
 
+  Future<void> resendOtp() async {
+    var body;
+    if (widget.type == "login") {
+      if (widget.phone.contains("@")) {
+        body = {"email": widget.phone};
+      } else {
+        body = {"phone": "+91" + widget.phone};
+      }
+    } else {
+      body = {"phone": "+91" + widget.phone};
+    }
+    final authPro = Provider.of<Auth>(context, listen: false);
+    final response = await authPro.sendVerificationOtp(body, false);
+    toast(response['message']);
+  }
+
+  Future<void> submitOtp() async {
+    final authPro = Provider.of<Auth>(context, listen: false);
+    var body;
+    var response;
+    bool isEmail;
+    if (widget.type == "login") {
+      // calling login api
+
+      if (widget.phone.contains("@")) {
+        isEmail = true;
+        body = {"email": widget.phone, "otpCode": _pinPutController.text};
+      } else {
+        isEmail = false;
+        body = {
+          "phone": "+91" + widget.phone,
+          "otpCode": _pinPutController.text
+        };
+      }
+      if (isEmail) {
+        if (_pinPutController.text == widget.otp) {
+          response = {"status": true, "msg": "User LoggedIn Successfully"};
+          authPro.setLoading(true);
+
+          await authPro.loginUser(body);
+          authPro.setLoading(false);
+        } else {
+          response = {"status": false, "msg": "Otp didn't match"};
+        }
+      } else {
+        authPro.setLoading(true);
+        response = await authPro.loginUser(body);
+        authPro.setLoading(false);
+      }
+    } else {
+      print(widget.image);
+      FormData body;
+      if (widget.image != null) {
+        var fileContent = widget.image.readAsBytesSync();
+        var fileContentBase64 = base64.encode(fileContent);
+        body = new FormData.fromMap({
+          "username": widget.username,
+          "location": widget.location,
+          "email": widget.email,
+          "phone": "+91" + widget.phone,
+          "referralCode": widget.referralCode,
+          "dateOfBirth": widget.dob.toIso8601String(),
+          "deviceId": "1234",
+          "otpCode": _pinPutController.text,
+          "profilePic": await MultipartFile.fromFile(widget.image.path,
+              filename: 'upload.png')
+        });
+      } else {
+        body = new FormData.fromMap({
+          "username": widget.username,
+          "location": widget.location,
+          "email": widget.email,
+          "phone": "+91" + widget.phone,
+          "referralCode": widget.referralCode,
+          "dateOfBirth": widget.dob.toIso8601String(),
+          "deviceId": "1234",
+          "otpCode": _pinPutController.text,
+          "profilePic": null
+        });
+      }
+      authPro.setLoading(true);
+
+      response = await authPro.signupUser(body);
+      authPro.setLoading(false);
+    }
+
+    if (response['status']) {
+      toast(response['msg']);
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.pushAndRemoveUntil(
+            context,
+            CupertinoPageRoute(builder: (context) => TabsScreen()),
+            (route) => false);
+      });
+    } else {
+      toast(response['msg']);
+    }
+  }
+
   Widget buildNextButton() {
-    return ConstrainedBox(
-      constraints: BoxConstraints.tightFor(width: 68, height: 55),
-      child: ElevatedButton(
-        onPressed: () {
-
-          Navigator.pushAndRemoveUntil(
-              context,
-              CupertinoPageRoute(builder: (context) => TabsScreen()),
-                  (route) => false);
-
-        },
-        style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          primary: kTextColor,
-        ),
-        child: const Text(
-          'NEXT',
-          style: TextStyle(
-              fontSize: 12.8, fontWeight: FontWeight.w600, color: Colors.black),
-        ),
-      ),
+    return Consumer<Auth>(
+      builder: (con, auth, _) => auth.isLoading
+          ? CircularProgressIndicator()
+          : ConstrainedBox(
+              constraints: BoxConstraints.tightFor(width: 68, height: 55),
+              child: ElevatedButton(
+                onPressed: () {
+                  submitOtp();
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  primary: kTextColor,
+                ),
+                child: const Text(
+                  'NEXT',
+                  style: TextStyle(
+                      fontSize: 12.8,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black),
+                ),
+              ),
+            ),
     );
   }
 }
