@@ -194,7 +194,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 text: "OTP VALID ",
                 children: [
                   TextSpan(
-                    text: '${_start}S',
+                    text: ' $_start S',
                     style:
                         const TextStyle(color: kSecondaryColor, fontSize: 20),
                   ),
@@ -254,7 +254,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
     final authPro = Provider.of<Auth>(context, listen: false);
     final response = await authPro.sendVerificationOtp(body, false);
-    toast(response['message']);
+    toast(response['msg']);
   }
 
   Future<void> submitOtp() async {
