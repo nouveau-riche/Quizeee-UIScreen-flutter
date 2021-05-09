@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:quizeee_ui/models/userModel.dart';
-import 'package:quizeee_ui/provider/apiUrl.dart';
+import '../models/userModel.dart';
+import 'apiUrl.dart';
 import 'package:dio/dio.dart';
 
 class Auth with ChangeNotifier {

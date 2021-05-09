@@ -66,20 +66,37 @@ class _DOBImageState extends State<DOBImage> {
   final picker = ImagePicker();
 
   Future pickImageFromGallery() async {
-    final imageFile = await picker.getImage(source: ImageSource.gallery);
-    if (mounted) {
-      setState(() {
-        image = File(imageFile.path);
-      });
-    }
+    var img = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      image = img;
+    });
   }
 
+  // Future pickImageFromGallery() async {
+  //   try {
+  //     print('working fine');
+  //     final imageFile = await picker.getImage(source: ImageSource.gallery);
+  //     if (mounted) {
+  //       setState(() {
+  //         image = File(imageFile.path);
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
   Future captureImageFromCamera() async {
-    final imageFile = await picker.getImage(source: ImageSource.camera);
-    if (mounted) {
-      setState(() {
-        image = File(imageFile.path);
-      });
+    try {
+      final imageFile = await picker.getImage(source: ImageSource.camera);
+      if (mounted) {
+        setState(() {
+          image = File(imageFile.path);
+        });
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -308,26 +325,26 @@ class _DOBImageState extends State<DOBImage> {
   }
 
   Widget buildSelectImage() {
-    return Stack(
-      children: [
-        CircleAvatar(
-          radius: 42,
-          backgroundColor: kSecondaryColor,
-          child: CircleAvatar(
-            radius: 38,
-            backgroundColor: Colors.grey,
-            backgroundImage: image == null
-                ? AssetImage('assets/images/profile.png')
-                : FileImage(image),
+    return GestureDetector(
+      onTap: () {
+        openDialogBox();
+      },
+      child: Stack(
+        children: [
+          CircleAvatar(
+            radius: 42,
+            backgroundColor: kSecondaryColor,
+            child: CircleAvatar(
+              radius: 38,
+              backgroundColor: Colors.grey,
+              backgroundImage: image == null
+                  ? AssetImage('assets/images/profile.png')
+                  : FileImage(image),
+            ),
           ),
-        ),
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: GestureDetector(
-            onTap: () {
-              openDialogBox();
-            },
+          Positioned(
+            bottom: 0,
+            right: 0,
             child: Container(
               height: 26,
               width: 28,
@@ -341,8 +358,8 @@ class _DOBImageState extends State<DOBImage> {
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -475,7 +492,7 @@ class _DOBImageState extends State<DOBImage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(50),
-        border: Border.all(color: Colors.white, width: 4),
+        border: Border.all(color: Colors.white, width: 1),
         gradient: LinearGradient(
           colors: [Colors.black.withOpacity(0.1), Colors.white],
           stops: [0.1, 1],
