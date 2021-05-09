@@ -56,15 +56,15 @@ class SignUpScreen extends StatelessWidget {
                   color: kTextColor,
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'SairaStencilOne',
+                  fontFamily: 'MajorLeagueDuty',
                   decoration: TextDecoration.underline),
             ),
             const Text(
               'SIGN UP',
               style: TextStyle(
                 color: kTextColor,
-                fontFamily: 'Bungee',
-                fontSize: 20,
+                fontFamily: 'DebugFreeTrial',
+                fontSize: 28,
                 fontWeight: FontWeight.w500,
               ),
             ),

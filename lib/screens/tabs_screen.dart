@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../constant.dart';
 import './account/account_screen.dart';
 import './creatQuiz/create_quiz_screen.dart';
-import 'homeScreen/home_screen.dart';
+import './homeScreen/home_screen.dart';
 import './wallet/wallet_screen.dart';
 
 class TabsScreen extends StatefulWidget {
@@ -45,27 +45,63 @@ class _TabsScreenState extends State<TabsScreen> {
         items: [
           BottomNavigationBarItem(
               icon: Container(
-                  height: 40,
-                  width: 50,
-                  child: Image.asset('assets/images/home.png',fit: BoxFit.cover,)),
+                height: 40,
+                width: 50,
+                child: pageIndex == 0
+                    ? Image.asset(
+                        'assets/images/home_fill.png',
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        'assets/images/home.png',
+                        fit: BoxFit.cover,
+                      ),
+              ),
               label: 'DASHBOARD'),
           BottomNavigationBarItem(
               icon: Container(
-                  height: 36,
-                  width: 45,
-                  child: Image.asset('assets/images/wallet.png',fit: BoxFit.cover,)),
+                height: 36,
+                width: 45,
+                child: pageIndex == 1
+                    ? Image.asset(
+                        'assets/images/wallet_fill.png',
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        'assets/images/wallet.png',
+                        fit: BoxFit.cover,
+                      ),
+              ),
               label: 'Wallet'),
           BottomNavigationBarItem(
               icon: Container(
-                  height: 28,
-                  width: 36,
-                  child: Image.asset('assets/images/create.png',fit: BoxFit.cover,)),
+                height: 28,
+                width: 36,
+                child: pageIndex == 2
+                    ? Image.asset(
+                        'assets/images/create_fill.png',
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        'assets/images/create.png',
+                        fit: BoxFit.cover,
+                      ),
+              ),
               label: 'Create'),
           BottomNavigationBarItem(
               icon: Container(
-                  height: 28,
-                  width: 38,
-                  child: Image.asset('assets/images/account.png',fit: BoxFit.cover,)),
+                height: 28,
+                width: 38,
+                child: pageIndex == 3
+                    ? Image.asset(
+                        'assets/images/account_fill.png',
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        'assets/images/account.png',
+                        fit: BoxFit.cover,
+                      ),
+              ),
               label: 'Account'),
         ],
       ),

@@ -1,8 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constant.dart';
-
-
 
 class QuizBox extends StatelessWidget {
   final String image;
@@ -11,6 +10,7 @@ class QuizBox extends StatelessWidget {
   final String slots;
   final String entryPrize;
   final String prize;
+  final bool isSlotBooked;
 
   QuizBox({
     this.image,
@@ -19,6 +19,7 @@ class QuizBox extends StatelessWidget {
     this.slots,
     this.entryPrize,
     this.prize,
+    this.isSlotBooked,
   });
 
   @override
@@ -27,10 +28,10 @@ class QuizBox extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          height: mq.height * 0.3,
+          height: mq.height * 0.26,
           width: mq.width,
-          padding: EdgeInsets.all(8.5),
-          margin: EdgeInsets.all(14),
+          padding: EdgeInsets.all(8),
+          margin: EdgeInsets.symmetric(horizontal: 14, vertical: 7),
           decoration: BoxDecoration(
             color: Color.fromRGBO(33, 64, 74, 1),
             borderRadius: BorderRadius.circular(12),
@@ -38,25 +39,25 @@ class QuizBox extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              buildQuizPoster(mq.height * 0.17, mq.width),
+              buildQuizPoster(mq.height * 0.15, mq.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  buildCategory(mq.height * 0.04, mq.width * 0.3),
-                  buildEntryPrize(mq.height * 0.08, mq.width * 0.3),
+                  buildCategory(mq.height * 0.038, mq.width * 0.28),
+                  buildEntryPrize(mq.height * 0.07, mq.width * 0.28),
                 ],
               ),
             ],
           ),
         ),
-        buildSlotsTag(mq.height * 0.07, mq.width * 0.125),
+        buildSlotsTag(mq.height * 0.065, mq.width * 0.12),
         Positioned(
-          right: mq.width * 0.065,
-          bottom: mq.height * 0.125,
-          child: buildReserveSlot(mq.height * 0.06, mq.width * 0.3),
+          right: mq.width * 0.055,
+          bottom: mq.height * 0.11,
+          child: buildReserveSlot(context, mq.height * 0.055, mq.width * 0.28),
         ),
         Positioned(
-          top: mq.height * 0.042,
+          top: mq.height * 0.028,
           right: mq.width * 0.08,
           child: buildPrizeMoney(),
         ),
@@ -92,7 +93,7 @@ class QuizBox extends StatelessWidget {
         Text(
           'QUIZ STARTS AT',
           style: TextStyle(
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: FontWeight.w600,
               color: kSecondaryColor),
         ),
@@ -132,14 +133,14 @@ class QuizBox extends StatelessWidget {
             'ENTRY PRIZE',
             style: TextStyle(
               fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
           ),
           Text(
             'RS. $entryPrize/-',
             style: TextStyle(
               fontSize: 14,
-              fontWeight: FontWeight.w700,
+              fontFamily: 'Bungee',
             ),
           ),
         ],
@@ -151,7 +152,7 @@ class QuizBox extends StatelessWidget {
     return Container(
       height: height,
       width: width,
-      margin: EdgeInsets.only(left: 8.5, top: 2),
+      margin: EdgeInsets.only(left: 8.5),
       decoration: BoxDecoration(
         color: kPrimaryLightColor,
         shape: BoxShape.circle,
@@ -163,15 +164,17 @@ class QuizBox extends StatelessWidget {
             Text(
               slots,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
+                fontSize: 14,
+                fontFamily: 'DebugFreeTrial',
+                fontWeight: FontWeight.w500,
               ),
             ),
             Text(
               'SLOTS',
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
+                fontSize: 14,
+                fontFamily: 'DebugFreeTrial',
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
@@ -187,47 +190,62 @@ class QuizBox extends StatelessWidget {
           'WINNING PRIZE',
           style: TextStyle(
               color: kPrimaryLightColor,
-              fontWeight: FontWeight.w800,
-              fontSize: 15),
+              fontFamily: 'DebugFreeTrial',
+              fontSize: 18),
         ),
-        Text(
-          'RS. $prize/- ',
-          style: TextStyle(
-              color: kPrimaryLightColor,
-              fontWeight: FontWeight.w800,
-              fontSize: 15),
-        )
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'RS. $prize',
+              style: TextStyle(
+                  color: kPrimaryLightColor,
+                  fontFamily: 'DebugFreeTrial',
+                  fontSize: 15),
+            ),
+            Text(
+              '/ -',
+              style: TextStyle(
+                  color: kPrimaryLightColor,
+                  fontFamily: 'Bungee',
+                  fontSize: 15),
+            )
+          ],
+        ),
       ],
     );
   }
 
-  Widget buildReserveSlot(double height, double width) {
-    return Container(
-      height: height,
-      width: width,
-      decoration: BoxDecoration(
-        color: kPrimaryLightColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'RESERVE',
-              style: TextStyle(
-                fontSize: 12.4,
-                fontWeight: FontWeight.w700,
+  Widget buildReserveSlot(BuildContext context, double height, double width) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          color: kPrimaryLightColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'RESERVE',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontFamily: 'DebugFreeTrial',
+                ),
               ),
-            ),
-            Text(
-              'SLOT',
-              style: TextStyle(
-                fontSize: 12.4,
-                fontWeight: FontWeight.w700,
+              Text(
+                'SLOT',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontFamily: 'DebugFreeTrial',
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

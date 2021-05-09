@@ -31,6 +31,7 @@ dependencies:
   http: ^0.12.1
   provider:
   dio:
+  shimmer:
 
 
 
@@ -57,15 +58,21 @@ flutter:
   assets:
     - assets/images/flag.png
     - assets/images/logo.png
-    - assets/images/profile.png
     - assets/images/poster.png
     - assets/images/pos1.png
     - assets/images/pos2.png
     - assets/images/home.png
+    - assets/images/profile.png
     - assets/images/wallet.png
     - assets/images/create.png
     - assets/images/account.png
     - assets/images/hamburger.png
+    - assets/images/cup.png
+    - assets/images/notification.png
+    - assets/images/home_fill.png
+    - assets/images/account_fill.png
+    - assets/images/wallet_fill.png
+    - assets/images/create_fill.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -80,17 +87,17 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:Bungee-Regular
   fonts:
-    - family: SairaStencilOne
+    - family: MajorLeagueDuty
       fonts:
-         - asset: assets/fonts/SairaStencilOne-Regular.ttf
+         - asset: assets/fonts/MajorLeagueDuty-LLYD.ttf
 
-    - family: Bungee
+    - family: DebugFreeTrial
       fonts:
-         - asset: assets/fonts/Bungee-Regular.ttf
+         - asset: assets/fonts/DebugFreeTrial-MVdYB.otf
 
-    - family: rapier zero
+    - family: RapierZero
       fonts:
-         - asset: assets/fonts/rapier zero italic.otf
+         - asset: assets/fonts/RapierZero-325M.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

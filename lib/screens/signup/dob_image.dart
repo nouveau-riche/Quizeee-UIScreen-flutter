@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:quizeee_ui/provider/initialPro.dart';
-import 'package:quizeee_ui/widgets/toast.dart';
 
+import '../../provider/initialPro.dart';
+import '../../widgets/toast.dart';
 import '../../constant.dart';
 import '../otp/otp_screen.dart';
 import '../../utility/custom_calendar.dart';
@@ -65,27 +65,27 @@ class _DOBImageState extends State<DOBImage> {
   File image;
   final picker = ImagePicker();
 
-  Future pickImageFromGallery() async {
-    var img = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      image = img;
-    });
-  }
-
   // Future pickImageFromGallery() async {
-  //   try {
-  //     print('working fine');
-  //     final imageFile = await picker.getImage(source: ImageSource.gallery);
-  //     if (mounted) {
-  //       setState(() {
-  //         image = File(imageFile.path);
-  //       });
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
+  //   var img = await ImagePicker.pickImage(source: ImageSource.gallery);
+  //
+  //   setState(() {
+  //     image = img;
+  //   });
   // }
+
+  Future pickImageFromGallery() async {
+    try {
+      print('working fine');
+      final imageFile = await picker.getImage(source: ImageSource.gallery);
+      if (mounted) {
+        setState(() {
+          image = File(imageFile.path);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future captureImageFromCamera() async {
     try {
@@ -111,7 +111,7 @@ class _DOBImageState extends State<DOBImage> {
     authPro.setLoading(false);
 
     if (response['status']) {
-      toast(response['msg']);
+      toast(response['msg'], isError: false);
       Future.delayed(Duration(seconds: 1), () {
         Navigator.of(context).push(
           CupertinoPageRoute(
@@ -129,7 +129,7 @@ class _DOBImageState extends State<DOBImage> {
         );
       });
     } else {
-      toast(response['msg']);
+      toast(response['msg'], isError: true);
     }
   }
 
@@ -237,9 +237,8 @@ class _DOBImageState extends State<DOBImage> {
               'SELECT PROFILE PICTURE',
               style: TextStyle(
                 color: kTextColor,
-                fontFamily: 'Bungee',
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
+                fontFamily: 'DebugFreeTrial',
+                fontSize: 28,
               ),
             ),
             SizedBox(
@@ -253,8 +252,8 @@ class _DOBImageState extends State<DOBImage> {
               'SELECT DATE OF BIRTH',
               style: TextStyle(
                 color: kTextColor,
-                fontFamily: 'Bungee',
-                fontSize: 15,
+                fontFamily: 'DebugFreeTrial',
+                fontSize: 24,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -270,9 +269,10 @@ class _DOBImageState extends State<DOBImage> {
                 color: kSecondaryColor,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Center(
-                child: const Text(
-                  'DD/MM/YYYY',
+              child: Center(
+                child: Text(
+                  // 'DD/MM/YYYY',
+                  _selectedDateTime.toString().substring(0, 10),
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 16),
                 ),
@@ -607,9 +607,10 @@ class _DOBImageState extends State<DOBImage> {
           child: GridView.builder(
             shrinkWrap: true,
             itemCount: 9,
-            physics: NeverScrollableScrollPhysics(),
+            // physics: NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
+              mainAxisSpacing: 0,
             ),
             itemBuilder: (context, index) {
               int thisYear;
@@ -620,16 +621,17 @@ class _DOBImageState extends State<DOBImage> {
               } else {
                 thisYear = midYear;
               }
-              return ListTile(
+
+              return GestureDetector(
                 onTap: () {
                   _currentDateTime = DateTime(thisYear, _currentDateTime.month);
                   _getCalendar();
                   setState(() => _currentView = CalendarViews.months);
                 },
-                title: Text(
-                  '$thisYear',
+                child: Text(
+                  '    $thisYear',
                   style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: (thisYear == _currentDateTime.year)
                           ? Colors.yellow
                           : Colors.white),

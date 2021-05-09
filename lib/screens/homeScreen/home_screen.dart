@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
+import '../../widgets/shimmer_effect.dart';
 import 'component/quiz_model.dart';
 import '../../constant.dart';
 
@@ -16,6 +17,7 @@ class HomeScreen extends StatelessWidget {
       entryPrize: '10',
       slots: '20',
       prize: '100',
+      isSlotBooked: true,
     ),
     QuizBox(
       image: 'assets/images/pos1.png',
@@ -24,6 +26,7 @@ class HomeScreen extends StatelessWidget {
       entryPrize: '5',
       slots: '4',
       prize: '49',
+      isSlotBooked: false,
     ),
   ];
 
@@ -49,9 +52,9 @@ class HomeScreen extends StatelessWidget {
             ),
             child: IconButton(
               icon: Container(
-                height: 40,
-                width: 40,
-                child: Image.asset('assets/images/hamburger.png'),
+                height: 35,
+                width: 35,
+                child: Image.asset('assets/images/hamburger.png',fit: BoxFit.fill,),
               ),
               onPressed: () {
                 _scaffoldKey.currentState.openDrawer();
@@ -65,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                 color: kTextColor,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'SairaStencilOne',
+                fontFamily: 'MajorLeagueDuty',
                 decoration: TextDecoration.underline),
           ),
           actions: [
@@ -78,7 +81,7 @@ class HomeScreen extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset('assets/images/profile.png'),
+                child: Image.asset('assets/images/notification.png'),
               ),
             ),
           ],
@@ -107,6 +110,18 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: mq.height * 0.018,
             ),
+
+
+            // use this shimmer effect for loading till all quzies are fetched
+
+            // Expanded(
+            //   child: ListView.builder(
+            //     itemBuilder: (ctx, index) => buildShimmer(context),
+            //     itemCount: 5,
+            //   ),
+            // ),
+
+
             Expanded(
               child: ListView.builder(
                 itemBuilder: (ctx, index) => allQuizes[index],

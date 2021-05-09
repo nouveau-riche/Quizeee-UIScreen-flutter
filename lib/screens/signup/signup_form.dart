@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:quizeee_ui/widgets/toast.dart';
 
 import './dob_image.dart';
 import '../../constant.dart';
@@ -35,6 +36,25 @@ class _SignUpFormState extends State<SignUpForm> {
   void _save() {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+
+      bool phoneValidation = _phoneNumber.length == 10;
+
+      bool emailValidation = emailValidatorRegExp.hasMatch(_email);
+
+      if (phoneValidation == false && emailValidation == false) {
+        toast('Enter email or phone',isError: true);
+        return;
+      }
+
+      print('sucessfull');
+
+
+      print(_username);
+      print(_location);
+      print(_email);
+      print(_phoneNumber);
+      print(_referralCode);
+
 
       Navigator.of(context).push(
         CupertinoPageRoute(
@@ -173,15 +193,15 @@ class _SignUpFormState extends State<SignUpForm> {
         },
 
         // ignore: missing_return
-        validator: (_value) {
-          if (_value.isEmpty) {
-            return kEmailNullError;
-          }
-          bool emailValid = emailValidatorRegExp.hasMatch(_value);
-          if (!emailValid) {
-            return kInvalidEmailError;
-          }
-        },
+        // validator: (_value) {
+        //   if (_value.isEmpty) {
+        //     return kEmailNullError;
+        //   }
+        //   bool emailValid = emailValidatorRegExp.hasMatch(_value);
+        //   if (!emailValid) {
+        //     return kInvalidEmailError;
+        //   }
+        // },
         onSaved: (_value) {
           _email = _value;
         },
@@ -215,14 +235,14 @@ class _SignUpFormState extends State<SignUpForm> {
         },
 
         // ignore: missing_return
-        validator: (_value) {
-          if (_value.isEmpty) {
-            return kPhoneNumberNullError;
-          }
-          if (_value.length != 10) {
-            return kInvalidPhoneError;
-          }
-        },
+        // validator: (_value) {
+        //   if (_value.isEmpty) {
+        //     return kPhoneNumberNullError;
+        //   }
+        //   if (_value.length != 10) {
+        //     return kInvalidPhoneError;
+        //   }
+        // },
         onSaved: (_value) {
           _phoneNumber = _value;
         },

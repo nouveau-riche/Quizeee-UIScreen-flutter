@@ -1,15 +1,14 @@
+import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:otp_count_down/otp_count_down.dart';
-import 'package:pinput/pin_put/pin_put.dart';
 import 'package:provider/provider.dart';
-import 'package:quizeee_ui/provider/initialPro.dart';
-import 'package:quizeee_ui/widgets/toast.dart';
+import 'package:pinput/pin_put/pin_put.dart';
 
+import '../../provider/initialPro.dart';
+import '../../widgets/toast.dart';
 import '../../constant.dart';
 import '../tabs_screen.dart';
 
@@ -140,15 +139,15 @@ class _OTPScreenState extends State<OTPScreen> {
                   color: kTextColor,
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'SairaStencilOne',
+                  fontFamily: 'MajorLeagueDuty',
                   decoration: TextDecoration.underline),
             ),
             const Text(
               'ENTER OTP',
               style: TextStyle(
                 color: kTextColor,
-                fontFamily: 'Bungee',
-                fontSize: 17,
+                fontFamily: 'DebugFreeTrial',
+                fontSize: 26,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -160,9 +159,9 @@ class _OTPScreenState extends State<OTPScreen> {
               child: PinPut(
                 fieldsCount: 6,
                 textStyle: const TextStyle(
-                  fontSize: 25.0,
+                  fontSize: 28.0,
                   color: kPrimaryColor,
-                  fontFamily: 'Bungee',
+                  fontFamily: 'DebugFreeTrial',
                 ),
                 eachFieldWidth: 40.0,
                 eachFieldHeight: 48.0,
@@ -181,8 +180,8 @@ class _OTPScreenState extends State<OTPScreen> {
               'OTP SENT TO YOUR MOBILE NUMBER',
               style: TextStyle(
                 color: kTextColor,
-                fontFamily: 'Bungee',
-                fontSize: 11.6,
+                fontFamily: 'DebugFreeTrial',
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -196,11 +195,11 @@ class _OTPScreenState extends State<OTPScreen> {
                   TextSpan(
                     text: ' $_start S',
                     style:
-                        const TextStyle(color: kSecondaryColor, fontSize: 20),
+                        const TextStyle(color: kSecondaryColor, fontSize: 22),
                   ),
                 ],
                 style: const TextStyle(
-                    color: kTextColor, fontFamily: 'Bungee', fontSize: 11),
+                    color: kTextColor, fontFamily: 'DebugFreeTrial', fontSize: 16),
               ),
               textAlign: TextAlign.center,
             ),
@@ -211,9 +210,9 @@ class _OTPScreenState extends State<OTPScreen> {
               child: const Text(
                 'RESEND OTP',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 26,
                   fontWeight: FontWeight.w500,
-                  fontFamily: 'Bungee',
+                  fontFamily: 'DebugFreeTrial',
                   color: kSecondaryColor,
                 ),
               ),
@@ -222,13 +221,9 @@ class _OTPScreenState extends State<OTPScreen> {
 
                 _pinPutController.clear();
                 resendOtp();
+                startTimer();
 
-                // re-verify phone
 
-                if (_start == 0) {
-                  startTimer();
-                  _pinPutController.clear();
-                }
               },
             ),
             SizedBox(
@@ -254,7 +249,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
     final authPro = Provider.of<Auth>(context, listen: false);
     final response = await authPro.sendVerificationOtp(body, false);
-    toast(response['msg']);
+    toast(response['msg'],isError: false);
   }
 
   Future<void> submitOtp() async {
@@ -328,7 +323,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
 
     if (response['status']) {
-      toast(response['msg']);
+      toast(response['msg'],isError: false);
       Future.delayed(Duration(seconds: 1), () {
         Navigator.pushAndRemoveUntil(
             context,
@@ -336,7 +331,7 @@ class _OTPScreenState extends State<OTPScreen> {
             (route) => false);
       });
     } else {
-      toast(response['msg']);
+      toast(response['msg'],isError: true);
     }
   }
 
