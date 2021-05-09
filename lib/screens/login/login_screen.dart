@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'package:quizeee_ui/provider/initialPro.dart';
+import 'package:quizeee_ui/provider/states.dart';
 import '../../provider/initialPro.dart';
 import '../../constant.dart';
 import '../otp/otp_screen.dart';
@@ -235,7 +237,7 @@ class LoginScreen extends StatelessWidget {
     if (_controller.text.isEmpty ||
         (_controller.text.length != 10 && emailValid == false)) {
       // show toast when user give invalid credentials
-      toast('Enter Correct phone or email',isError: true);
+      toast('Enter Correct phone or email', isError: true);
     } else {
       var body;
       if (_controller.text.contains("@")) {
@@ -249,7 +251,7 @@ class LoginScreen extends StatelessWidget {
       authPro.setLoading(false);
 
       if (response['status']) {
-        toast(response['message'],isError: false);
+        toast(response['message'], isError: false);
         Future.delayed(Duration(seconds: 1), () {
           Navigator.of(context).push(
             CupertinoPageRoute(
@@ -262,7 +264,7 @@ class LoginScreen extends StatelessWidget {
           );
         });
       } else {
-        toast(response['msg'],isError: true);
+        toast(response['msg'], isError: true);
       }
     }
   }

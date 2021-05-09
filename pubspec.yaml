@@ -32,6 +32,7 @@ dependencies:
   provider:
   dio:
   shimmer:
+  localstorage: ^3.0.6
 
 
 

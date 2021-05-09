@@ -18,4 +18,6 @@ class ApiUrls {
   static String sendVerificationRegistration = "signup-verification-otp";
   static String loginUser = "user-login";
   static String signUpUser = "users-signup";
+  static String getUserDetails = "get-user-details/";
+  static String localStorageKey = "userDetails";
 }

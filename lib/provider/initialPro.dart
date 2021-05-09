@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
+import 'package:quizeee_ui/models/userModel.dart';
+import 'package:quizeee_ui/provider/apiUrl.dart';
 import '../models/userModel.dart';
 import 'apiUrl.dart';
 import 'package:dio/dio.dart';
@@ -15,6 +18,9 @@ class Auth with ChangeNotifier {
   List<UserModel> get userModel {
     return [..._userModel];
   }
+
+  //Local Storage
+  final LocalStorage storage = new LocalStorage(ApiUrls.localStorageKey);
 
   Future<Map<String, dynamic>> sendVerificationOtp(
       Map<String, dynamic> body, bool isLogin) async {
@@ -49,6 +55,7 @@ class Auth with ChangeNotifier {
         if (response['status']) {
           _userModel.clear();
           _userModel.add(UserModel.fromJson(response['user']));
+          await saveUserId(_userModel[0].userId);
         } else {
           return reponseData(true, response['message']);
         }
@@ -71,6 +78,7 @@ class Auth with ChangeNotifier {
         if (result.data['status']) {
           _userModel.clear();
           _userModel.add(UserModel.fromJson(result.data['user']));
+          await saveUserId(_userModel[0].userId);
           return reponseData(true, result.data['message']);
         } else {
           return reponseData(false, result.data['message']);
@@ -83,6 +91,54 @@ class Auth with ChangeNotifier {
     } catch (e) {
       return reponseData(false, "Something went wrong please try again!!");
     }
+  }
+
+  Future<Map<String, dynamic>> getUserDetails() async {
+    try {
+      final userId = await getKeyValue("userId");
+      final result = await http.get(
+        ApiUrls.baseUrl + ApiUrls.getUserDetails + userId.toString(),
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (checkStatus(result)) {
+        print(response);
+        if (response['status']) {
+          _userModel.clear();
+          _userModel.add(UserModel.fromJson(response['user']));
+          await saveUserId(_userModel[0].userId);
+        } else {
+          return reponseData(true, response['message']);
+        }
+        return reponseData(true, response['message']);
+      } else {
+        return reponseData(true, response['message']);
+      }
+    } catch (e) {
+      return reponseData(false, "Something went wrong please try again!!");
+    }
+  }
+
+  void saveUserId(int userId) async {
+    await storage.ready;
+    await storage.setItem("userId", userId);
+  }
+
+  Future<dynamic> getKeyValue(String key) async {
+    await storage.ready;
+
+    return await storage.getItem(key);
+  }
+
+  void removePreferences() async {
+    await storage.ready;
+
+    await storage.clear();
+  }
+
+  Future<dynamic> checkKeyExist(String key) async {
+    await storage.ready;
+    return await storage.getItem(key);
   }
 
   Map<String, dynamic> reponseData(bool status, String msg) {
