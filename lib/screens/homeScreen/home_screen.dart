@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return QuizBox(
                               image: 'assets/images/pos2.png',
                               category: data.quizCategory.toUpperCase(),
-                              time: data.endTime,
+                              time: data.startTime,
                               entryPrize: data.entryAmount.toString(),
                               slots: '20',
                               prize: data.winningPrize.toString(),

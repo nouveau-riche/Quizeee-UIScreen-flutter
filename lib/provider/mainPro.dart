@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:quizeee_ui/models/assignedModel.dart';
+import 'package:quizeee_ui/models/publicModel.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
 import 'package:quizeee_ui/provider/constFun.dart';
 import 'package:quizeee_ui/provider/initialPro.dart';
@@ -21,6 +22,11 @@ class MainPro with ChangeNotifier {
     return [..._assignedQuiz];
   }
 
+  List<PublicQuizes> _publicQuiz = [];
+  List<PublicQuizes> get publicQuiz {
+    return [..._publicQuiz];
+  }
+
   Future<Map<String, dynamic>> getDashBoardData() async {
     try {
       final userId = await ConstFun.getKeyValue("userId", _auth.storage);
@@ -35,6 +41,10 @@ class MainPro with ChangeNotifier {
         print(response);
         if (response['status']) {
           _assignedQuiz.clear();
+          _publicQuiz.clear();
+          response['publicQuizes'].forEach((element) {
+            _publicQuiz.add(PublicQuizes.fromJson(element));
+          });
           response["assignedQuizes"].forEach((element) {
             _assignedQuiz.add(AssignedQuiz.fromJson(element));
           });
