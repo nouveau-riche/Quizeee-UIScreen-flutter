@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:quizeee_ui/provider/initialPro.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/provider/states.dart';
 import 'package:quizeee_ui/screens/login/login_screen.dart';
 import 'package:quizeee_ui/screens/tabs_screen.dart';
@@ -42,6 +44,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: Auth()),
         ChangeNotifierProvider.value(value: AppStates()),
+        ChangeNotifierProxyProvider<Auth, MainPro>(
+          create: (_) => MainPro(),
+          update: (_, auth, products) => products..upate(auth),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

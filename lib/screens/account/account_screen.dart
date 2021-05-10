@@ -16,11 +16,13 @@ class AccountScreen extends StatelessWidget {
             child: Text("Logout"),
             onPressed: () async {
               await states.removePreferences();
-              toast('User logged out',isError: false);
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  CupertinoPageRoute(builder: (context) => LoginScreen()),
-                  (route) => false);
+              toast('User logged out', isError: false);
+              Future.delayed(Duration(seconds: 1), () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(builder: (context) => LoginScreen()),
+                    (route) => false);
+              });
             },
           ),
         ),

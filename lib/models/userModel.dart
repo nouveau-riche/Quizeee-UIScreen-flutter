@@ -5,6 +5,7 @@ class UserModel {
   String location;
   String email;
   String phone;
+  String userAge;
   String referralCode;
   String generatedReferralCode;
   String profilePic;
@@ -17,6 +18,7 @@ class UserModel {
       this.userId,
       this.username,
       this.location,
+      this.userAge,
       this.email,
       this.phone,
       this.referralCode,
@@ -39,6 +41,7 @@ class UserModel {
     dateOfBirth = json['dateOfBirth'];
     deviceId = json['deviceId'];
     creationTimeStamp = json['creationTimeStamp'];
+    userAge = calculateAge(DateTime.parse(dateOfBirth));
   }
 
   Map<String, dynamic> toJson() {
@@ -56,5 +59,22 @@ class UserModel {
     data['deviceId'] = this.deviceId;
     data['creationTimeStamp'] = this.creationTimeStamp;
     return data;
+  }
+
+  String calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age.toString();
   }
 }

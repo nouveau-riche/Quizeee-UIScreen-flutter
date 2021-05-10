@@ -20,4 +20,7 @@ class ApiUrls {
   static String signUpUser = "users-signup";
   static String getUserDetails = "get-user-details/";
   static String localStorageKey = "userDetails";
+
+  //Dashboard
+  static String dashboardData = "all-assigned-public-quizes";
 }
