@@ -9,6 +9,8 @@ class AssignedQuiz {
   String startDate;
   String startTime;
   String endDate;
+  String slot;
+  String availableSlots;
   String endTime;
   int noOfQuestions;
   String difficultyLevel;
@@ -23,6 +25,8 @@ class AssignedQuiz {
   AssignedQuiz(
       {this.sId,
       this.quizId,
+      this.slot,
+      this.availableSlots,
       this.quizMasterId,
       this.quizTitle,
       this.quizCategory,
@@ -45,6 +49,8 @@ class AssignedQuiz {
   AssignedQuiz.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     quizId = json['quizId'];
+    slot = json['slot'].toString();
+    availableSlots = json['availableSlots'].toString();
     quizMasterId = json['quizMasterId'];
     quizTitle = json['quizTitle'];
     quizCategory = json['quizCategory'];

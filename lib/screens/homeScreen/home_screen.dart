@@ -88,116 +88,96 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         drawer: Drawer(),
-        body: Column(
-          children: [
-            buildPoster(mq),
-            SizedBox(
-              height: mq.height * 0.018,
-            ),
-            Consumer<MainPro>(
-              builder: (context, mainPro, _) => mainPro.publicQuiz.isEmpty ? Container() :  Expanded(
-                child: Column(
+        body: Consumer<MainPro>(builder: (context, mainPro, _) {
+          return FutureBuilder(
+              future: mainPro.assignedQuiz.isEmpty && mainPro.publicQuiz.isEmpty
+                  ? getDashboardData()
+                  : null,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return ListView.builder(
+                    itemBuilder: (ctx, index) => buildShimmer(context),
+                    itemCount: 5,
+                  );
+                }
+                return Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'PLAY ANY QUIZ',
-                          style: TextStyle(
-                            fontFamily: 'RapierZero',
-                            color: kPrimaryLightColor,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
-                    ),
+                    buildPoster(mq),
                     SizedBox(
                       height: mq.height * 0.018,
                     ),
-                    FutureBuilder(
-                        future: mainPro.publicQuiz.isEmpty
-                            ? getDashboardData()
-                            : null,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Expanded(
-                              child: ListView.builder(
-                                itemBuilder: (ctx, index) =>
-                                    buildShimmer(context),
-                                itemCount: 5,
-                              ),
-                            );
-                          } else {
-                            return Expanded(
+                    Consumer<MainPro>(
+                      builder: (context, mainPro, _) => Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'PLAY ANY QUIZ',
+                                  style: TextStyle(
+                                    fontFamily: 'RapierZero',
+                                    color: kPrimaryLightColor,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: mq.height * 0.018,
+                            ),
+                            Expanded(
                               child: ListView.builder(
                                 itemBuilder: (ctx, index) {
                                   var data = mainPro.publicQuiz[index];
                                   return QuizBox(
                                     image: 'assets/images/pos2.png',
                                     category: data.quizCategory.toUpperCase(),
-                                    time: data.startTime,
+                                    time: mainPro.stateEndDate(data),
                                     entryPrize: data.entryAmount.toString(),
-                                    slots: '20',
+                                    slots: data.slots.toString(),
                                     prize: data.winningPrize.toString(),
-                                    isSlotBooked: false,
+                                    isSlotBooked: data.slots == 0,
                                   );
                                 },
                                 itemCount: mainPro.publicQuiz.length,
                               ),
-                            );
-                          }
-                        }),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: mq.height * 0.018,
-            ),
-
-            Consumer<MainPro>(
-              builder: (context, mainPro, _) => mainPro.assignedQuiz.isEmpty ? Container() : Expanded(
-                child: Column(
-                  children: [
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'PLAY ANY QUIZ',
-                          style: TextStyle(
-                            fontFamily: 'RapierZero',
-                            color: kPrimaryLightColor,
-                            fontSize: 20,
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                     SizedBox(
                       height: mq.height * 0.018,
                     ),
-
-                    FutureBuilder(
-                        future:
-                            mainPro.assignedQuiz.isEmpty ? getDashboardData() : null,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Expanded(
-                              child: ListView.builder(
-                                itemBuilder: (ctx, index) => buildShimmer(context),
-                                itemCount: 5,
-                              ),
-                            );
-                          } else {
-                            return Expanded(
+                    Consumer<MainPro>(
+                      builder: (context, mainPro, _) => Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'PLAY ANY QUIZ',
+                                  style: TextStyle(
+                                    fontFamily: 'RapierZero',
+                                    color: kPrimaryLightColor,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: mq.height * 0.018,
+                            ),
+                            Expanded(
                               child: ListView.builder(
                                 itemBuilder: (ctx, index) {
                                   var data = mainPro.assignedQuiz[index];
                                   return QuizBox(
                                     image: 'assets/images/pos2.png',
                                     category: data.quizCategory.toUpperCase(),
-                                    time: data.startTime,
+                                    time: mainPro.stateEndDate(data),
                                     entryPrize: data.entryAmount.toString(),
                                     slots: '20',
                                     prize: data.winningPrize.toString(),
@@ -206,15 +186,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 itemCount: mainPro.assignedQuiz.length,
                               ),
-                            );
-                          }
-                        }),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
-                ),
-              ),
-            ),
-          ],
-        ),
+                );
+              });
+        }),
       ),
     );
   }

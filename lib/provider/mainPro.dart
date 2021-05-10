@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quizeee_ui/models/assignedModel.dart';
 import 'package:quizeee_ui/models/publicModel.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
@@ -49,7 +50,7 @@ class MainPro with ChangeNotifier {
             _assignedQuiz.add(AssignedQuiz.fromJson(element));
           });
           print(_assignedQuiz);
-
+          print(_publicQuiz);
           return ConstFun.reponseData(true, response['message']);
         } else {
           return ConstFun.reponseData(false, response['message']);
@@ -60,6 +61,18 @@ class MainPro with ChangeNotifier {
     } catch (e) {
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
+    }
+  }
+
+  DateFormat format = DateFormat("dd-MM-yy hh:mm");
+  String stateEndDate(dynamic date) {
+    DateTime now = DateTime.now();
+    DateTime startDate = DateTime.parse(date.startDate);
+    DateTime endTime = DateTime.parse(date.endDate);
+    if (startDate.isAfter(now)) {
+      return format.format(startDate);
+    } else {
+      return format.format(endTime);
     }
   }
 }
