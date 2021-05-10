@@ -111,7 +111,7 @@ class _DOBImageState extends State<DOBImage> {
     authPro.setLoading(false);
 
     if (response['status']) {
-      toast(response['msg'], isError: response['status']);
+      toast(response['msg'], isError: !response['status']);
       Future.delayed(Duration(seconds: 1), () {
         Navigator.of(context).push(
           CupertinoPageRoute(
@@ -129,7 +129,7 @@ class _DOBImageState extends State<DOBImage> {
         );
       });
     } else {
-      toast(response['msg'], isError: response['status']);
+      toast(response['msg'], isError: !response['status']);
     }
   }
 

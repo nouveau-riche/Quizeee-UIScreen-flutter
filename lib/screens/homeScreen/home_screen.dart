@@ -99,10 +99,9 @@ class HomeScreen extends StatelessWidget {
                 const Text(
                   'PLAY ANY QUIZ',
                   style: TextStyle(
-                    fontFamily: 'rapier zero',
+                    fontFamily: 'RapierZero',
                     color: kPrimaryLightColor,
-                    fontSize: 21,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
                   ),
                 ),
               ],

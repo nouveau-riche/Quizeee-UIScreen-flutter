@@ -50,7 +50,7 @@ class QuizBox extends StatelessWidget {
             ],
           ),
         ),
-        buildSlotsTag(mq.height * 0.065, mq.width * 0.12),
+        buildSlotsTag(mq.height * 0.062, mq.width * 0.11),
         Positioned(
           right: mq.width * 0.055,
           bottom: mq.height * 0.11,
@@ -139,8 +139,8 @@ class QuizBox extends StatelessWidget {
           Text(
             'RS. $entryPrize/-',
             style: TextStyle(
-              fontSize: 14,
-              fontFamily: 'Bungee',
+              fontSize: 13.5,
+              fontFamily: 'RapierZero',
             ),
           ),
         ],
@@ -164,9 +164,8 @@ class QuizBox extends StatelessWidget {
             Text(
               slots,
               style: TextStyle(
-                fontSize: 14,
-                fontFamily: 'DebugFreeTrial',
-                fontWeight: FontWeight.w500,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
               ),
             ),
             Text(
