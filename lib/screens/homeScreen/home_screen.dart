@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
       isSlotBooked: false,
     ),
   ];
+
   Future<void> getDashboardData() async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     final resp = await mainPro.getDashBoardData();
@@ -93,55 +94,125 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: mq.height * 0.018,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'PLAY ANY QUIZ',
-                  style: TextStyle(
-                    fontFamily: 'RapierZero',
-                    color: kPrimaryLightColor,
-                    fontSize: 20,
-                  ),
+            Consumer<MainPro>(
+              builder: (context, mainPro, _) => mainPro.publicQuiz.isEmpty ? Container() :  Expanded(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'PLAY ANY QUIZ',
+                          style: TextStyle(
+                            fontFamily: 'RapierZero',
+                            color: kPrimaryLightColor,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: mq.height * 0.018,
+                    ),
+                    FutureBuilder(
+                        future: mainPro.publicQuiz.isEmpty
+                            ? getDashboardData()
+                            : null,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Expanded(
+                              child: ListView.builder(
+                                itemBuilder: (ctx, index) =>
+                                    buildShimmer(context),
+                                itemCount: 5,
+                              ),
+                            );
+                          } else {
+                            return Expanded(
+                              child: ListView.builder(
+                                itemBuilder: (ctx, index) {
+                                  var data = mainPro.publicQuiz[index];
+                                  return QuizBox(
+                                    image: 'assets/images/pos2.png',
+                                    category: data.quizCategory.toUpperCase(),
+                                    time: data.startTime,
+                                    entryPrize: data.entryAmount.toString(),
+                                    slots: '20',
+                                    prize: data.winningPrize.toString(),
+                                    isSlotBooked: false,
+                                  );
+                                },
+                                itemCount: mainPro.publicQuiz.length,
+                              ),
+                            );
+                          }
+                        }),
+                  ],
                 ),
-              ],
+              ),
             ),
             SizedBox(
               height: mq.height * 0.018,
             ),
+
             Consumer<MainPro>(
-              builder: (context, mainPro, _) => FutureBuilder(
-                  future:
-                      mainPro.assignedQuiz.isEmpty ? getDashboardData() : null,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Expanded(
-                        child: ListView.builder(
-                          itemBuilder: (ctx, index) => buildShimmer(context),
-                          itemCount: 5,
+              builder: (context, mainPro, _) => mainPro.assignedQuiz.isEmpty ? Container() : Expanded(
+                child: Column(
+                  children: [
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'PLAY ANY QUIZ',
+                          style: TextStyle(
+                            fontFamily: 'RapierZero',
+                            color: kPrimaryLightColor,
+                            fontSize: 20,
+                          ),
                         ),
-                      );
-                    } else {
-                      return Expanded(
-                        child: ListView.builder(
-                          itemBuilder: (ctx, index) {
-                            var data = mainPro.assignedQuiz[index];
-                            return QuizBox(
-                              image: 'assets/images/pos2.png',
-                              category: data.quizCategory.toUpperCase(),
-                              time: data.startTime,
-                              entryPrize: data.entryAmount.toString(),
-                              slots: '20',
-                              prize: data.winningPrize.toString(),
-                              isSlotBooked: false,
+                      ],
+                    ),
+                    SizedBox(
+                      height: mq.height * 0.018,
+                    ),
+
+                    FutureBuilder(
+                        future:
+                            mainPro.assignedQuiz.isEmpty ? getDashboardData() : null,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Expanded(
+                              child: ListView.builder(
+                                itemBuilder: (ctx, index) => buildShimmer(context),
+                                itemCount: 5,
+                              ),
                             );
-                          },
-                          itemCount: mainPro.assignedQuiz.length,
-                        ),
-                      );
-                    }
-                  }),
-            )
+                          } else {
+                            return Expanded(
+                              child: ListView.builder(
+                                itemBuilder: (ctx, index) {
+                                  var data = mainPro.assignedQuiz[index];
+                                  return QuizBox(
+                                    image: 'assets/images/pos2.png',
+                                    category: data.quizCategory.toUpperCase(),
+                                    time: data.startTime,
+                                    entryPrize: data.entryAmount.toString(),
+                                    slots: '20',
+                                    prize: data.winningPrize.toString(),
+                                    isSlotBooked: false,
+                                  );
+                                },
+                                itemCount: mainPro.assignedQuiz.length,
+                              ),
+                            );
+                          }
+                        }),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
