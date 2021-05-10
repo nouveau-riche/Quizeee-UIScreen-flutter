@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 import 'package:quizeee_ui/models/userModel.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
+import 'package:quizeee_ui/provider/constFun.dart';
 import '../models/userModel.dart';
 import 'apiUrl.dart';
 import 'package:dio/dio.dart';
@@ -31,17 +32,18 @@ class Auth with ChangeNotifier {
       final result = await http.post(ApiUrls.baseUrl + actionurl,
           headers: ApiUrls.headers, body: json.encode(body));
       final response = json.decode(result.body);
-      if (checkStatus(result)) {
+      if (ConstFun.checkStatus(result)) {
         print(response);
         if (actionurl == ApiUrls.sendVerificationRegistration) {
-          return reponseData(true, response['message']);
+          return ConstFun.reponseData(true, response['message']);
         }
         return response as Map<String, dynamic>;
       } else {
-        return reponseData(false, response['message']);
+        return ConstFun.reponseData(false, response['message']);
       }
     } catch (e) {
-      return reponseData(true, "Something went wrong please try again!!");
+      return ConstFun.reponseData(
+          true, "Something went wrong please try again!!");
     }
   }
 
@@ -50,21 +52,22 @@ class Auth with ChangeNotifier {
       final result = await http.post(ApiUrls.baseUrl + ApiUrls.loginUser,
           headers: ApiUrls.headers, body: json.encode(body));
       final response = json.decode(result.body) as Map<String, dynamic>;
-      if (checkStatus(result)) {
+      if (ConstFun.checkStatus(result)) {
         print(response);
         if (response['status']) {
           _userModel.clear();
           _userModel.add(UserModel.fromJson(response['user']));
-          await saveUserId(_userModel[0].userId);
+          await ConstFun.saveUserId(_userModel[0].userId, storage);
         } else {
-          return reponseData(true, response['message']);
+          return ConstFun.reponseData(true, response['message']);
         }
-        return reponseData(true, response['message']);
+        return ConstFun.reponseData(true, response['message']);
       } else {
-        return reponseData(true, response['message']);
+        return ConstFun.reponseData(true, response['message']);
       }
     } catch (e) {
-      return reponseData(false, "Something went wrong please try again!!");
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
     }
   }
 
@@ -78,55 +81,52 @@ class Auth with ChangeNotifier {
         if (result.data['status']) {
           _userModel.clear();
           _userModel.add(UserModel.fromJson(result.data['user']));
-          await saveUserId(_userModel[0].userId);
-          return reponseData(true, result.data['message']);
+          await ConstFun.saveUserId(_userModel[0].userId, storage);
+          return ConstFun.reponseData(true, result.data['message']);
         } else {
-          return reponseData(false, result.data['message']);
+          return ConstFun.reponseData(false, result.data['message']);
         }
       } else {
-        return reponseData(false, result.data['message']);
+        return ConstFun.reponseData(false, result.data['message']);
       }
     } on DioError catch (e) {
-      return reponseData(false, e.response.data['message']);
+      return ConstFun.reponseData(false, e.response.data['message']);
     } catch (e) {
-      return reponseData(false, "Something went wrong please try again!!");
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
     }
   }
 
   Future<Map<String, dynamic>> getUserDetails() async {
     try {
-      final userId = await getKeyValue("userId");
+      final userId = await ConstFun.getKeyValue("userId", storage);
       final result = await http.get(
         ApiUrls.baseUrl + ApiUrls.getUserDetails + userId.toString(),
         headers: ApiUrls.headers,
       );
       final response = json.decode(result.body) as Map<String, dynamic>;
-      if (checkStatus(result)) {
+      if (ConstFun.checkStatus(result)) {
         print(response);
         if (response['status']) {
           _userModel.clear();
           _userModel.add(UserModel.fromJson(response['user']));
-          await saveUserId(_userModel[0].userId);
+          await storage.ready;
+          await ConstFun.saveUserId(_userModel[0].userId, storage);
+          return ConstFun.reponseData(response['status'], response['message']);
         } else {
-          return reponseData(true, response['message']);
+          return ConstFun.reponseData(true, response['message']);
         }
-        return reponseData(true, response['message']);
       } else {
-        return reponseData(true, response['message']);
+        return ConstFun.reponseData(false, response['message']);
       }
     } catch (e) {
-      return reponseData(false, "Something went wrong please try again!!");
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
     }
   }
 
-  void saveUserId(int userId) async {
+  Future<dynamic> checkKeyExist(String key) async {
     await storage.ready;
-    await storage.setItem("userId", userId);
-  }
-
-  Future<dynamic> getKeyValue(String key) async {
-    await storage.ready;
-
     return await storage.getItem(key);
   }
 
@@ -136,25 +136,8 @@ class Auth with ChangeNotifier {
     await storage.clear();
   }
 
-  Future<dynamic> checkKeyExist(String key) async {
-    await storage.ready;
-    return await storage.getItem(key);
-  }
-
-  Map<String, dynamic> reponseData(bool status, String msg) {
-    return {"msg": msg, "status": status};
-  }
-
   void setLoading(bool value) {
     isLoading = value;
     notifyListeners();
-  }
-
-  bool checkStatus(http.Response result) {
-    if (result.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
   }
 }

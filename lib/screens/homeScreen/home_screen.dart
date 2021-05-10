@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
 
 import '../../widgets/shimmer_effect.dart';
 import 'component/quiz_model.dart';
 import '../../constant.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<Widget> allQuizes = [
-    QuizBox(
-      image: 'assets/images/pos2.png',
-      category: 'SCIENCE',
-      time: '12H: 34M: 30S',
-      entryPrize: '10',
-      slots: '20',
-      prize: '100',
-      isSlotBooked: true,
-    ),
     QuizBox(
       image: 'assets/images/pos1.png',
       category: 'HISTORY',
@@ -29,6 +27,10 @@ class HomeScreen extends StatelessWidget {
       isSlotBooked: false,
     ),
   ];
+  Future<void> getDashboardData() async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    final resp = await mainPro.getDashBoardData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,21 +109,38 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: mq.height * 0.018,
             ),
-
-            // use this shimmer effect for loading till all quzies are fetched
-
-            // Expanded(
-            //   child: ListView.builder(
-            //     itemBuilder: (ctx, index) => buildShimmer(context),
-            //     itemCount: 5,
-            //   ),
-            // ),
-
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (ctx, index) => allQuizes[index],
-                itemCount: allQuizes.length,
-              ),
+            Consumer<MainPro>(
+              builder: (context, mainPro, _) => FutureBuilder(
+                  future:
+                      mainPro.assignedQuiz.isEmpty ? getDashboardData() : null,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Expanded(
+                        child: ListView.builder(
+                          itemBuilder: (ctx, index) => buildShimmer(context),
+                          itemCount: 5,
+                        ),
+                      );
+                    } else {
+                      return Expanded(
+                        child: ListView.builder(
+                          itemBuilder: (ctx, index) {
+                            var data = mainPro.assignedQuiz[index];
+                            return QuizBox(
+                              image: 'assets/images/pos2.png',
+                              category: data.quizCategory.toUpperCase(),
+                              time: data.startTime,
+                              entryPrize: data.entryAmount.toString(),
+                              slots: '20',
+                              prize: data.winningPrize.toString(),
+                              isSlotBooked: false,
+                            );
+                          },
+                          itemCount: mainPro.assignedQuiz.length,
+                        ),
+                      );
+                    }
+                  }),
             )
           ],
         ),
