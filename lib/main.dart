@@ -12,25 +12,29 @@ import 'constant.dart';
 
 void main() {
   runApp(MyApp());
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    bool inDebug = false;
-    assert(() {
-      inDebug = true;
-      return true;
-    }());
-    // In debug mode, use the normal error widget which shows
-    // the error message:
-    if (inDebug) return ErrorWidget(details.exception);
-    // In release builds, show a yellow-on-blue message instead:
-    return Container(
-      alignment: Alignment.center,
-      child: Text(
-        'Error! ${details.exception} ${details.context} ${details.informationCollector} ${details.library}',
-        style: TextStyle(color: Colors.black, fontSize: 14),
-        textDirection: TextDirection.ltr,
-      ),
-    );
-  };
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  // ErrorWidget.builder = (FlutterErrorDetails details) {
+  //   bool inDebug = false;
+  //   assert(() {
+  //     inDebug = true;
+  //     return true;
+  //   }());
+  //   // In debug mode, use the normal error widget which shows
+  //   // the error message:
+  //   if (inDebug) return ErrorWidget(details.exception);
+  //   // In release builds, show a yellow-on-blue message instead:
+  //   return Container(
+  //     alignment: Alignment.center,
+  //     child: Text(
+  //       'Error! ${details.exception} ${details.context} ${details.informationCollector} ${details.library}',
+  //       style: TextStyle(color: Colors.black, fontSize: 14),
+  //       textDirection: TextDirection.ltr,
+  //     ),
+  //   );
+  // };
 }
 
 class MyApp extends StatelessWidget {
