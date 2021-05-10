@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:quizeee_ui/widgets/toast.dart';
 
 import './dob_image.dart';
+import '../../widgets/toast.dart';
 import '../../constant.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -42,12 +42,20 @@ class _SignUpFormState extends State<SignUpForm> {
       bool emailValidation = emailValidatorRegExp.hasMatch(_email);
 
       if (phoneValidation == false && emailValidation == false) {
+
+        if(_email.length != 0){
+          toast('Enter valid email',isError: true);
+          return;
+        }
+
+        if(_phoneNumber.length != 10){
+          toast('Enter valid phone',isError: true);
+          return;
+        }
+
         toast('Enter email or phone',isError: true);
         return;
       }
-
-      print('sucessfull');
-
 
       print(_username);
       print(_location);

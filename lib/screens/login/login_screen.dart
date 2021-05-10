@@ -251,7 +251,7 @@ class LoginScreen extends StatelessWidget {
       authPro.setLoading(false);
 
       if (response['status']) {
-        toast(response['message'], isError: response['status']);
+        toast(response['message'], isError: !response['status']);
         Future.delayed(Duration(seconds: 1), () {
           Navigator.of(context).push(
             CupertinoPageRoute(
@@ -264,7 +264,7 @@ class LoginScreen extends StatelessWidget {
           );
         });
       } else {
-        toast(response['msg'], isError: response['status']);
+        toast(response['msg'], isError: !response['status']);
       }
     }
   }

@@ -159,9 +159,9 @@ class _OTPScreenState extends State<OTPScreen> {
               child: PinPut(
                 fieldsCount: 6,
                 textStyle: const TextStyle(
-                  fontSize: 28.0,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
                   color: kPrimaryColor,
-                  fontFamily: 'DebugFreeTrial',
                 ),
                 eachFieldWidth: 40.0,
                 eachFieldHeight: 48.0,
@@ -249,7 +249,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
     final authPro = Provider.of<Auth>(context, listen: false);
     final response = await authPro.sendVerificationOtp(body, false);
-    toast(response['msg'],isError: response['status']);
+    toast(response['msg'],isError: !response['status']);
   }
 
   Future<void> submitOtp() async {
@@ -323,7 +323,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
 
     if (response['status']) {
-      toast(response['msg'],isError: response['status']);
+      toast(response['msg'],isError: !response['status']);
       Future.delayed(Duration(seconds: 1), () {
         Navigator.pushAndRemoveUntil(
             context,
@@ -331,7 +331,7 @@ class _OTPScreenState extends State<OTPScreen> {
             (route) => false);
       });
     } else {
-      toast(response['msg'],isError: response['status']);
+      toast(response['msg'],isError: !response['status']);
     }
   }
 
