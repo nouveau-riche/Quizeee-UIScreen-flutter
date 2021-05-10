@@ -67,9 +67,9 @@ flutter:
     - assets/images/wallet.png
     - assets/images/create.png
     - assets/images/account.png
-    - assets/images/hamburger.png
-    - assets/images/cup.png
     - assets/images/notification.png
+    - assets/images/cup.png
+    - assets/images/hamburger.png
     - assets/images/home_fill.png
     - assets/images/account_fill.png
     - assets/images/wallet_fill.png

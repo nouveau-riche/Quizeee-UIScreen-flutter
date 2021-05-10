@@ -50,15 +50,14 @@ class HomeScreen extends StatelessWidget {
               color: kSecondaryColor,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: IconButton(
-              icon: Container(
-                height: 35,
-                width: 35,
-                child: Image.asset('assets/images/hamburger.png',fit: BoxFit.fill,),
-              ),
-              onPressed: () {
+            child: GestureDetector(
+              onTap: () {
                 _scaffoldKey.currentState.openDrawer();
               },
+              child: Image.asset(
+                'assets/images/hamburger.png',
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
           centerTitle: true,
@@ -79,17 +78,16 @@ class HomeScreen extends StatelessWidget {
                 color: kSecondaryColor,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset('assets/images/notification.png'),
-              ),
+              child: Container(
+                  margin: EdgeInsets.all(7),
+                  child: Image.asset('assets/images/notification.png')),
             ),
           ],
         ),
         drawer: Drawer(),
         body: Column(
           children: [
-            buildPoster(mq.height * 0.16, mq.width),
+            buildPoster(mq),
             SizedBox(
               height: mq.height * 0.018,
             ),
@@ -110,7 +108,6 @@ class HomeScreen extends StatelessWidget {
               height: mq.height * 0.018,
             ),
 
-
             // use this shimmer effect for loading till all quzies are fetched
 
             // Expanded(
@@ -119,7 +116,6 @@ class HomeScreen extends StatelessWidget {
             //     itemCount: 5,
             //   ),
             // ),
-
 
             Expanded(
               child: ListView.builder(
@@ -134,13 +130,13 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-Widget buildPoster(double height, double width) {
+Widget buildPoster(Size mq) {
   return Container(
-    height: height,
-    width: width,
-    margin: EdgeInsets.all(14),
+    height: mq.height * 0.16,
+    width: mq.width,
+    margin: EdgeInsets.all(mq.width * 0.034),
     child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
         child: Image.asset(
           'assets/images/poster.png',
           fit: BoxFit.cover,
