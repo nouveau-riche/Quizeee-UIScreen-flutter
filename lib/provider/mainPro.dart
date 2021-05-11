@@ -97,15 +97,23 @@ class MainPro with ChangeNotifier {
     }
   }
 
-  DateFormat format = DateFormat("dd-MM-yy hh:mm");
+  DateFormat format = DateFormat("dd-MMMM , hh:mm");
   String stateEndDate(dynamic date) {
-    DateTime now = DateTime.now();
-    DateTime startDate = DateTime.parse(date.startDate);
-    DateTime endTime = DateTime.parse(date.endDate);
-    if (startDate.isAfter(now)) {
-      return format.format(startDate);
-    } else {
-      return format.format(endTime);
+    try {
+      DateTime now = DateTime.now();
+      DateTime startDate = DateTime.parse(date.startDate);
+      if (date.endDate.isNotEmpty) {
+        DateTime endTime = DateTime.parse(date.endDate);
+        if (startDate.isAfter(now)) {
+          return format.format(startDate);
+        } else {
+          return format.format(endTime);
+        }
+      } else {
+        return format.format(startDate);
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

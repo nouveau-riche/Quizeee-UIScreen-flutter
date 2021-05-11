@@ -204,6 +204,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+// yashjimanu@gmail
+//
+
 Widget buildPoster(Size mq, String imgNetwork) {
   return Container(
     height: mq.height * 0.16,
