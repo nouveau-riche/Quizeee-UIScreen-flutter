@@ -136,19 +136,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: mq.height * 0.018,
                                   ),
                                   Column(
-                                      children: List.generate(
-                                          mainPro.assignedQuiz.length, (index) {
-                                    var data = mainPro.assignedQuiz[index];
-                                    return QuizBox(
-                                      image: 'assets/images/pos2.png',
-                                      category: data.quizCategory.toUpperCase(),
-                                      time: mainPro.stateEndDate(data),
-                                      entryPrize: data.entryAmount.toString(),
-                                      slots: null,
-                                      prize: data.winningPrize.toString(),
-                                      isSlotBooked: false,
-                                    );
-                                  }))
+                                    children: List.generate(
+                                        mainPro.assignedQuiz.length, (index) {
+                                      var data = mainPro.assignedQuiz[index];
+                                      return QuizBox(
+                                        image: 'assets/images/pos2.png',
+                                        category:
+                                            data.quizCategory.toUpperCase(),
+                                        time: mainPro.stateEndDate(data),
+                                        entryPrize: data.entryAmount.toString(),
+                                        slots: null,
+                                        prize: data.winningPrize.toString(),
+                                        isSlotBooked: false,
+                                      );
+                                    }),
+                                  )
                                 ],
                               ),
                       ),

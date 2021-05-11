@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:quizeee_ui/provider/initialPro.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/provider/states.dart';
+import 'package:quizeee_ui/screens/homeScreen/component/quiz_result.dart';
 import 'package:quizeee_ui/screens/login/login_screen.dart';
 import 'package:quizeee_ui/screens/tabs_screen.dart';
 import './constant.dart';
