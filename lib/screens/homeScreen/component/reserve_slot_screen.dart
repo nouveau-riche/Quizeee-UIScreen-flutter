@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/lets_start_or_play_practice_quiz.dart';
+import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../../constant.dart';
 
@@ -10,14 +13,15 @@ class ReserveSlotScreen extends StatelessWidget {
   final String image;
   final String prize;
   final String time;
-  final int totalSlots;
-  final int slotsLeft;
+  final String totalSlots;
+  final String slotsLeft;
   final String entryPrize;
   final String difficultyLevel;
+  final dynamic data;
 
   ReserveSlotScreen(
-      {
-      this.isSlotBooked,
+      {this.isSlotBooked,
+      this.data,
       this.category,
       this.image,
       this.prize,
@@ -41,7 +45,10 @@ class ReserveSlotScreen extends StatelessWidget {
             ),
             buildAppBar(context, mq.width * 0.045),
             buildQuizPoster(mq),
-            buildSlotsLeftGradientBar(mq, totalSlots, slotsLeft),
+            slotsLeft == null
+                ? Container()
+                : buildSlotsLeftGradientBar(
+                    mq, int.parse(totalSlots), int.parse(slotsLeft)),
             Text(
               'PRICE BREAKDOWN',
               style: TextStyle(
@@ -210,13 +217,14 @@ class ReserveSlotScreen extends StatelessWidget {
   }
 
   Widget buildSlotsLeftGradientBar(Size mq, int totalSlots, int slotsLeft) {
-    int percentage = (100 * slotsLeft) ~/ totalSlots;
+    int remainingSlots = slotsLeft - totalSlots;
+    int percentage = (100 * remainingSlots) ~/ totalSlots;
     print(percentage);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        buildSlotTag(slotsLeft, mq.height * 0.06, mq.width * 0.1, true),
+        buildSlotTag(totalSlots, mq.height * 0.06, mq.width * 0.1, true),
         Container(
           margin: EdgeInsets.symmetric(horizontal: 2),
           width: mq.width * 0.65,
@@ -243,7 +251,7 @@ class ReserveSlotScreen extends StatelessWidget {
             ],
           ),
         ),
-        buildSlotTag(totalSlots, mq.height * 0.06, mq.width * 0.1, false),
+        buildSlotTag(slotsLeft, mq.height * 0.06, mq.width * 0.1, false),
       ],
     );
   }
@@ -289,33 +297,45 @@ class ReserveSlotScreen extends StatelessWidget {
   }
 
   Widget buildRankWisePrizeRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildRankList('#1 rank'),
-            buildRankList('#2nd - #3rd'),
-            buildRankList('#4th - #10th'),
-            buildRankList('#11th - #50th'),
-            buildRankList('#51st - #100th'),
-            buildRankList('#101th - #200th'),
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildMoney(100),
-            buildMoney(90),
-            buildMoney(80),
-            buildMoney(60),
-            buildMoney(40),
-            buildMoney(30),
-          ],
-        ),
-      ],
-    );
+    return Column(
+        children: List.generate(data.prizePool.length, (index) {
+      var prizes = data.prizePool[index];
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          buildRankList('#${prizes.rankNo} rank'),
+          buildMoney(int.parse(prizes.prize))
+        ],
+      );
+    }));
+
+    // Row(
+    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //   children: [
+    //     Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         buildRankList('#1 rank'),
+    //         buildRankList('#2nd - #3rd'),
+    //         buildRankList('#4th - #10th'),
+    //         buildRankList('#11th - #50th'),
+    //         buildRankList('#51st - #100th'),
+    //         buildRankList('#101th - #200th'),
+    //       ],
+    //     ),
+    //     Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         buildMoney(100),
+    //         buildMoney(90),
+    //         buildMoney(80),
+    //         buildMoney(60),
+    //         buildMoney(40),
+    //         buildMoney(30),
+    //       ],
+    //     ),
+    //   ],
+    // );
   }
 
   Widget buildMoney(int money) {
@@ -509,25 +529,7 @@ class ReserveSlotScreen extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(width: 1, color: Colors.black26),
-                        left: BorderSide(width: 0.5, color: Colors.black26),
-                      ),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        // logic for slot book
-
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'DONE',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    ),
-                  ),
+                  child: ConfirmBooking(),
                 )
               ],
             ),
@@ -612,6 +614,47 @@ class ReserveSlotScreen extends StatelessWidget {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ConfirmBooking extends StatefulWidget {
+  const ConfirmBooking({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _ConfirmBookingState createState() => _ConfirmBookingState();
+}
+
+class _ConfirmBookingState extends State<ConfirmBooking> {
+  Future<void> confirmBooking() async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    final resp = await mainPro.bookAQuiz(mainPro.selectedQuizId);
+    toast(resp['message'], isError: !resp['status']);
+    // Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(width: 1, color: Colors.black26),
+          left: BorderSide(width: 0.5, color: Colors.black26),
+        ),
+      ),
+      child: TextButton(
+        onPressed: () {
+          // logic for slot book
+          confirmBooking();
+          Navigator.of(context).pop();
+        },
+        child: Text(
+          'DONE',
+          style: TextStyle(color: Colors.black54),
         ),
       ),
     );

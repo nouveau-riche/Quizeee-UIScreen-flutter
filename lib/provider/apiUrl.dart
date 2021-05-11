@@ -27,4 +27,5 @@ class ApiUrls {
   static String dashboardData = "all-assigned-public-quizes";
   static String dashboardBanner = "get-banner-by-name/dashboard";
   static String checkBookinStatus = "check-booking-status";
+  static String bookQuiz = "book-quizeee-master-quiz-slot";
 }

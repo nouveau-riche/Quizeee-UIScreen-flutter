@@ -15,9 +15,13 @@ class QuizBox extends StatelessWidget {
   final String prize;
   final String quizId;
   final bool isSlotBooked;
+  final String totalSlots;
+  final dynamic data;
 
   QuizBox({
     this.reverseSlot,
+    this.totalSlots,
+    this.data,
     this.quizId,
     this.image,
     this.category,
@@ -64,8 +68,27 @@ class QuizBox extends StatelessWidget {
           right: mq.width * 0.055,
           bottom: mq.height * 0.1,
           child: GestureDetector(
-              onTap: () {
-                reverseSlot(quizId);
+              onTap: () async {
+                bool booked = await reverseSlot(quizId);
+                print(totalSlots.toString());
+                print(slots);
+
+                // if (!booked) {
+                Navigator.of(context).push(CupertinoPageRoute(
+                  builder: (ctx) => ReserveSlotScreen(
+                    isSlotBooked: booked,
+                    category: category,
+                    image: image,
+                    prize: prize,
+                    time: time,
+                    entryPrize: entryPrize,
+                    difficultyLevel: 'HARD',
+                    totalSlots: totalSlots,
+                    slotsLeft: slots,
+                    data: data,
+                  ),
+                ));
+                // }
               },
               child: buildReserveSlot(
                   context, mq.height * 0.055, mq.width * 0.28)),

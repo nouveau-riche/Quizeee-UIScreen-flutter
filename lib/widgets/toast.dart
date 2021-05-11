@@ -12,3 +12,7 @@ Future<bool> toast(String message, {bool isError}) {
     fontSize: 15.0,
   );
 }
+
+Future<bool> cancelToast() {
+  return Fluttertoast.cancel();
+}

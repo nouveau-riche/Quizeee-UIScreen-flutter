@@ -10,6 +10,7 @@ import 'package:quizeee_ui/widgets/toast.dart';
 import '../../widgets/shimmer_effect.dart';
 import 'component/quiz_model.dart';
 import '../../constant.dart';
+import 'component/reserve_slot_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -37,15 +38,18 @@ class _HomeScreenState extends State<HomeScreen> {
     final res = await mainPro.getDashBoardBanner();
   }
 
-  Future<void> checkBookingStatus(String quizId) async {
+  Future<bool> checkBookingStatus(String quizId) async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     toast("Loading...", isError: false);
+    mainPro.saveCurrentQuizId(quizId);
     final resp = await mainPro.checkQuizBookingStatus(quizId);
-    // closeToast();
+
+    cancelToast();
     if (!resp['status']) {
-      toast(resp['message'], isError: true);
+      return resp['status'];
     } else {
       toast(resp['message'], isError: true);
+      return resp['status'];
     }
   }
 
@@ -162,6 +166,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       prize: data.winningPrize.toString(),
                                       isSlotBooked: false,
                                       quizId: data.quizId.toString(),
+                                      totalSlots: data.availableSlots,
+                                      data: data,
                                     );
                                   }))
                                 ],
@@ -206,6 +212,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       prize: data.winningPrize.toString(),
                                       isSlotBooked: data.slots == 0,
                                       quizId: data.quizId.toString(),
+                                      totalSlots:
+                                          data.availableSlots.toString(),
+                                      data: data,
                                     );
                                   }))
                                 ],
