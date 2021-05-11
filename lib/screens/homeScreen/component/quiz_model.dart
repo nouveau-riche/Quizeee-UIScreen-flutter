@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizeee_ui/screens/homeScreen/component/lets_start_or_play_practice_quiz.dart';
+import 'package:quizeee_ui/screens/homeScreen/component/reserve_slot_screen.dart';
 
 import '../../../constant.dart';
 
@@ -69,7 +71,7 @@ class QuizBox extends StatelessWidget {
                   context, mq.height * 0.055, mq.width * 0.28)),
         ),
         Positioned(
-          top: mq.height * 0.028,
+          top: mq.height * 0.027,
           right: mq.width * 0.08,
           child: buildPrizeMoney(),
         ),
