@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 import '../../../constant.dart';
 
 class QuizBox extends StatelessWidget {
+  final Function reverseSlot;
   final String image;
   final String category;
   final String time;
   final String slots;
   final String entryPrize;
   final String prize;
+  final String quizId;
   final bool isSlotBooked;
 
   QuizBox({
+    this.reverseSlot,
+    this.quizId,
     this.image,
     this.category,
     this.time,
@@ -57,7 +61,12 @@ class QuizBox extends StatelessWidget {
         Positioned(
           right: mq.width * 0.055,
           bottom: mq.height * 0.1,
-          child: buildReserveSlot(context, mq.height * 0.055, mq.width * 0.28),
+          child: GestureDetector(
+              onTap: () {
+                reverseSlot(quizId);
+              },
+              child: buildReserveSlot(
+                  context, mq.height * 0.055, mq.width * 0.28)),
         ),
         Positioned(
           top: mq.height * 0.028,
@@ -219,35 +228,32 @@ class QuizBox extends StatelessWidget {
   }
 
   Widget buildReserveSlot(BuildContext context, double height, double width) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-          color: kPrimaryLightColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'RESERVE',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontFamily: 'DebugFreeTrial',
-                ),
+    return Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        color: kPrimaryLightColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'RESERVE',
+              style: TextStyle(
+                fontSize: 17,
+                fontFamily: 'DebugFreeTrial',
               ),
-              Text(
-                'SLOT',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontFamily: 'DebugFreeTrial',
-                ),
+            ),
+            Text(
+              'SLOT',
+              style: TextStyle(
+                fontSize: 17,
+                fontFamily: 'DebugFreeTrial',
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

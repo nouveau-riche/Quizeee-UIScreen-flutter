@@ -97,6 +97,23 @@ class MainPro with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> checkQuizBookingStatus(String quizId) async {
+    try {
+      final userId = await ConstFun.getKeyValue("userId", _auth.storage);
+      var body = {"userId": _auth.userModel[0].userId, "quizId": quizId};
+      final result = await http.post(
+        ApiUrls.baseUrl + ApiUrls.checkBookinStatus,
+        body: json.encode(body),
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
   DateFormat format = DateFormat("dd-MMMM , hh:mm");
   String stateEndDate(dynamic date) {
     try {
