@@ -15,6 +15,14 @@ import 'package:quizeee_ui/widgets/toast.dart';
 class MainPro with ChangeNotifier {
   Auth _auth;
 
+  //Global Loader for MainPro
+  bool isLoading = false;
+
+  void changeLoadingState(bool val) {
+    isLoading = val;
+    notifyListeners();
+  }
+
   void upate(Auth auth) async {
     this._auth = auth;
   }

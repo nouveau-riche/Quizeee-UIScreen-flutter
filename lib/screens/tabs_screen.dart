@@ -1,10 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
+import 'package:quizeee_ui/widgets/centerLoader.dart';
 
 import '../constant.dart';
 import './account/account_screen.dart';
 import './creatQuiz/create_quiz_screen.dart';
 import './homeScreen/home_screen.dart';
 import './wallet/wallet_screen.dart';
+
+class TabMainScreen extends StatefulWidget {
+  TabMainScreen({Key key}) : super(key: key);
+
+  @override
+  _TabMainScreenState createState() => _TabMainScreenState();
+}
+
+class _TabMainScreenState extends State<TabMainScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Consumer<MainPro>(
+        builder: (context, mainPro, _) => Stack(
+          children: [
+            TabsScreen(),
+            mainPro.isLoading
+                ? CenterLoader(
+                    isScaffoldRequired: true,
+                  )
+                : Container()
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class TabsScreen extends StatefulWidget {
   @override

@@ -40,9 +40,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<bool> checkBookingStatus(String quizId) async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
-    toast("Loading...", isError: false);
+    // toast("Loading...", isError: false);
+    mainPro.changeLoadingState(true);
     mainPro.saveCurrentQuizId(quizId);
     final resp = await mainPro.checkQuizBookingStatus(quizId);
+    mainPro.changeLoadingState(false);
 
     cancelToast();
     if (!resp['status']) {

@@ -199,7 +199,9 @@ class _OTPScreenState extends State<OTPScreen> {
                   ),
                 ],
                 style: const TextStyle(
-                    color: kTextColor, fontFamily: 'DebugFreeTrial', fontSize: 16),
+                    color: kTextColor,
+                    fontFamily: 'DebugFreeTrial',
+                    fontSize: 16),
               ),
               textAlign: TextAlign.center,
             ),
@@ -222,8 +224,6 @@ class _OTPScreenState extends State<OTPScreen> {
                 _pinPutController.clear();
                 resendOtp();
                 startTimer();
-
-
               },
             ),
             SizedBox(
@@ -249,7 +249,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
     final authPro = Provider.of<Auth>(context, listen: false);
     final response = await authPro.sendVerificationOtp(body, false);
-    toast(response['msg'],isError: !response['status']);
+    toast(response['msg'], isError: !response['status']);
   }
 
   Future<void> submitOtp() async {
@@ -323,15 +323,15 @@ class _OTPScreenState extends State<OTPScreen> {
     }
 
     if (response['status']) {
-      toast(response['msg'],isError: !response['status']);
+      toast(response['msg'], isError: !response['status']);
       Future.delayed(Duration(seconds: 1), () {
         Navigator.pushAndRemoveUntil(
             context,
-            CupertinoPageRoute(builder: (context) => TabsScreen()),
+            CupertinoPageRoute(builder: (context) => TabMainScreen()),
             (route) => false);
       });
     } else {
-      toast(response['msg'],isError: !response['status']);
+      toast(response['msg'], isError: !response['status']);
     }
   }
 

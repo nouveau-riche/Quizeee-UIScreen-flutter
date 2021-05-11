@@ -73,22 +73,22 @@ class QuizBox extends StatelessWidget {
                 print(totalSlots.toString());
                 print(slots);
 
-                // if (!booked) {
-                Navigator.of(context).push(CupertinoPageRoute(
-                  builder: (ctx) => ReserveSlotScreen(
-                    isSlotBooked: booked,
-                    category: category,
-                    image: image,
-                    prize: prize,
-                    time: time,
-                    entryPrize: entryPrize,
-                    difficultyLevel: 'HARD',
-                    totalSlots: totalSlots,
-                    slotsLeft: slots,
-                    data: data,
-                  ),
-                ));
-                // }
+                Future.delayed(Duration(milliseconds: 500), () {
+                  Navigator.of(context).push(CupertinoPageRoute(
+                    builder: (ctx) => ReserveSlotScreen(
+                      isSlotBooked: booked,
+                      category: category,
+                      image: image,
+                      prize: prize,
+                      time: time,
+                      entryPrize: entryPrize,
+                      difficultyLevel: data.difficultyLevel,
+                      totalSlots: totalSlots,
+                      slotsLeft: slots,
+                      data: data,
+                    ),
+                  ));
+                });
               },
               child: buildReserveSlot(
                   context, mq.height * 0.055, mq.width * 0.28)),
