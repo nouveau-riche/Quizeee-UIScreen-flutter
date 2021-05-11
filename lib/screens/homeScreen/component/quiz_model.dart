@@ -31,7 +31,8 @@ class QuizBox extends StatelessWidget {
           height: mq.height * 0.26,
           width: mq.width,
           padding: EdgeInsets.all(8),
-          margin: EdgeInsets.symmetric(horizontal: mq.width*0.034, vertical: 7),
+          margin:
+              EdgeInsets.symmetric(horizontal: mq.width * 0.034, vertical: 7),
           decoration: BoxDecoration(
             color: Color.fromRGBO(33, 64, 74, 1),
             borderRadius: BorderRadius.circular(12),
@@ -50,7 +51,9 @@ class QuizBox extends StatelessWidget {
             ],
           ),
         ),
-        buildSlotsTag(mq.height * 0.062, mq.width * 0.11),
+        slots != null
+            ? buildSlotsTag(mq.height * 0.062, mq.width * 0.11)
+            : Container(),
         Positioned(
           right: mq.width * 0.055,
           bottom: mq.height * 0.1,

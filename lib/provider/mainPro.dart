@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quizeee_ui/models/assignedModel.dart';
+import 'package:quizeee_ui/models/dashboardBanner.dart';
 import 'package:quizeee_ui/models/publicModel.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
 import 'package:quizeee_ui/provider/constFun.dart';
@@ -21,6 +22,11 @@ class MainPro with ChangeNotifier {
   List<AssignedQuiz> _assignedQuiz = [];
   List<AssignedQuiz> get assignedQuiz {
     return [..._assignedQuiz];
+  }
+
+  List<DashboardBanner> _dashboardBanner = [];
+  List<DashboardBanner> get dashboardBanner {
+    return [..._dashboardBanner];
   }
 
   List<PublicQuizes> _publicQuiz = [];
@@ -49,8 +55,35 @@ class MainPro with ChangeNotifier {
           response["assignedQuizes"].forEach((element) {
             _assignedQuiz.add(AssignedQuiz.fromJson(element));
           });
-          print(_assignedQuiz);
-          print(_publicQuiz);
+          return ConstFun.reponseData(true, response['message']);
+        } else {
+          return ConstFun.reponseData(false, response['message']);
+        }
+      } else {
+        return ConstFun.reponseData(false, response['message']);
+      }
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> getDashBoardBanner() async {
+    try {
+      final userId = await ConstFun.getKeyValue("userId", _auth.storage);
+      var body = {
+        "userId": _auth.userModel[0].userId,
+        "age": _auth.userModel[0].userAge
+      };
+      final result = await http.get(
+        ApiUrls.baseUrl + ApiUrls.dashboardBanner,
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (ConstFun.checkStatus(result)) {
+        if (response['status']) {
+          _dashboardBanner.clear();
+          _dashboardBanner.add(DashboardBanner.fromJson(response['banner']));
           return ConstFun.reponseData(true, response['message']);
         } else {
           return ConstFun.reponseData(false, response['message']);

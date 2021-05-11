@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/apiUrl.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
 
 import '../../widgets/shimmer_effect.dart';
@@ -31,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> getDashboardData() async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     final resp = await mainPro.getDashBoardData();
+    final res = await mainPro.getDashBoardBanner();
   }
 
   @override
@@ -100,98 +103,99 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: 5,
                   );
                 }
-                return Column(
-                  children: [
-                    buildPoster(mq),
-                    SizedBox(
-                      height: mq.height * 0.018,
-                    ),
-                    Consumer<MainPro>(
-                      builder: (context, mainPro, _) => Expanded(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  'PLAY ANY QUIZ',
-                                  style: TextStyle(
-                                    fontFamily: 'RapierZero',
-                                    color: kPrimaryLightColor,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: mq.height * 0.018,
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                itemBuilder: (ctx, index) {
-                                  var data = mainPro.publicQuiz[index];
-                                  return QuizBox(
-                                    image: 'assets/images/pos2.png',
-                                    category: data.quizCategory.toUpperCase(),
-                                    time: mainPro.stateEndDate(data),
-                                    entryPrize: data.entryAmount.toString(),
-                                    slots: data.slots.toString(),
-                                    prize: data.winningPrize.toString(),
-                                    isSlotBooked: data.slots == 0,
-                                  );
-                                },
-                                itemCount: mainPro.publicQuiz.length,
-                              ),
-                            ),
-                          ],
-                        ),
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      mainPro.dashboardBanner.isNotEmpty
+                          ? buildPoster(
+                              mq, mainPro.dashboardBanner[0].bannerImg)
+                          : Container(),
+                      SizedBox(
+                        height: mq.height * 0.018,
                       ),
-                    ),
-                    SizedBox(
-                      height: mq.height * 0.018,
-                    ),
-                    Consumer<MainPro>(
-                      builder: (context, mainPro, _) => Expanded(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  'PLAY ANY QUIZ',
-                                  style: TextStyle(
-                                    fontFamily: 'RapierZero',
-                                    color: kPrimaryLightColor,
-                                    fontSize: 20,
+                      Consumer<MainPro>(
+                        builder: (context, mainPro, _) => mainPro
+                                .assignedQuiz.isEmpty
+                            ? Container()
+                            : Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'ASSIGNED QUIZ',
+                                        style: TextStyle(
+                                          fontFamily: 'RapierZero',
+                                          color: kPrimaryLightColor,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: mq.height * 0.018,
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                itemBuilder: (ctx, index) {
-                                  var data = mainPro.assignedQuiz[index];
-                                  return QuizBox(
-                                    image: 'assets/images/pos2.png',
-                                    category: data.quizCategory.toUpperCase(),
-                                    time: mainPro.stateEndDate(data),
-                                    entryPrize: data.entryAmount.toString(),
-                                    slots: '20',
-                                    prize: data.winningPrize.toString(),
-                                    isSlotBooked: false,
-                                  );
-                                },
-                                itemCount: mainPro.assignedQuiz.length,
+                                  SizedBox(
+                                    height: mq.height * 0.018,
+                                  ),
+                                  Column(
+                                      children: List.generate(
+                                          mainPro.assignedQuiz.length, (index) {
+                                    var data = mainPro.assignedQuiz[index];
+                                    return QuizBox(
+                                      image: 'assets/images/pos2.png',
+                                      category: data.quizCategory.toUpperCase(),
+                                      time: mainPro.stateEndDate(data),
+                                      entryPrize: data.entryAmount.toString(),
+                                      slots: null,
+                                      prize: data.winningPrize.toString(),
+                                      isSlotBooked: false,
+                                    );
+                                  }))
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: mq.height * 0.018,
+                      ),
+                      Consumer<MainPro>(
+                        builder: (context, mainPro, _) => mainPro
+                                .publicQuiz.isEmpty
+                            ? Container()
+                            : Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'PLAY ANY QUIZ',
+                                        style: TextStyle(
+                                          fontFamily: 'RapierZero',
+                                          color: kPrimaryLightColor,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: mq.height * 0.018,
+                                  ),
+                                  Column(
+                                      children: List.generate(
+                                          mainPro.publicQuiz.length, (index) {
+                                    var data = mainPro.publicQuiz[index];
+                                    return QuizBox(
+                                      image: 'assets/images/pos2.png',
+                                      category: data.quizCategory.toUpperCase(),
+                                      time: mainPro.stateEndDate(data),
+                                      entryPrize: data.entryAmount.toString(),
+                                      slots: data.slots.toString(),
+                                      prize: data.winningPrize.toString(),
+                                      isSlotBooked: data.slots == 0,
+                                    );
+                                  }))
+                                ],
+                              ),
+                      ),
+                    ],
+                  ),
                 );
               });
         }),
@@ -200,16 +204,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget buildPoster(Size mq) {
+Widget buildPoster(Size mq, String imgNetwork) {
   return Container(
     height: mq.height * 0.16,
     width: mq.width,
     margin: EdgeInsets.all(mq.width * 0.034),
     child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Image.asset(
-          'assets/images/poster.png',
+      borderRadius: BorderRadius.circular(12),
+      child: CachedNetworkImage(
+        fit: BoxFit.cover,
+        imageUrl: ApiUrls.baseUrlImage + imgNetwork,
+        placeholder: (context, url) => Image.asset(
+          "assets/images/poster.png",
           fit: BoxFit.cover,
-        )),
+        ),
+        errorWidget: (context, url, error) => Image.asset(
+          "assets/images/poster.png",
+          fit: BoxFit.cover,
+        ),
+      ),
+    ),
   );
 }

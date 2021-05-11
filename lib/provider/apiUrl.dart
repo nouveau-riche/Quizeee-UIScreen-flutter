@@ -12,6 +12,8 @@ class ApiUrls {
 
   // Base Url
   static String baseUrl = "https://quizeee-app-api.herokuapp.com/api/";
+  static String baseUrlImage =
+      "https://quizeee-app-api.herokuapp.com/api/download/";
 
   // Login flow
   static String sendVerificationOtp = "send-verification-otp";
@@ -23,4 +25,5 @@ class ApiUrls {
 
   //Dashboard
   static String dashboardData = "all-assigned-public-quizes";
+  static String dashboardBanner = "get-banner-by-name/dashboard";
 }
