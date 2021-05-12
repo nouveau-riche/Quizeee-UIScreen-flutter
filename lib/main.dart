@@ -11,6 +11,7 @@ import 'package:quizeee_ui/screens/homeScreen/component/quiz_result.dart';
 import 'package:quizeee_ui/screens/login/login_screen.dart';
 import 'package:quizeee_ui/screens/tabs_screen.dart';
 import './constant.dart';
+import 'widgets/centerLoader.dart';
 
 void main() {
   runApp(MyApp());
@@ -76,7 +77,7 @@ class _NavigateScreenState extends State<NavigateScreen> {
       if (response['status']) {
         Navigator.pushAndRemoveUntil(
             context,
-            CupertinoPageRoute(builder: (context) => TabsScreen()),
+            CupertinoPageRoute(builder: (context) => TabMainScreen()),
             (route) => false);
       } else {
         Navigator.pushAndRemoveUntil(
@@ -94,8 +95,6 @@ class _NavigateScreenState extends State<NavigateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final mq = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Container(
         child: FutureBuilder(
@@ -103,39 +102,8 @@ class _NavigateScreenState extends State<NavigateScreen> {
             builder: (con, snap) => Stack(
                   children: [
                     LoginScreen(),
-                    Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: Colors.black.withOpacity(0.7),
-                      child: Center(
-                        child: Container(
-                          width: mq.width * 0.50,
-                          height: mq.height * 0.15,
-                          decoration: BoxDecoration(
-                              color: kPrimaryColor,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              CircularProgressIndicator(),
-                              Spacer(),
-                              Text("Loading....",
-                                  style: TextStyle(
-                                    color: kTextColor,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'SairaStencilOne',
-                                  )),
-                              SizedBox(
-                                height: 10,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                    CenterLoader(
+                      isScaffoldRequired: false,
                     )
                   ],
                 )),

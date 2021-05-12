@@ -6,15 +6,23 @@ import 'package:quizeee_ui/screens/homeScreen/component/reserve_slot_screen.dart
 import '../../../constant.dart';
 
 class QuizBox extends StatelessWidget {
+  final Function reverseSlot;
   final String image;
   final String category;
   final String time;
   final String slots;
   final String entryPrize;
   final String prize;
+  final String quizId;
   final bool isSlotBooked;
+  final String totalSlots;
+  final dynamic data;
 
   QuizBox({
+    this.reverseSlot,
+    this.totalSlots,
+    this.data,
+    this.quizId,
     this.image,
     this.category,
     this.time,
@@ -59,7 +67,31 @@ class QuizBox extends StatelessWidget {
         Positioned(
           right: mq.width * 0.055,
           bottom: mq.height * 0.1,
-          child: buildReserveSlot(context, mq.height * 0.055, mq.width * 0.28),
+          child: GestureDetector(
+              onTap: () async {
+                bool booked = await reverseSlot(quizId);
+                print(totalSlots.toString());
+                print(slots);
+
+                Future.delayed(Duration(milliseconds: 500), () {
+                  Navigator.of(context).push(CupertinoPageRoute(
+                    builder: (ctx) => ReserveSlotScreen(
+                      isSlotBooked: booked,
+                      category: category,
+                      image: image,
+                      prize: prize,
+                      time: time,
+                      entryPrize: entryPrize,
+                      difficultyLevel: data.difficultyLevel,
+                      totalSlots: totalSlots,
+                      slotsLeft: slots,
+                      data: data,
+                    ),
+                  ));
+                });
+              },
+              child: buildReserveSlot(
+                  context, mq.height * 0.055, mq.width * 0.28)),
         ),
         Positioned(
           top: mq.height * 0.027,
@@ -221,49 +253,32 @@ class QuizBox extends StatelessWidget {
   }
 
   Widget buildReserveSlot(BuildContext context, double height, double width) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(CupertinoPageRoute(
-          builder: (ctx) => ReserveSlotScreen(
-            isSlotBooked: isSlotBooked,
-            category: category,
-            image: image,
-            prize: prize,
-            time: time,
-            entryPrize: entryPrize,
-            difficultyLevel: 'HARD',
-            totalSlots: 20,
-            slotsLeft: 2,
-          ),
-        ));
-      },
-      child: Container(
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-          color: kPrimaryLightColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'RESERVE',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontFamily: 'DebugFreeTrial',
-                ),
+    return Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        color: kPrimaryLightColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'RESERVE',
+              style: TextStyle(
+                fontSize: 17,
+                fontFamily: 'DebugFreeTrial',
               ),
-              Text(
-                'SLOT',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontFamily: 'DebugFreeTrial',
-                ),
+            ),
+            Text(
+              'SLOT',
+              style: TextStyle(
+                fontSize: 17,
+                fontFamily: 'DebugFreeTrial',
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

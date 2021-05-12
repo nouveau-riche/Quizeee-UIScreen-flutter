@@ -5,10 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
+import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../widgets/shimmer_effect.dart';
 import 'component/quiz_model.dart';
 import '../../constant.dart';
+import 'component/reserve_slot_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -34,6 +36,23 @@ class _HomeScreenState extends State<HomeScreen> {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     final resp = await mainPro.getDashBoardData();
     final res = await mainPro.getDashBoardBanner();
+  }
+
+  Future<bool> checkBookingStatus(String quizId) async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    // toast("Loading...", isError: false);
+    mainPro.changeLoadingState(true);
+    mainPro.saveCurrentQuizId(quizId);
+    final resp = await mainPro.checkQuizBookingStatus(quizId);
+    mainPro.changeLoadingState(false);
+
+    cancelToast();
+    if (!resp['status']) {
+      return resp['status'];
+    } else {
+      toast(resp['message'], isError: true);
+      return resp['status'];
+    }
   }
 
   @override
@@ -136,21 +155,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: mq.height * 0.018,
                                   ),
                                   Column(
-                                    children: List.generate(
-                                        mainPro.assignedQuiz.length, (index) {
-                                      var data = mainPro.assignedQuiz[index];
-                                      return QuizBox(
-                                        image: 'assets/images/pos2.png',
-                                        category:
-                                            data.quizCategory.toUpperCase(),
-                                        time: mainPro.stateEndDate(data),
-                                        entryPrize: data.entryAmount.toString(),
-                                        slots: null,
-                                        prize: data.winningPrize.toString(),
-                                        isSlotBooked: false,
-                                      );
-                                    }),
-                                  )
+                                      children: List.generate(
+                                          mainPro.assignedQuiz.length, (index) {
+                                    var data = mainPro.assignedQuiz[index];
+                                    return QuizBox(
+                                      reverseSlot: checkBookingStatus,
+                                      image: 'assets/images/pos2.png',
+                                      category: data.quizCategory.toUpperCase(),
+                                      time: mainPro.stateEndDate(data),
+                                      entryPrize: data.entryAmount.toString(),
+                                      slots: null,
+                                      prize: data.winningPrize.toString(),
+                                      isSlotBooked: false,
+                                      quizId: data.quizId.toString(),
+                                      totalSlots: data.availableSlots,
+                                      data: data,
+                                    );
+                                  }))
                                 ],
                               ),
                       ),
@@ -184,6 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           mainPro.publicQuiz.length, (index) {
                                     var data = mainPro.publicQuiz[index];
                                     return QuizBox(
+                                      reverseSlot: checkBookingStatus,
                                       image: 'assets/images/pos2.png',
                                       category: data.quizCategory.toUpperCase(),
                                       time: mainPro.stateEndDate(data),
@@ -191,6 +213,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       slots: data.slots.toString(),
                                       prize: data.winningPrize.toString(),
                                       isSlotBooked: data.slots == 0,
+                                      quizId: data.quizId.toString(),
+                                      totalSlots:
+                                          data.availableSlots.toString(),
+                                      data: data,
                                     );
                                   }))
                                 ],

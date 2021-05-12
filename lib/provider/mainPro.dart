@@ -10,9 +10,18 @@ import 'package:quizeee_ui/provider/constFun.dart';
 import 'package:quizeee_ui/provider/initialPro.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:quizeee_ui/widgets/toast.dart';
 
 class MainPro with ChangeNotifier {
   Auth _auth;
+
+  //Global Loader for MainPro
+  bool isLoading = false;
+
+  void changeLoadingState(bool val) {
+    isLoading = val;
+    notifyListeners();
+  }
 
   void upate(Auth auth) async {
     this._auth = auth;
@@ -97,6 +106,40 @@ class MainPro with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> checkQuizBookingStatus(String quizId) async {
+    try {
+      final userId = await ConstFun.getKeyValue("userId", _auth.storage);
+      var body = {"userId": _auth.userModel[0].userId, "quizId": quizId};
+      final result = await http.post(
+        ApiUrls.baseUrl + ApiUrls.checkBookinStatus,
+        body: json.encode(body),
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> bookAQuiz(String quizId) async {
+    try {
+      final userId = await ConstFun.getKeyValue("userId", _auth.storage);
+      var body = {"userId": _auth.userModel[0].userId, "quizId": quizId};
+      final result = await http.post(
+        ApiUrls.baseUrl + ApiUrls.bookQuiz,
+        body: json.encode(body),
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
   DateFormat format = DateFormat("dd-MMMM , hh:mm");
   String stateEndDate(dynamic date) {
     try {
@@ -115,5 +158,10 @@ class MainPro with ChangeNotifier {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  String selectedQuizId;
+  void saveCurrentQuizId(String quizId) async {
+    selectedQuizId = quizId;
   }
 }
