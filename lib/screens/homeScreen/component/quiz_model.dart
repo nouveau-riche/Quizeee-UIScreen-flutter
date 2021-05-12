@@ -82,7 +82,8 @@ class QuizBox extends StatelessWidget {
                       prize: prize,
                       time: time,
                       entryPrize: entryPrize,
-                      difficultyLevel: data.difficultyLevel,
+                      difficultyLevel:
+                          data.difficultyLevel.toString().toUpperCase(),
                       totalSlots: totalSlots,
                       slotsLeft: slots,
                       data: data,
