@@ -28,7 +28,9 @@ class _TabMainScreenState extends State<TabMainScreen> {
                 ? CenterLoader(
                     isScaffoldRequired: true,
                   )
-                : Container()
+                : Container(
+                    // color: Colors.transparent,
+                    )
           ],
         ),
       ),

@@ -632,7 +632,10 @@ class ConfirmBooking extends StatefulWidget {
 class _ConfirmBookingState extends State<ConfirmBooking> {
   Future<void> confirmBooking() async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
+    mainPro.changeLoadingState(true);
     final resp = await mainPro.bookAQuiz(mainPro.selectedQuizId);
+    mainPro.changeLoadingState(false);
+
     toast(resp['message'], isError: !resp['status']);
     // Navigator.of(context).pop();
   }

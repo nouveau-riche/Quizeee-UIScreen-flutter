@@ -1,7 +1,7 @@
 class PublicQuizes {
   String sId;
-  int quizId;
-  int quizMasterId;
+  dynamic quizId;
+  dynamic quizMasterId;
   String quizTitle;
   String quizCategory;
   String quizSubCategory;
@@ -10,13 +10,13 @@ class PublicQuizes {
   String startTime;
   String endDate;
   String endTime;
-  int slots;
-  int availableSlots;
-  int noOfQuestions;
+  dynamic slots;
+  dynamic availableSlots;
+  dynamic noOfQuestions;
   String difficultyLevel;
-  int timePerQues;
-  int entryAmount;
-  int winningPrize;
+  dynamic timePerQues;
+  dynamic entryAmount;
+  dynamic winningPrize;
   List<PrizePool> prizePool;
   List<Questions> questions;
   Age age;
@@ -116,7 +116,7 @@ class PublicQuizes {
 }
 
 class PrizePool {
-  int rankNo;
+  dynamic rankNo;
   String prize;
 
   PrizePool({this.rankNo, this.prize});
@@ -135,12 +135,12 @@ class PrizePool {
 }
 
 class Questions {
-  int questionId;
+  dynamic questionId;
   String quesText;
   List<String> options;
   String quesImgUrl;
   String solution;
-  int rightOption;
+  dynamic rightOption;
   String quizCategory;
   String quizSubCategory;
   String areaOfInterest;
@@ -184,8 +184,8 @@ class Questions {
 }
 
 class Age {
-  int start;
-  int end;
+  dynamic start;
+  dynamic end;
 
   Age({this.start, this.end});
 
