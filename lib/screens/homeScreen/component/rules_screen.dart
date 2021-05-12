@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/question_screen.dart';
 
 import '../../../constant.dart';
 
 class RulesScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -132,8 +133,11 @@ class RulesScreen extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Navigator.of(context)
-              .push(CupertinoPageRoute(builder: (ctx) => QuizQuestion()));
+          final mainPro = Provider.of<MainPro>(context, listen: false);
+          Navigator.of(context).push(CupertinoPageRoute(
+              builder: (ctx) => QuizQuestion(
+                    mainPro: mainPro,
+                  )));
         },
         child: Text(
           'START THE QUIZ',

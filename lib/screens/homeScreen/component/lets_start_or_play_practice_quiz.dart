@@ -1,10 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/rules_screen.dart';
 
 import '../../../constant.dart';
 
 class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
+  final dynamic data;
+
+  const LetsStartOrPlayPracticeQuiz({Key key, @required this.data})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,42 +19,85 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: Column(
-        children: [
-          SizedBox(
-            height: mq.height * 0.04,
-          ),
-          buildAppBar(context, mq.width * 0.045),
-          SizedBox(
-            height: mq.height * 0.14,
-          ),
-          Text(
-            'LET\'S START',
-            style: TextStyle(
+      body: Consumer<MainPro>(
+        builder: (con, mainPro, _) => Column(
+          children: [
+            SizedBox(
+              height: mq.height * 0.04,
+            ),
+            buildAppBar(context, mq.width * 0.045),
+            SizedBox(
+              height: mq.height * 0.14,
+            ),
+            Text(
+              'LET\'S START',
+              style: TextStyle(
+                  color: kPrimaryLightColor,
+                  fontSize: 35,
+                  fontFamily: 'RapierZero'),
+            ),
+            SizedBox(
+              height: mq.height * 0.07,
+            ),
+            Text(
+              'Time remaining',
+              style: TextStyle(
+                  color: kSecondaryColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600),
+            ),
+            SizedBox(
+              height: mq.height * 0.015,
+            ),
+            Container(
+              height: mq.height * 0.052,
+              width: mq.width * 0.45,
+              margin: EdgeInsets.only(top: 2),
+              decoration: BoxDecoration(
                 color: kPrimaryLightColor,
-                fontSize: 35,
-                fontFamily: 'RapierZero'),
-          ),
-          SizedBox(
-            height: mq.height * 0.07,
-          ),
-          Text(
-            'Time remaining',
-            style: TextStyle(
-                color: kSecondaryColor,
-                fontSize: 15,
-                fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: mq.height * 0.015,
-          ),
-          buildQuizTime(mq.height * 0.052, mq.width * 0.45),
-          Spacer(),
-          buildNextNow(mq, context),
-          SizedBox(
-            height: mq.height * 0.07,
-          ),
-        ],
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Center(
+                child: Text(
+                  '${mainPro.formatDate(data.startDate)}',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Spacer(),
+            SizedBox(
+              height: mq.height * 0.058,
+              width: mq.width * 0.55,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: kSecondaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  mainPro.saveDataForQuestions(data);
+                  Navigator.of(context).push(
+                      CupertinoPageRoute(builder: (ctx) => RulesScreen()));
+                },
+                child: Text(
+                  'NEXT',
+                  style: TextStyle(
+                    color: kPrimaryColor,
+                    fontFamily: 'DebugFreeTrial',
+                    fontSize: 28,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: mq.height * 0.07,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -91,51 +141,11 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
     );
   }
 
-  Widget buildQuizTime(double height, double width) {
-    return Container(
-      height: height,
-      width: width,
-      margin: EdgeInsets.only(top: 2),
-      decoration: BoxDecoration(
-        color: kPrimaryLightColor,
-        borderRadius: BorderRadius.circular(7),
-      ),
-      child: Center(
-        child: Text(
-          'time',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget buildQuizTime(double height, double width,MainPro mainPro) {
+  //   return
+  // }
 
-  Widget buildNextNow(Size mq, BuildContext context) {
-    return SizedBox(
-      height: mq.height * 0.058,
-      width: mq.width * 0.55,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          primary: kSecondaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        onPressed: () {
-          Navigator.of(context)
-              .push(CupertinoPageRoute(builder: (ctx) => RulesScreen()));
-        },
-        child: Text(
-          'NEXT',
-          style: TextStyle(
-            color: kPrimaryColor,
-            fontFamily: 'DebugFreeTrial',
-            fontSize: 28,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget buildNextNow(Size mq, BuildContext context,MainPro mainPro) {
+  //   return ;
+  // }
 }

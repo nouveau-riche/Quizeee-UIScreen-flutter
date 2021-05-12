@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class MainPro with ChangeNotifier {
           headers: ApiUrls.headers, body: json.encode(body));
       final response = json.decode(result.body) as Map<String, dynamic>;
       if (ConstFun.checkStatus(result)) {
-        print(response);
+        // print(response);
         if (response['status']) {
           _assignedQuiz.clear();
           _publicQuiz.clear();
@@ -160,8 +161,70 @@ class MainPro with ChangeNotifier {
     }
   }
 
+  String formatDate(String date) {
+    DateTime startDate = DateTime.parse(date);
+    return format.format(startDate);
+  }
+
   String selectedQuizId;
-  void saveCurrentQuizId(String quizId) async {
+  int quizIndex;
+  dynamic selectedData;
+  void saveDataForQuestions(dynamic data) {
+    selectedData = data;
+  }
+
+  void saveCurrentQuizId({String quizId, int quizIndex}) async {
     selectedQuizId = quizId;
+    quizIndex = quizIndex;
+  }
+
+  ///QUESTION ANSWER LOGICS
+  int _seconds;
+  bool enableButton = false;
+  List<Map<String, dynamic>> answerSelections = [];
+  int get seconds {
+    if (_seconds == null) {
+      return selectedData.timePerQues;
+    }
+    return _seconds;
+  }
+
+  int _currentQuestionIndex = 0;
+  int get currentQuestionIndex {
+    return _currentQuestionIndex;
+  }
+
+  bool incrementQuestions() {
+    bool quesitonFinsh;
+    _currentQuestionIndex += 1;
+    if (_currentQuestionIndex >= selectedData.questions.length) {
+      quesitonFinsh = true;
+      _currentQuestionIndex = selectedData.questions.length - 1;
+      notifyListeners();
+      return quesitonFinsh;
+    } else {
+      quesitonFinsh = false;
+      notifyListeners();
+      return quesitonFinsh;
+    }
+  }
+
+  void enableButtonAns() {
+    enableButton = true;
+    notifyListeners();
+  }
+
+  void makeSelections(int index) {
+    final data = answerSelections.where((element) =>
+        element['quesId'] ==
+        selectedData.questions[_currentQuestionIndex].questionId);
+    if (data.isEmpty) {
+      answerSelections.add({
+        "quesId": selectedData.questions[_currentQuestionIndex].questionId,
+        "answer": selectedData.questions[_currentQuestionIndex].options[index]
+      });
+    } else {
+      print(data);
+    }
   }
 }

@@ -510,7 +510,9 @@ class ReserveSlotScreen extends StatelessWidget {
               // if payment is successful then navigate
 
               Navigator.of(context).push(CupertinoPageRoute(
-                  builder: (ctx) => LetsStartOrPlayPracticeQuiz()));
+                  builder: (ctx) => LetsStartOrPlayPracticeQuiz(
+                        data: data,
+                      )));
             },
             child: Text(
               'CONFIRM',

@@ -35,6 +35,7 @@ dependencies:
   localstorage: ^3.0.6
   intl:
   cached_network_image:
+  flutter_countdown_timer:
 
 
 

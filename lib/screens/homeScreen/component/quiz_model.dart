@@ -17,10 +17,12 @@ class QuizBox extends StatelessWidget {
   final bool isSlotBooked;
   final String totalSlots;
   final dynamic data;
+  final int quizIndex;
 
   QuizBox({
     this.reverseSlot,
     this.totalSlots,
+    this.quizIndex,
     this.data,
     this.quizId,
     this.image,
@@ -64,36 +66,36 @@ class QuizBox extends StatelessWidget {
         slots != null
             ? buildSlotsTag(mq.height * 0.062, mq.width * 0.11)
             : Container(),
-        Positioned(
-          right: mq.width * 0.055,
-          bottom: mq.height * 0.1,
-          child: GestureDetector(
-              onTap: () async {
-                bool booked = await reverseSlot(quizId);
-                print(totalSlots.toString());
-                print(slots);
+        int.parse(totalSlots) == 0
+            ? Container()
+            : Positioned(
+                right: mq.width * 0.055,
+                bottom: mq.height * 0.1,
+                child: GestureDetector(
+                    onTap: () async {
+                      bool booked = await reverseSlot(quizId, quizIndex);
 
-                Future.delayed(Duration(milliseconds: 500), () {
-                  Navigator.of(context).push(CupertinoPageRoute(
-                    builder: (ctx) => ReserveSlotScreen(
-                      isSlotBooked: booked,
-                      category: category,
-                      image: image,
-                      prize: prize,
-                      time: time,
-                      entryPrize: entryPrize,
-                      difficultyLevel:
-                          data.difficultyLevel.toString().toUpperCase(),
-                      totalSlots: totalSlots,
-                      slotsLeft: slots,
-                      data: data,
-                    ),
-                  ));
-                });
-              },
-              child: buildReserveSlot(
-                  context, mq.height * 0.055, mq.width * 0.28)),
-        ),
+                      Future.delayed(Duration(milliseconds: 500), () {
+                        Navigator.of(context).push(CupertinoPageRoute(
+                          builder: (ctx) => ReserveSlotScreen(
+                            isSlotBooked: booked,
+                            category: category,
+                            image: image,
+                            prize: prize,
+                            time: time,
+                            entryPrize: entryPrize,
+                            difficultyLevel:
+                                data.difficultyLevel.toString().toUpperCase(),
+                            totalSlots: totalSlots,
+                            slotsLeft: slots,
+                            data: data,
+                          ),
+                        ));
+                      });
+                    },
+                    child: buildReserveSlot(
+                        context, mq.height * 0.055, mq.width * 0.28)),
+              ),
         Positioned(
           top: mq.height * 0.027,
           right: mq.width * 0.08,

@@ -38,11 +38,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final res = await mainPro.getDashBoardBanner();
   }
 
-  Future<bool> checkBookingStatus(String quizId) async {
+  Future<bool> checkBookingStatus(String quizId, int quizIndex) async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     // toast("Loading...", isError: false);
     mainPro.changeLoadingState(true);
-    mainPro.saveCurrentQuizId(quizId);
+    mainPro.saveCurrentQuizId(quizId: quizId, quizIndex: quizIndex);
     final resp = await mainPro.checkQuizBookingStatus(quizId);
     mainPro.changeLoadingState(false);
 
@@ -170,6 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       quizId: data.quizId.toString(),
                                       totalSlots: data.availableSlots,
                                       data: data,
+                                      quizIndex: index,
                                     );
                                   }))
                                 ],
@@ -217,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       totalSlots:
                                           data.availableSlots.toString(),
                                       data: data,
+                                      quizIndex: index,
                                     );
                                   }))
                                 ],
