@@ -5,6 +5,7 @@ import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/question_s
 import '../../../constant.dart';
 
 class RulesScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -139,7 +140,7 @@ class RulesScreen extends StatelessWidget {
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',
-            fontSize: 28.5,
+            fontSize: 28,
           ),
         ),
       ),

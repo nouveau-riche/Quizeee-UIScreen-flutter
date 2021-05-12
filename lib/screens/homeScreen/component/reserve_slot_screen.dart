@@ -21,10 +21,7 @@ class ReserveSlotScreen extends StatelessWidget {
 
   ReserveSlotScreen(
       {this.isSlotBooked,
-
-
       this.data,
-
       this.category,
       this.image,
       this.prize,
@@ -40,50 +37,40 @@ class ReserveSlotScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: mq.height * 0.04,
-            ),
-            buildAppBar(context, mq.width * 0.045),
-            buildQuizPoster(mq),
-            slotsLeft == null
-                ? Container()
-                : buildSlotsLeftGradientBar(
-                    mq, int.parse(totalSlots), int.parse(slotsLeft)),
-            Text(
-              'PRICE BREAKDOWN',
-              style: TextStyle(
-                  color: kSecondaryColor, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: mq.height * 0.015,
-            ),
-            buildRankWisePrizeRow(),
-            Container(
-              margin: EdgeInsets.symmetric(
-                  horizontal: mq.width * 0.07, vertical: mq.height * 0.02),
-              height: 2,
-              width: mq.width,
-              color: kSecondaryColor.withOpacity(0.2),
-            ),
-            buildEntryFeeAndLevel(),
-            Container(
-              margin: EdgeInsets.symmetric(
-                  horizontal: mq.width * 0.07, vertical: mq.height * 0.02),
-              height: 2,
-              width: mq.width,
-              color: kSecondaryColor.withOpacity(0.2),
-            ),
-            isSlotBooked
-                ? buildPayNow(mq, context)
-                : buildReserveSlot(mq, context),
-            SizedBox(
-              height: mq.height * 0.015,
-            ),
-          ],
-        ),
+      body: Column(
+        children: [
+          SizedBox(
+            height: mq.height * 0.04,
+          ),
+          buildAppBar(context, mq.width * 0.045),
+          buildQuizPoster(mq),
+          slotsLeft == null
+              ? Container()
+              : buildSlotsLeftGradientBar(
+                  mq, int.parse(totalSlots), int.parse(slotsLeft)),
+          Text(
+            'PRICE BREAKDOWN',
+            style:
+                TextStyle(color: kSecondaryColor, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: mq.height * 0.015,
+          ),
+          buildRankWisePrizeRow(),
+          Spacer(),
+          buildDivider(mq),
+          buildEntryFeeAndLevel(),
+          buildDivider(mq),
+          SizedBox(
+            height: mq.height * 0.02,
+          ),
+          isSlotBooked
+              ? buildPayNow(mq, context)
+              : buildReserveSlot(mq, context),
+          SizedBox(
+            height: mq.height * 0.06,
+          ),
+        ],
       ),
     );
   }
@@ -128,7 +115,7 @@ class ReserveSlotScreen extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset('assets/images/profile.png'),
+            child: Image.asset('assets/images/rules.png'),
           ),
         ),
       ],
@@ -140,7 +127,8 @@ class ReserveSlotScreen extends StatelessWidget {
       children: [
         Container(
           height: mq.height * 0.2,
-          margin: EdgeInsets.all(mq.width * 0.055),
+          margin: EdgeInsets.symmetric(
+              vertical: mq.width * 0.055, horizontal: mq.width * 0.04),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.asset(
@@ -150,12 +138,12 @@ class ReserveSlotScreen extends StatelessWidget {
           ),
         ),
         Positioned(
-          right: mq.width * 0.1,
-          top: mq.height * 0.04,
+          right: mq.width * 0.08,
+          top: mq.height * 0.035,
           child: buildPrizeMoney(prize),
         ),
         Positioned(
-          right: mq.width * 0.06,
+          right: mq.width * 0.045,
           bottom: mq.height * 0.026,
           child: buildQuizTime(mq.height * 0.042, mq.width * 0.32),
         ),
@@ -299,46 +287,32 @@ class ReserveSlotScreen extends StatelessWidget {
     );
   }
 
+  Widget buildDivider(Size mq) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+          horizontal: mq.width * 0.07, vertical: mq.height * 0.02),
+      height: 2,
+      width: mq.width,
+      color: kSecondaryColor.withOpacity(0.2),
+    );
+  }
+
   Widget buildRankWisePrizeRow() {
     return Column(
-        children: List.generate(data.prizePool.length, (index) {
-      var prizes = data.prizePool[index];
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          buildRankList('#${prizes.rankNo} rank'),
-          buildMoney(int.parse(prizes.prize))
-        ],
-      );
-    }));
-
-    // Row(
-    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //   children: [
-    //     Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         buildRankList('#1 rank'),
-    //         buildRankList('#2nd - #3rd'),
-    //         buildRankList('#4th - #10th'),
-    //         buildRankList('#11th - #50th'),
-    //         buildRankList('#51st - #100th'),
-    //         buildRankList('#101th - #200th'),
-    //       ],
-    //     ),
-    //     Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         buildMoney(100),
-    //         buildMoney(90),
-    //         buildMoney(80),
-    //         buildMoney(60),
-    //         buildMoney(40),
-    //         buildMoney(30),
-    //       ],
-    //     ),
-    //   ],
-    // );
+      children: List.generate(
+        data.prizePool.length,
+        (index) {
+          var prizes = data.prizePool[index];
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              buildRankList('#${prizes.rankNo} rank'),
+              buildMoney(int.parse(prizes.prize))
+            ],
+          );
+        },
+      ),
+    );
   }
 
   Widget buildMoney(int money) {
@@ -488,58 +462,23 @@ class ReserveSlotScreen extends StatelessWidget {
 
       // change the padding of alert box from inside
 
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Column(
-              children: [
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'SLOT BOOKED',
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        right: BorderSide(width: 0.5, color: Colors.black26),
-                        top: BorderSide(width: 1, color: Colors.black26),
-                      ),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'BACK',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-
-                  child: ConfirmBooking(),
-
-                )
-              ],
-            ),
-          ],
+      builder: (context) => CupertinoAlertDialog(
+        content: Text(
+          'SLOT BOOKED',
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'BACK',
+              style: TextStyle(color: Colors.black54),
+            ),
+          ),
+          ConfirmBooking(),
+        ],
       ),
     );
   }
@@ -547,79 +486,38 @@ class ReserveSlotScreen extends StatelessWidget {
   buildAlertBoxForPayNow(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Column(
-              children: [
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'PAY Rs. $entryPrize/-',
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        right: BorderSide(width: 0.5, color: Colors.black26),
-                        top: BorderSide(width: 1, color: Colors.black26),
-                      ),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'DONE',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(width: 1, color: Colors.black26),
-                        left: BorderSide(width: 0.5, color: Colors.black26),
-                      ),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        // logic for slot book
-
-                        Navigator.of(context).pop();
-
-                        // if payment is successful then navigate
-
-                        Navigator.of(context).push(CupertinoPageRoute(
-                            builder: (ctx) => LetsStartOrPlayPracticeQuiz()));
-                      },
-                      child: Text(
-                        'PAY NOW',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ],
+      builder: (context) => CupertinoAlertDialog(
+        content: Text(
+          'PAY Rs. $entryPrize/-',
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'BACK',
+              style: TextStyle(color: Colors.black54),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              // logic for slot book
+
+              Navigator.of(context).pop();
+
+              // if payment is successful then navigate
+
+              Navigator.of(context).push(CupertinoPageRoute(
+                  builder: (ctx) => LetsStartOrPlayPracticeQuiz()));
+            },
+            child: Text(
+              'CONFIRM',
+              style: TextStyle(color: Colors.black54),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -647,23 +545,15 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(width: 1, color: Colors.black26),
-          left: BorderSide(width: 0.5, color: Colors.black26),
-        ),
-      ),
-      child: TextButton(
-        onPressed: () {
-          // logic for slot book
-          confirmBooking();
-          Navigator.of(context).pop();
-        },
-        child: Text(
-          'DONE',
-          style: TextStyle(color: Colors.black54),
-        ),
+    return TextButton(
+      onPressed: () {
+        // logic for slot book
+        confirmBooking();
+        Navigator.of(context).pop();
+      },
+      child: Text(
+        'DONE',
+        style: TextStyle(color: Colors.black54),
       ),
     );
   }

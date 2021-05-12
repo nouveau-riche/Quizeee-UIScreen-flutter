@@ -45,7 +45,7 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
           Spacer(),
           buildNextNow(mq, context),
           SizedBox(
-            height: mq.height * 0.1,
+            height: mq.height * 0.07,
           ),
         ],
       ),
@@ -84,7 +84,7 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset('assets/images/profile.png'),
+            child: Image.asset('assets/images/rules.png'),
           ),
         ),
       ],
@@ -132,7 +132,7 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',
-            fontSize: 30,
+            fontSize: 28,
           ),
         ),
       ),

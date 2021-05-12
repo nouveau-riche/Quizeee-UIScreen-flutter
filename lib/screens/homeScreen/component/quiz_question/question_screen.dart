@@ -22,10 +22,11 @@ class QuizQuestion extends StatelessWidget {
           height: 45,
           width: 40,
           margin: EdgeInsets.only(
-              left: mq.width * 0.024,
-              right: mq.width * 0.024,
-              top: 7,
-              bottom: 7),
+            left: mq.width * 0.024,
+            right: mq.width * 0.024,
+            top: 7,
+            bottom: 7,
+          ),
           decoration: BoxDecoration(
             color: kSecondaryColor,
             borderRadius: BorderRadius.circular(10),
@@ -133,30 +134,39 @@ class QuizQuestion extends StatelessWidget {
   }
 
   Widget buildOption(String option, Size mq) {
-    return Container(
-      height: mq.height * 0.07,
-      margin: EdgeInsets.symmetric(
-          vertical: mq.height * 0.015, horizontal: mq.width * 0.08),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            Colors.grey.withOpacity(0.2),
-            Colors.grey.withOpacity(0.1),
-          ],
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        height: mq.height * 0.07,
+        margin: EdgeInsets.symmetric(
+            vertical: mq.height * 0.015, horizontal: mq.width * 0.08),
+        decoration: BoxDecoration(
+          // add some functionality to add border and change color of text if selected
+
+          border: Border.all(width: 1, color: kPrimaryLightColor),
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Colors.grey.withOpacity(0.2),
+              Colors.grey.withOpacity(0.1),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(10),
         ),
-        borderRadius: BorderRadius.circular(10),
+        child: Center(
+            child: Text(
+          option,
+          style: TextStyle(
+            fontSize: 26,
+
+            // if selected change this color to kPrimaryLightColor
+
+            color: kSecondaryColor,
+            fontFamily: 'DebugFreeTrial',
+          ),
+        )),
       ),
-      child: Center(
-          child: Text(
-        option,
-        style: TextStyle(
-          fontSize: 26,
-          color: kSecondaryColor,
-          fontFamily: 'DebugFreeTrial',
-        ),
-      )),
     );
   }
 }
