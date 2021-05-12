@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/question_screen.dart';
 
 import '../../../constant.dart';
 
@@ -10,14 +12,15 @@ class RulesScreen extends StatelessWidget {
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
+        centerTitle: true,
         leading: Container(
           height: 45,
           width: 40,
           margin: EdgeInsets.only(
-              left: mq.width * 0.018,
-              right: mq.width * 0.018,
-              top: 4,
-              bottom: 4),
+              left: mq.width * 0.024,
+              right: mq.width * 0.024,
+              top: 7,
+              bottom: 7),
           decoration: BoxDecoration(
             color: kSecondaryColor,
             borderRadius: BorderRadius.circular(10),
@@ -57,25 +60,27 @@ class RulesScreen extends StatelessWidget {
           SizedBox(
             height: mq.height * 0.06,
           ),
-          buildRule('THERE WILL BE TOTAL 10 QUESTIONS'),
+          buildRule('THERE WILL BE TOTAL 10 QUESTIONS', mq),
           SizedBox(
             height: mq.height * 0.03,
           ),
-          buildRule('EACH QUESTION WILL BE GIVEN 10 SECONDS\nTO ANSWER'),
-          SizedBox(
-            height: mq.height * 0.03,
-          ),
-          buildRule(
-              'YOU HAVE TO SUBMIT YOUR ANSWER ONLY\nWHEN THE WINDOW IS OPEN'),
-          SizedBox(
-            height: mq.height * 0.03,
-          ),
-          buildRule('YOU CAN ONLY SUBMIT ONCE'),
+          buildRule('EACH QUESTION WILL BE GIVEN 10 SECONDS TO ANSWER', mq),
           SizedBox(
             height: mq.height * 0.03,
           ),
           buildRule(
-              'PAYMENTS WILL BE DIRECTLY CREDITED TO\nTHE WALLET OF THE USER'),
+              'YOU HAVE TO SUBMIT YOUR ANSWER ONLY WHEN THE WINDOW IS OPEN',
+              mq),
+          SizedBox(
+            height: mq.height * 0.03,
+          ),
+          buildRule('YOU CAN ONLY SUBMIT ONCE', mq),
+          SizedBox(
+            height: mq.height * 0.03,
+          ),
+          buildRule(
+              'PAYMENTS WILL BE DIRECTLY CREDITED TO THE WALLET OF THE USER',
+              mq),
           Spacer(),
           buildStartQuiz(mq, context),
           SizedBox(
@@ -86,13 +91,13 @@ class RulesScreen extends StatelessWidget {
     );
   }
 
-  Widget buildRule(String rule) {
+  Widget buildRule(String rule, Size mq) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          height: 18,
-          width: 18,
+          height: 14,
+          width: 14,
           margin: EdgeInsets.only(left: 20, right: 10),
           decoration: BoxDecoration(
             color: kPrimaryLightColor,
@@ -100,12 +105,13 @@ class RulesScreen extends StatelessWidget {
           ),
         ),
         Container(
+          width: mq.width * 0.8,
           child: Text(
             rule,
             style: TextStyle(
               fontFamily: 'DebugFreeTrial',
               color: kPrimaryLightColor,
-              fontSize: 25,
+              fontSize: 22,
             ),
           ),
         ),
@@ -124,13 +130,16 @@ class RulesScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context)
+              .push(CupertinoPageRoute(builder: (ctx) => QuizQuestion()));
+        },
         child: Text(
           'START THE QUIZ',
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',
-            fontSize: 30,
+            fontSize: 28.5,
           ),
         ),
       ),

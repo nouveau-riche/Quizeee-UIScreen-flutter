@@ -16,8 +16,7 @@ class ReserveSlotScreen extends StatelessWidget {
   final String difficultyLevel;
 
   ReserveSlotScreen(
-      {
-      this.isSlotBooked,
+      {this.isSlotBooked,
       this.category,
       this.image,
       this.prize,
@@ -373,14 +372,14 @@ class ReserveSlotScreen extends StatelessWidget {
               'ENTRY FEE',
               style: TextStyle(
                   color: kSecondaryColor,
-                  fontSize: 16,
+                  fontSize: 15.5,
                   fontWeight: FontWeight.w700),
             ),
             Text(
               'Rs. $entryPrize',
               style: TextStyle(
                   color: kPrimaryLightColor,
-                  fontSize: 32,
+                  fontSize: 28.5,
                   fontWeight: FontWeight.w700),
             ),
           ],
@@ -391,14 +390,14 @@ class ReserveSlotScreen extends StatelessWidget {
               'DIFFICULTY LEVEL',
               style: TextStyle(
                   color: kSecondaryColor,
-                  fontSize: 16,
+                  fontSize: 15.5,
                   fontWeight: FontWeight.w700),
             ),
             Text(
               difficultyLevel,
               style: TextStyle(
                   color: kPrimaryLightColor,
-                  fontSize: 32,
+                  fontSize: 28.5,
                   fontWeight: FontWeight.w700),
             ),
           ],
@@ -520,7 +519,14 @@ class ReserveSlotScreen extends StatelessWidget {
                       onPressed: () {
                         // logic for slot book
 
+                        // if successfully booked change the state of isSlotBooked variable as true
+
                         Navigator.of(context).pop();
+
+                        Navigator.of(context).push(CupertinoPageRoute(
+                            builder: (ctx) => LetsStartOrPlayPracticeQuiz()));
+
+
                       },
                       child: Text(
                         'DONE',

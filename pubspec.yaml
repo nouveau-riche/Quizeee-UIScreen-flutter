@@ -76,6 +76,9 @@ flutter:
     - assets/images/account_fill.png
     - assets/images/wallet_fill.png
     - assets/images/create_fill.png
+    - assets/images/cartoon.png
+    - assets/images/rules.png
+    - assets/images/stars.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

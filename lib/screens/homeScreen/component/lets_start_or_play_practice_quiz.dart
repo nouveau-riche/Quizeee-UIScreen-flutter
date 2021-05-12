@@ -5,6 +5,7 @@ import 'package:quizeee_ui/screens/homeScreen/component/rules_screen.dart';
 import '../../../constant.dart';
 
 class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -34,7 +35,7 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
             'Time remaining',
             style: TextStyle(
                 color: kSecondaryColor,
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: FontWeight.w600),
           ),
           SizedBox(
