@@ -181,17 +181,50 @@ class MainPro with ChangeNotifier {
   ///QUESTION ANSWER LOGICS
   int _seconds;
   bool enableButton = false;
+  int _selectedOption;
+  int get selectedOption {
+    return _selectedOption;
+  }
+
   List<Map<String, dynamic>> answerSelections = [];
   int get seconds {
     if (_seconds == null) {
+      _seconds = selectedData.timePerQues;
       return selectedData.timePerQues;
     }
     return _seconds;
   }
 
+  void decrementSeconds() {
+    _seconds -= 1;
+    notifyListeners();
+  }
+
+  void resetSeconds() {
+    _seconds = selectedData.timePerQues;
+    notifyListeners();
+  }
+
+  void resetSelectedOption() {
+    _selectedOption = null;
+    notifyListeners();
+  }
+
+  void setSelectedOption(int index) {
+    _selectedOption = index;
+  }
+
   int _currentQuestionIndex = 0;
   int get currentQuestionIndex {
     return _currentQuestionIndex;
+  }
+
+  void clearQuizData() {
+    enableButton = false;
+    _seconds = null;
+    answerSelections.clear();
+    _currentQuestionIndex = 0;
+    notifyListeners();
   }
 
   bool incrementQuestions() {
@@ -203,14 +236,15 @@ class MainPro with ChangeNotifier {
       notifyListeners();
       return quesitonFinsh;
     } else {
+      _selectedOption = null;
       quesitonFinsh = false;
       notifyListeners();
       return quesitonFinsh;
     }
   }
 
-  void enableButtonAns() {
-    enableButton = true;
+  void enableButtonAns(bool enable) {
+    enableButton = enable;
     notifyListeners();
   }
 
@@ -218,13 +252,22 @@ class MainPro with ChangeNotifier {
     final data = answerSelections.where((element) =>
         element['quesId'] ==
         selectedData.questions[_currentQuestionIndex].questionId);
+
     if (data.isEmpty) {
+      print("DATA DOESN't HAVE THIS VALUE SO ADD IT");
       answerSelections.add({
         "quesId": selectedData.questions[_currentQuestionIndex].questionId,
         "answer": selectedData.questions[_currentQuestionIndex].options[index]
       });
     } else {
-      print(data);
+      answerSelections.removeWhere((element) =>
+          element['quesId'] ==
+          selectedData.questions[_currentQuestionIndex].questionId);
+      answerSelections.add({
+        "quesId": selectedData.questions[_currentQuestionIndex].questionId,
+        "answer": selectedData.questions[_currentQuestionIndex].options[index]
+      });
+      print("DATA ALREDY HAVING THIS VALUE REPLACE IT");
     }
   }
 }

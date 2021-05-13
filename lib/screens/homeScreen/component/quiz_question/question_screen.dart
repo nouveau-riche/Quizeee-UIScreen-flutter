@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
+import 'package:quizeee_ui/screens/tabs_screen.dart';
 import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../../../constant.dart';
@@ -21,6 +23,20 @@ class QuizQuestion extends StatefulWidget {
 }
 
 class _QuizQuestionState extends State<QuizQuestion> {
+  void userExitsQuiz() {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    mainPro.clearQuizData();
+    toast("We are taking you out of the quiz!", isError: true);
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.pop(context);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mainPro = Provider.of<MainPro>(context, listen: false);
@@ -50,13 +66,14 @@ class _QuizQuestionState extends State<QuizQuestion> {
               color: kPrimaryColor,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              userExitsQuiz();
+              // Navigator.of(context).pop();
             },
           ),
         ),
         title: Consumer<MainPro>(builder: (context, mainPro, _) {
           return Text(
-            'QUIZ',
+            '${mainPro.selectedData.quizSubCategory} QUIZ',
             style: TextStyle(
               color: kSecondaryColor,
               fontFamily: 'DebugFreeTrial',
@@ -75,7 +92,8 @@ class _QuizQuestionState extends State<QuizQuestion> {
                     SizedBox(
                       height: mq.height * 0.01,
                     ),
-                    buildQuestionNumberIndicator(mq),
+                    buildQuestionNumberIndicator(mq, "${index + 1}",
+                        mainPro.selectedData.questions.length.toString()),
                     SizedBox(
                       height: mq.height * 0.1,
                     ),
@@ -84,8 +102,8 @@ class _QuizQuestionState extends State<QuizQuestion> {
                           mainPro.selectedData.questions[index].options.length,
                           (i) {
                         var questions = mainPro.selectedData.questions[index];
-                        var options = mainPro
-                            .selectedData.questions[index].options[index];
+                        var options =
+                            mainPro.selectedData.questions[index].options[i];
                         return Column(
                           children: [
                             i == 0
@@ -95,7 +113,7 @@ class _QuizQuestionState extends State<QuizQuestion> {
                                     width: mq.width * 0.7,
                                     child: Center(
                                       child: Text(
-                                        '${questions.quesText}',
+                                        'Q ${index + 1} : ${questions.quesText}',
                                         style: TextStyle(
                                             color: kPrimaryLightColor,
                                             fontSize: 16,
@@ -131,7 +149,7 @@ class _QuizQuestionState extends State<QuizQuestion> {
     );
   }
 
-  Widget buildQuestionNumberIndicator(Size mq) {
+  Widget buildQuestionNumberIndicator(Size mq, String current, String total) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +166,7 @@ class _QuizQuestionState extends State<QuizQuestion> {
           height: 4,
         ),
         Text(
-          '1 out of 10',
+          '$current out of $total',
           style: TextStyle(
               color: kPrimaryLightColor.withOpacity(0.8),
               fontSize: 12,
@@ -162,12 +180,16 @@ class _QuizQuestionState extends State<QuizQuestion> {
     return Consumer<MainPro>(builder: (context, main, _) {
       return GestureDetector(
         onTap: () {
-          if (main.enableButton) {
+          if (!main.enableButton) {
+            main.setSelectedOption(index);
             main.makeSelections(index);
-            toast("Cant select now!", isError: true);
-          } else {
-            print("Selected");
           }
+          // if (main.enableButton) {
+          //   main.makeSelections(index);
+          //   toast("Cant select now!", isError: true);
+          // } else {
+          //   print("Selected");
+          // }
         },
         child: Container(
           height: mq.height * 0.07,
@@ -176,7 +198,13 @@ class _QuizQuestionState extends State<QuizQuestion> {
           decoration: BoxDecoration(
             // add some functionality to add border and change color of text if selected
 
-            border: Border.all(width: 1, color: kPrimaryLightColor),
+            border: Border.all(
+                width: 1,
+                color: main.selectedOption != null
+                    ? main.selectedOption == index
+                        ? Colors.red
+                        : kPrimaryLightColor
+                    : kPrimaryLightColor),
             gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
@@ -216,7 +244,7 @@ class QuestionSeconds extends StatefulWidget {
 
 class _QuestionSecondsState extends State<QuestionSeconds> {
   Timer _timer;
-  int seconds = 0;
+  // int seconds = 0;
   @override
   void initState() {
     super.initState();
@@ -225,49 +253,63 @@ class _QuestionSecondsState extends State<QuestionSeconds> {
 
   void startTimmer() {
     final mainPro = Provider.of<MainPro>(context, listen: false);
-    seconds = mainPro.selectedData.timePerQues;
-    Timer.periodic(Duration(seconds: seconds), (timer) {
-      if (seconds == 0) {
+    mainPro.resetSeconds();
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (mainPro.seconds == 0) {
         timer.cancel();
         enableButton();
       } else {
-        setState(() {
-          seconds -= 1;
-        });
+        mainPro.decrementSeconds();
       }
     });
   }
 
   void enableButton() {
     final mainPro = Provider.of<MainPro>(context, listen: false);
-    mainPro.enableButtonAns();
-    toast("Times Up!", isError: true);
+    mainPro.enableButtonAns(true);
+    toast("Times Up!", isError: false);
+    // Future.delayed(Duration(seconds: 1), () {
+    if (mainPro.enableButton) {
+      if (mainPro.incrementQuestions()) {
+        if (mainPro.answerSelections.length - 1 ==
+            mainPro.currentQuestionIndex) {
+          toast("Bingo you answered all the questions!", isError: false);
+        } else {
+          toast(
+              "Quiz Completed you answered ${mainPro.answerSelections.length}",
+              isError: false);
+
+          Future.delayed(Duration(seconds: 1), () {
+            // Navigate to next Screen
+          });
+        }
+        // setState(() {});
+      } else {
+        mainPro.enableButtonAns(false);
+        print("Show must go on!!");
+        startTimmer();
+      }
+    }
+    // });
   }
+
+  // void setStateIfMounted(f) {
+  //   if (mounted) setState(() => seconds = f);
+  // }
 
   @override
   void dispose() {
+    this.deactivate();
     super.dispose();
     _timer.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MainPro, bool>(
-      selector: (context, main) => main.enableButton,
-      builder: (context, enableButton, _) => RaisedButton(
-          onPressed: () {
-            final mainPro = Provider.of<MainPro>(context, listen: false);
-
-            if (enableButton) {
-              if (mainPro.incrementQuestions()) {
-                toast("Quiz Completed!!", isError: false);
-              } else {
-                print("Show must go on!!");
-                startTimmer();
-              }
-            }
-          },
-          child: Text("${seconds}")),
+    return Selector<MainPro, int>(
+      selector: (context, main) => main.seconds,
+      builder: (context, enableButton, _) =>
+          RaisedButton(onPressed: () {}, child: Text("${enableButton}")),
     );
   }
 }
