@@ -25,9 +25,9 @@ class QuizQuestion extends StatefulWidget {
 class _QuizQuestionState extends State<QuizQuestion> {
   void userExitsQuiz() {
     final mainPro = Provider.of<MainPro>(context, listen: false);
-    mainPro.clearQuizData();
     toast("We are taking you out of the quiz!", isError: true);
     Future.delayed(Duration(seconds: 1), () {
+      mainPro.clearQuizData();
       Navigator.pop(context);
     });
   }
@@ -268,7 +268,6 @@ class _QuestionSecondsState extends State<QuestionSeconds> {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     mainPro.enableButtonAns(true);
     toast("Times Up!", isError: false);
-    // Future.delayed(Duration(seconds: 1), () {
     if (mainPro.enableButton) {
       if (mainPro.incrementQuestions()) {
         if (mainPro.answerSelections.length - 1 ==
@@ -278,24 +277,17 @@ class _QuestionSecondsState extends State<QuestionSeconds> {
           toast(
               "Quiz Completed you answered ${mainPro.answerSelections.length}",
               isError: false);
-
           Future.delayed(Duration(seconds: 1), () {
             // Navigate to next Screen
           });
         }
-        // setState(() {});
       } else {
         mainPro.enableButtonAns(false);
         print("Show must go on!!");
         startTimmer();
       }
     }
-    // });
   }
-
-  // void setStateIfMounted(f) {
-  //   if (mounted) setState(() => seconds = f);
-  // }
 
   @override
   void dispose() {
