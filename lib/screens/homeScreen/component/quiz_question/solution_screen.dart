@@ -194,77 +194,85 @@ class SolutionScreen extends StatelessWidget {
     return Container(
       height: mq.height * 0.1,
       width: mq.width * 0.25,
-      child: Stack(
-        children: [
+      child: GestureDetector(
+        onTap: (){
 
-          Container(
-            padding: EdgeInsets.all(5),
-            height: mq.height * 0.14,
-            width: mq.height * 0.14,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  kPrimaryLightColor,
-                  kPrimaryColor.withOpacity(0.3)
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: Container(
-              height: mq.height * 0.1,
-              width: mq.height * 0.1,
+
+          // launch the url for more description of the solution
+
+        },
+        child: Stack(
+          children: [
+
+            Container(
+              padding: EdgeInsets.all(5),
+              height: mq.height * 0.14,
+              width: mq.height * 0.14,
               decoration: BoxDecoration(
-                color: kPrimaryColor,
+                gradient: LinearGradient(
+                  colors: [
+                    kPrimaryLightColor,
+                    kPrimaryColor.withOpacity(0.3)
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
                 shape: BoxShape.circle,
               ),
+              child: Container(
+                height: mq.height * 0.1,
+                width: mq.height * 0.1,
+                decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
             ),
-          ),
 
-          // CircularCountDownTimer(
-          //   duration: 10,
-          //   initialDuration: 0,
-          //   controller: CountDownController(),
-          //   width: mq.width * 0.25,
-          //   height: mq.height * 0.1,
-          //   ringColor: kPrimaryLightColor,
-          //   ringGradient: LinearGradient(
-          //     colors: [
-          //       kPrimaryColor,
-          //       kPrimaryLightColor,
-          //     ],
-          //     begin: Alignment.centerLeft,
-          //     end: Alignment.centerRight,
-          //   ),
-          //   fillColor: kSecondaryColor,
-          //   fillGradient: null,
-          //   backgroundColor: kPrimaryColor,
-          //   backgroundGradient: null,
-          //   strokeWidth: 4.0,
-          //   strokeCap: StrokeCap.round,
-          //   textStyle: TextStyle(
-          //       fontSize: 33.0,
-          //       color: Colors.transparent,
-          //       fontWeight: FontWeight.bold),
-          //   textFormat: CountdownTextFormat.S,
-          //   isReverse: false,
-          //   isReverseAnimation: false,
-          //   isTimerTextShown: false,
-          //   autoStart: false,
-          //   onStart: () {},
-          //   onComplete: () {},
-          // ),
-          Align(
-            child: Text(
-              ' Check\nSolution ',
-              style: TextStyle(
-                  color: kPrimaryLightColor,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600),
+            // CircularCountDownTimer(
+            //   duration: 10,
+            //   initialDuration: 0,
+            //   controller: CountDownController(),
+            //   width: mq.width * 0.25,
+            //   height: mq.height * 0.1,
+            //   ringColor: kPrimaryLightColor,
+            //   ringGradient: LinearGradient(
+            //     colors: [
+            //       kPrimaryColor,
+            //       kPrimaryLightColor,
+            //     ],
+            //     begin: Alignment.centerLeft,
+            //     end: Alignment.centerRight,
+            //   ),
+            //   fillColor: kSecondaryColor,
+            //   fillGradient: null,
+            //   backgroundColor: kPrimaryColor,
+            //   backgroundGradient: null,
+            //   strokeWidth: 4.0,
+            //   strokeCap: StrokeCap.round,
+            //   textStyle: TextStyle(
+            //       fontSize: 33.0,
+            //       color: Colors.transparent,
+            //       fontWeight: FontWeight.bold),
+            //   textFormat: CountdownTextFormat.S,
+            //   isReverse: false,
+            //   isReverseAnimation: false,
+            //   isTimerTextShown: false,
+            //   autoStart: false,
+            //   onStart: () {},
+            //   onComplete: () {},
+            // ),
+            Align(
+              child: Text(
+                ' Check\nSolution ',
+                style: TextStyle(
+                    color: kPrimaryLightColor,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
