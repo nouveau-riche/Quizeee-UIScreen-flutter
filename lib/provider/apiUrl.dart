@@ -28,4 +28,8 @@ class ApiUrls {
   static String dashboardBanner = "get-banner-by-name/dashboard";
   static String checkBookinStatus = "check-booking-status";
   static String bookQuiz = "book-quizeee-master-quiz-slot";
+
+  //QUIZ SUBMIT
+  static String submitResult = "add-quiz-result";
+  static String getUserRank = "get-user-rank";
 }

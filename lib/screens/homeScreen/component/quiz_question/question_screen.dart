@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/tabs_screen.dart';
+import 'package:quizeee_ui/widgets/centerLoader.dart';
 import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../../../constant.dart';
+import '../../../../main.dart';
 import '../quiz_result.dart';
 
 class QuizQuestion extends StatefulWidget {
@@ -26,10 +28,8 @@ class _QuizQuestionState extends State<QuizQuestion> {
   void userExitsQuiz() {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     toast("We are taking you out of the quiz!", isError: true);
-    Future.delayed(Duration(seconds: 1), () {
-      mainPro.clearQuizData();
-      Navigator.pop(context);
-    });
+    mainPro.clearQuizData();
+    Navigator.pop(context);
   }
 
   @override
@@ -83,71 +83,85 @@ class _QuizQuestionState extends State<QuizQuestion> {
           );
         }),
       ),
-      body: Column(
-        children: [
-          Selector<MainPro, int>(
-              selector: (context, main) => main.currentQuestionIndex,
-              builder: (context, index, _) {
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: mq.height * 0.01,
-                    ),
-                    buildQuestionNumberIndicator(
-                        mq, index + 1, mainPro.selectedData.questions.length),
-                    SizedBox(
-                      height: mq.height * 0.1,
-                    ),
-                    Column(
-                      children: List.generate(
-                          mainPro.selectedData.questions[index].options.length,
-                          (i) {
-                        var questions = mainPro.selectedData.questions[index];
-                        var options =
-                            mainPro.selectedData.questions[index].options[i];
-                        return Column(
-                          children: [
-                            i == 0
-                                ? Container(
-                                    padding: EdgeInsets.only(
-                                        bottom: mq.height * 0.04),
-                                    width: mq.width * 0.7,
-                                    child: Center(
-                                      child: Text(
-                                        'Q${index + 1} : ${questions.quesText}',
-                                        style: TextStyle(
-                                            color: kPrimaryLightColor,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
-                            buildOption('$options', mq, i),
-                          ],
-                        );
-                      }),
-                    ),
-                    // Expanded(
-                    //   child: ListView.builder(
-                    //     itemBuilder: (ctx, index) => ),
-                    //     itemCount: 4,
-                    //   ),
-                    // ),
-                    SizedBox(
-                      height: mq.height * 0.04,
-                    ),
+      body: Consumer<MainPro>(
+        builder: (con, loading, _) => Stack(
+          children: [
+            Column(
+              children: [
+                Selector<MainPro, int>(
+                    selector: (context, main) => main.currentQuestionIndex,
+                    builder: (context, index, _) {
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: mq.height * 0.01,
+                          ),
+                          buildQuestionNumberIndicator(mq, index + 1,
+                              mainPro.selectedData.questions.length),
+                          SizedBox(
+                            height: mq.height * 0.1,
+                          ),
+                          Column(
+                            children: List.generate(
+                                mainPro.selectedData.questions[index].options
+                                    .length, (i) {
+                              var questions =
+                                  mainPro.selectedData.questions[index];
+                              var options = mainPro
+                                  .selectedData.questions[index].options[i];
+                              return Column(
+                                children: [
+                                  i == 0
+                                      ? Container(
+                                          padding: EdgeInsets.only(
+                                              bottom: mq.height * 0.04),
+                                          width: mq.width * 0.7,
+                                          child: Center(
+                                            child: Text(
+                                              'Q${index + 1} : ${questions.quesText}',
+                                              style: TextStyle(
+                                                  color: kPrimaryLightColor,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                  buildOption('$options', mq, i),
+                                ],
+                              );
+                            }),
+                          ),
+                          // Expanded(
+                          //   child: ListView.builder(
+                          //     itemBuilder: (ctx, index) => ),
+                          //     itemCount: 4,
+                          //   ),
+                          // ),
+                          SizedBox(
+                            height: mq.height * 0.04,
+                          ),
 
-                    // SizedBox(
-                    //   height: mq.height * 0.1,
-                    // ),
-                  ],
-                );
-              }),
-          QuestionSeconds(),
+                          // SizedBox(
+                          //   height: mq.height * 0.1,
+                          // ),
+                        ],
+                      );
+                    }),
+                QuestionSeconds(),
 
-          // SizedBox(height: mq.height*0.1,),
-        ],
+                // SizedBox(height: mq.height*0.1,),
+              ],
+            ),
+            loading.isLoading
+                ? CenterLoader(
+                    isScaffoldRequired: false,
+                  )
+                : Container(
+                    // color: Colors.transparent,
+                    )
+          ],
+        ),
       ),
     );
   }
@@ -286,6 +300,8 @@ class _QuestionSecondsState extends State<QuestionSeconds>
   }
 
   void startRolling() {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    seconds = mainPro.selectedData.timePerQues;
     _controller = AnimationController(
       duration: Duration(seconds: seconds),
       vsync: this,
@@ -309,42 +325,61 @@ class _QuestionSecondsState extends State<QuestionSeconds>
     });
   }
 
-  void enableButton() {
+  Future<void> enableButton() async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     mainPro.enableButtonAns(true);
     toast("Times Up!", isError: false);
     if (mainPro.enableButton) {
       if (mainPro.incrementQuestions()) {
-        if (mainPro.answerSelections.length - 1 ==
-            mainPro.currentQuestionIndex) {
-          toast("Bingo you answered all the questions!", isError: false);
-          Future.delayed(Duration(seconds: 1), () {
-            // Navigate to next Screen
-            Navigator.of(context).pushReplacement(
-              CupertinoPageRoute(
-                  builder: (ctx) => QuizResult(isPracticeQuiz: false)),
-            );
-          });
+        toast("Quiz Completed", isError: false);
+        mainPro.calculateTotalScore();
+        _controller.stop();
+        mainPro.changeLoadingState(true);
+        final response = await mainPro.submitQuizResult();
+        mainPro.changeLoadingState(false);
+        if (response['status']) {
+          Navigator.of(context).pushReplacement(CupertinoPageRoute(
+            builder: (ctx) => QuizResult(
+              isPracticeQuiz: false,
+            ),
+          ));
         } else {
-          toast(
-              "Quiz Completed you answered ${mainPro.answerSelections.length}",
-              isError: false);
-          Future.delayed(Duration(seconds: 1), () {
-            // Navigate to next Screen
-
-            Navigator.of(context).pushReplacement(CupertinoPageRoute(
-              builder: (ctx) => QuizResult(
-                isPracticeQuiz: false,
-              ),
-            ));
-          });
+          buildAlertBoxForPayNow(context, response['message']);
         }
+        // Navigate to next Screen
+
       } else {
         mainPro.enableButtonAns(false);
         print("Show must go on!!");
         startTimmer();
       }
     }
+  }
+
+  buildAlertBoxForPayNow(BuildContext context, String msg) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        content: Text(
+          msg,
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (ctx) => NavigateScreen()),
+                  (route) => false);
+            },
+            child: Text(
+              'OK',
+              style: TextStyle(color: Colors.black54),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -354,7 +389,6 @@ class _QuestionSecondsState extends State<QuestionSeconds>
     _controller.dispose();
     _timer.cancel();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -411,7 +445,6 @@ class _QuestionSecondsState extends State<QuestionSeconds>
                 ],
               ),
             ),
-
             Align(
               child: Text(
                 '${enableButton}s',
