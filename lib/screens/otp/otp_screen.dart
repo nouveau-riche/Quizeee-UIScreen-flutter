@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
@@ -338,7 +339,7 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget buildNextButton() {
     return Consumer<Auth>(
       builder: (con, auth, _) => auth.isLoading
-          ? CircularProgressIndicator()
+          ? SpinKitWave(color: kSecondaryColor)
           : ConstrainedBox(
               constraints: BoxConstraints.tightFor(width: 68, height: 55),
               child: ElevatedButton(

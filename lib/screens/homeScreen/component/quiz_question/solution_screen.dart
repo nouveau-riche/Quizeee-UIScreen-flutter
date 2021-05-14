@@ -196,6 +196,32 @@ class SolutionScreen extends StatelessWidget {
       width: mq.width * 0.25,
       child: Stack(
         children: [
+
+          Container(
+            padding: EdgeInsets.all(5),
+            height: mq.height * 0.14,
+            width: mq.height * 0.14,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  kPrimaryLightColor,
+                  kPrimaryColor.withOpacity(0.3)
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              shape: BoxShape.circle,
+            ),
+            child: Container(
+              height: mq.height * 0.1,
+              width: mq.height * 0.1,
+              decoration: BoxDecoration(
+                color: kPrimaryColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+
           // CircularCountDownTimer(
           //   duration: 10,
           //   initialDuration: 0,
@@ -231,10 +257,10 @@ class SolutionScreen extends StatelessWidget {
           // ),
           Align(
             child: Text(
-              ' Check\nSolution',
+              ' Check\nSolution ',
               style: TextStyle(
                   color: kPrimaryLightColor,
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.w600),
             ),
           ),

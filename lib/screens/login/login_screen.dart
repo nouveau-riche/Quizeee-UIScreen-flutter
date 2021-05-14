@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:quizeee_ui/provider/initialPro.dart';
 import 'package:quizeee_ui/provider/states.dart';
@@ -139,9 +140,6 @@ class LoginScreen extends StatelessWidget {
                 height: mq.height * 0.035,
               ),
               buildNextButton(context),
-
-
-
             ],
           ),
         ),
@@ -210,7 +208,7 @@ class LoginScreen extends StatelessWidget {
   Widget buildNextButton(BuildContext context) {
     return Consumer<Auth>(
       builder: (con, auth, _) => auth.isLoading
-          ? CircularProgressIndicator()
+          ? SpinKitWave(color: kSecondaryColor)
           : ConstrainedBox(
               constraints: const BoxConstraints.tightFor(width: 68, height: 55),
               child: ElevatedButton(

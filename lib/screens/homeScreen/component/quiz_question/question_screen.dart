@@ -277,7 +277,7 @@ class _QuestionSecondsState extends State<QuestionSeconds>
   AnimationController _controller;
   Animation _animation;
 
-  int seconds = 5; // change
+  int seconds = 5 + 1; // change this duration according to api and + 1
   @override
   void initState() {
     super.initState();
