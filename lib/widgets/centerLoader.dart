@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../constant.dart';
 
 class CenterLoader extends StatelessWidget {
   bool isScaffoldRequired;
+
   CenterLoader({
     @required this.isScaffoldRequired,
     Key key,
@@ -35,15 +37,17 @@ class CenterLoader extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              CircularProgressIndicator(),
+              SpinKitWave(color: kSecondaryColor),
               Spacer(),
-              Text("Loading....",
-                  style: TextStyle(
-                    color: kTextColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'SairaStencilOne',
-                  )),
+              Text(
+                "Loading....",
+                style: TextStyle(
+                  color: kTextColor,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'DebugFreeTrial',
+                ),
+              ),
               SizedBox(
                 height: 10,
               )

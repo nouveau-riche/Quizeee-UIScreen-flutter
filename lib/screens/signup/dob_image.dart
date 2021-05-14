@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -296,7 +297,7 @@ class _DOBImageState extends State<DOBImage> {
             ),
             Consumer<Auth>(
               builder: (con, auth, _) => auth.isLoading
-                  ? CircularProgressIndicator()
+                  ? SpinKitWave(color: kSecondaryColor)
                   : ConstrainedBox(
                       constraints:
                           BoxConstraints.tightFor(width: 68, height: 55),
@@ -318,6 +319,8 @@ class _DOBImageState extends State<DOBImage> {
                       ),
                     ),
             ),
+            SizedBox(height: mq.height*0.02,),
+
           ],
         ),
       ),
