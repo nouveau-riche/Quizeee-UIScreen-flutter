@@ -8,7 +8,7 @@ import 'package:quizeee_ui/screens/tabs_screen.dart';
 import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../../../constant.dart';
-import 'timer_animation.dart';
+import '../quiz_result.dart';
 
 class QuizQuestion extends StatefulWidget {
   final MainPro mainPro;
@@ -46,6 +46,7 @@ class _QuizQuestionState extends State<QuizQuestion> {
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
+        elevation: 0,
         centerTitle: true,
         leading: Container(
           height: 45,
@@ -92,8 +93,8 @@ class _QuizQuestionState extends State<QuizQuestion> {
                     SizedBox(
                       height: mq.height * 0.01,
                     ),
-                    buildQuestionNumberIndicator(mq, "${index + 1}",
-                        mainPro.selectedData.questions.length.toString()),
+                    buildQuestionNumberIndicator(
+                        mq, index + 1, mainPro.selectedData.questions.length),
                     SizedBox(
                       height: mq.height * 0.1,
                     ),
@@ -113,7 +114,7 @@ class _QuizQuestionState extends State<QuizQuestion> {
                                     width: mq.width * 0.7,
                                     child: Center(
                                       child: Text(
-                                        'Q ${index + 1} : ${questions.quesText}',
+                                        'Q${index + 1} : ${questions.quesText}',
                                         style: TextStyle(
                                             color: kPrimaryLightColor,
                                             fontSize: 16,
@@ -137,19 +138,24 @@ class _QuizQuestionState extends State<QuizQuestion> {
                       height: mq.height * 0.04,
                     ),
 
-                    SizedBox(
-                      height: mq.height * 0.1,
-                    ),
+                    // SizedBox(
+                    //   height: mq.height * 0.1,
+                    // ),
                   ],
                 );
               }),
           QuestionSeconds(),
+
+          // SizedBox(height: mq.height*0.1,),
         ],
       ),
     );
   }
 
-  Widget buildQuestionNumberIndicator(Size mq, String current, String total) {
+  Widget buildQuestionNumberIndicator(Size mq, int current, int total) {
+    int percentage = (100 * current) ~/ total;
+    print(percentage);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,7 +165,27 @@ class _QuizQuestionState extends State<QuizQuestion> {
           width: mq.width * 0.88,
           decoration: BoxDecoration(
             color: kSecondaryColor.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(2),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: ((mq.width * 0.88 * percentage) ~/ 100).toDouble(),
+                height: 4,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(2),
+                      bottomRight: Radius.circular(2)),
+                  gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        kPrimaryLightColor.withOpacity(0.1),
+                        kPrimaryLightColor
+                      ]),
+                ),
+              ),
+            ],
           ),
         ),
         SizedBox(
@@ -198,13 +224,13 @@ class _QuizQuestionState extends State<QuizQuestion> {
           decoration: BoxDecoration(
             // add some functionality to add border and change color of text if selected
 
-            border: Border.all(
-                width: 1,
-                color: main.selectedOption != null
-                    ? main.selectedOption == index
-                        ? Colors.red
-                        : kPrimaryLightColor
-                    : kPrimaryLightColor),
+            border: main.selectedOption != null
+                ? Border.all(
+                    width: 1.5,
+                    color: main.selectedOption == index
+                        ? kPrimaryLightColor
+                        : Colors.transparent)
+                : Border.all(color: Colors.transparent),
             gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
@@ -223,7 +249,9 @@ class _QuizQuestionState extends State<QuizQuestion> {
 
               // if selected change this color to kPrimaryLightColor
 
-              color: kSecondaryColor,
+              color: main.selectedOption == index
+                  ? kPrimaryLightColor
+                  : kSecondaryColor,
               fontFamily: 'DebugFreeTrial',
             ),
           )),
@@ -242,13 +270,30 @@ class QuestionSeconds extends StatefulWidget {
   _QuestionSecondsState createState() => _QuestionSecondsState();
 }
 
-class _QuestionSecondsState extends State<QuestionSeconds> {
+class _QuestionSecondsState extends State<QuestionSeconds>
+    with SingleTickerProviderStateMixin {
   Timer _timer;
-  // int seconds = 0;
+
+  AnimationController _controller;
+  Animation _animation;
+
+  int seconds = 5; // change
   @override
   void initState() {
     super.initState();
+    startRolling();
     startTimmer();
+  }
+
+  void startRolling() {
+    _controller = AnimationController(
+      duration: Duration(seconds: seconds),
+      vsync: this,
+    )..repeat();
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.linear,
+    );
   }
 
   void startTimmer() {
@@ -273,12 +318,25 @@ class _QuestionSecondsState extends State<QuestionSeconds> {
         if (mainPro.answerSelections.length - 1 ==
             mainPro.currentQuestionIndex) {
           toast("Bingo you answered all the questions!", isError: false);
+          Future.delayed(Duration(seconds: 1), () {
+            // Navigate to next Screen
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                  builder: (ctx) => QuizResult(isPracticeQuiz: false)),
+            );
+          });
         } else {
           toast(
               "Quiz Completed you answered ${mainPro.answerSelections.length}",
               isError: false);
           Future.delayed(Duration(seconds: 1), () {
             // Navigate to next Screen
+
+            Navigator.of(context).pushReplacement(CupertinoPageRoute(
+              builder: (ctx) => QuizResult(
+                isPracticeQuiz: false,
+              ),
+            ));
           });
         }
       } else {
@@ -293,15 +351,79 @@ class _QuestionSecondsState extends State<QuestionSeconds> {
   void dispose() {
     this.deactivate();
     super.dispose();
+    _controller.dispose();
     _timer.cancel();
   }
 
+
   @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context).size;
     return Selector<MainPro, int>(
       selector: (context, main) => main.seconds,
-      builder: (context, enableButton, _) =>
-          RaisedButton(onPressed: () {}, child: Text("${enableButton}")),
+      builder: (context, enableButton, _) => Container(
+        height: mq.height * 0.1,
+        width: mq.width * 0.25,
+        child: Stack(
+          children: [
+            RotationTransition(
+              turns: _animation,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    height: mq.height * 0.14,
+                    width: mq.height * 0.14,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          kPrimaryLightColor,
+                          kPrimaryColor.withOpacity(0.3)
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Container(
+                      height: mq.height * 0.1,
+                      width: mq.height * 0.1,
+                      decoration: BoxDecoration(
+                        color: kPrimaryColor,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: -4,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 10,
+                      width: 10,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: kPrimaryLightColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            Align(
+              child: Text(
+                '${enableButton}s',
+                style: TextStyle(
+                    color: kPrimaryLightColor,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

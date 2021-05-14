@@ -160,7 +160,7 @@ class ReserveSlotScreen extends StatelessWidget {
               color: kPrimaryLightColor,
               fontFamily: 'DebugFreeTrial',
               fontWeight: FontWeight.w500,
-              fontSize: 24),
+              fontSize: 22),
         ),
         Text(
           'RS. $prize/  ',
@@ -168,7 +168,7 @@ class ReserveSlotScreen extends StatelessWidget {
               color: kPrimaryLightColor,
               fontFamily: 'DebugFreeTrial',
               fontWeight: FontWeight.w500,
-              fontSize: 24),
+              fontSize: 22),
         )
       ],
     );
@@ -227,14 +227,11 @@ class ReserveSlotScreen extends StatelessWidget {
                 width: ((mq.width * 0.65 * percentage) ~/ 100).toDouble(),
                 height: 7,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
                   gradient: LinearGradient(
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       colors: [
-                        kSecondaryColor.withOpacity(0.4),
+                        kPrimaryLightColor.withOpacity(0.1),
                         kPrimaryLightColor
                       ]),
                 ),
@@ -337,8 +334,8 @@ class ReserveSlotScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            height: 35,
-            width: 35,
+            height: 30,
+            width: 30,
             child: Image.asset(
               'assets/images/cup.png',
               fit: BoxFit.cover,
@@ -423,7 +420,7 @@ class ReserveSlotScreen extends StatelessWidget {
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',
-            fontSize: 30,
+            fontSize: 28,
           ),
         ),
       ),
@@ -449,7 +446,7 @@ class ReserveSlotScreen extends StatelessWidget {
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',
-            fontSize: 30,
+            fontSize: 28,
           ),
         ),
       ),
@@ -459,8 +456,6 @@ class ReserveSlotScreen extends StatelessWidget {
   buildAlertBoxForSlotBook(BuildContext context, Size mq) {
     showDialog(
       context: context,
-
-      // change the padding of alert box from inside
 
       builder: (context) => CupertinoAlertDialog(
         content: Text(
@@ -509,10 +504,13 @@ class ReserveSlotScreen extends StatelessWidget {
 
               // if payment is successful then navigate
 
-              Navigator.of(context).push(CupertinoPageRoute(
+              Navigator.of(context).push(
+                CupertinoPageRoute(
                   builder: (ctx) => LetsStartOrPlayPracticeQuiz(
-                        data: data,
-                      )));
+                    data: data,
+                  ),
+                ),
+              );
             },
             child: Text(
               'CONFIRM',

@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final mq = MediaQuery.of(context).size;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: kPrimaryColor,
+        statusBarColor: kSecondaryColor,
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(

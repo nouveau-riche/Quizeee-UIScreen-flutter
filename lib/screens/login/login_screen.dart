@@ -139,6 +139,9 @@ class LoginScreen extends StatelessWidget {
                 height: mq.height * 0.035,
               ),
               buildNextButton(context),
+
+
+
             ],
           ),
         ),

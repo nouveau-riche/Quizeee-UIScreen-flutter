@@ -1,9 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizeee_ui/main.dart';
+import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/solution_screen.dart';
+import 'package:quizeee_ui/screens/tabs_screen.dart';
 
 import '../../../constant.dart';
 
 class QuizResult extends StatelessWidget {
   final bool isPracticeQuiz;
+
+  // final int pointsScored;
+  // final int totalPoints;
 
   QuizResult({this.isPracticeQuiz});
 
@@ -15,6 +22,7 @@ class QuizResult extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
         centerTitle: true,
+        elevation: 0,
         leading: Container(
           height: 45,
           width: 40,
@@ -211,7 +219,7 @@ class QuizResult extends StatelessWidget {
   Widget buildPlayAgain(Size mq, BuildContext context) {
     return SizedBox(
       height: mq.height * 0.058,
-      width: mq.width * 0.42,
+      width: mq.width * 0.45,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           primary: kSecondaryColor,
@@ -225,7 +233,7 @@ class QuizResult extends StatelessWidget {
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
       ),
@@ -235,7 +243,7 @@ class QuizResult extends StatelessWidget {
   Widget buildBackToQuiz(Size mq, BuildContext context) {
     return SizedBox(
       height: mq.height * 0.058,
-      width: mq.width * 0.42,
+      width: mq.width * 0.45,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           primary: kSecondaryColor,
@@ -247,7 +255,7 @@ class QuizResult extends StatelessWidget {
         child: Text(
           'BACK TO QUIZ',
           style: TextStyle(
-              color: kPrimaryColor, fontFamily: 'DebugFreeTrial', fontSize: 20),
+              color: kPrimaryColor, fontFamily: 'DebugFreeTrial', fontSize: 18),
         ),
       ),
     );
@@ -256,7 +264,7 @@ class QuizResult extends StatelessWidget {
   Widget buildPlayMoreQuiz(Size mq, BuildContext context) {
     return SizedBox(
       height: mq.height * 0.058,
-      width: mq.width * 0.42,
+      width: mq.width * 0.45,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           primary: kSecondaryColor,
@@ -264,11 +272,15 @@ class QuizResult extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (ctx) => NavigateScreen()),
+              (route) => false);
+        },
         child: Text(
           'PLAY MORE QUIZ',
           style: TextStyle(
-              color: kPrimaryColor, fontFamily: 'DebugFreeTrial', fontSize: 20),
+              color: kPrimaryColor, fontFamily: 'DebugFreeTrial', fontSize: 18),
         ),
       ),
     );
@@ -277,7 +289,7 @@ class QuizResult extends StatelessWidget {
   Widget buildReviewSolution(Size mq, BuildContext context) {
     return SizedBox(
       height: mq.height * 0.058,
-      width: mq.width * 0.42,
+      width: mq.width * 0.45,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           primary: kSecondaryColor,
@@ -285,11 +297,17 @@ class QuizResult extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (ctx) => SolutionScreen(),
+            ),
+          );
+        },
         child: Text(
           'REVIEW SOLUTIONS',
           style: TextStyle(
-              color: kPrimaryColor, fontFamily: 'DebugFreeTrial', fontSize: 20),
+              color: kPrimaryColor, fontFamily: 'DebugFreeTrial', fontSize: 18),
         ),
       ),
     );

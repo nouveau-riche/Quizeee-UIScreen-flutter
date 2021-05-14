@@ -78,18 +78,18 @@ class _NavigateScreenState extends State<NavigateScreen> {
         Navigator.pushAndRemoveUntil(
             context,
             CupertinoPageRoute(builder: (context) => TabMainScreen()),
-            (route) => false);
+                (route) => false);
       } else {
         Navigator.pushAndRemoveUntil(
             context,
             CupertinoPageRoute(builder: (context) => LoginScreen()),
-            (route) => false);
+                (route) => false);
       }
     } else {
       Navigator.pushAndRemoveUntil(
           context,
           CupertinoPageRoute(builder: (context) => LoginScreen()),
-          (route) => false);
+              (route) => false);
     }
   }
 
@@ -98,15 +98,16 @@ class _NavigateScreenState extends State<NavigateScreen> {
     return Scaffold(
       body: Container(
         child: FutureBuilder(
-            future: checkLogin(),
-            builder: (con, snap) => Stack(
-                  children: [
-                    LoginScreen(),
-                    CenterLoader(
-                      isScaffoldRequired: false,
-                    )
-                  ],
-                )),
+          future: checkLogin(),
+          builder: (con, snap) =>
+              Stack(
+                children: [
+                  LoginScreen(),
+                  CenterLoader(
+                    isScaffoldRequired: false,
+                  )
+                ],
+              ),),
       ),
     );
   }
