@@ -55,7 +55,7 @@ class MainPro with ChangeNotifier {
           headers: ApiUrls.headers, body: json.encode(body));
       final response = json.decode(result.body) as Map<String, dynamic>;
       if (ConstFun.checkStatus(result)) {
-        // print(response);
+        // // print(response);
         if (response['status']) {
           _assignedQuiz.clear();
           _publicQuiz.clear();
@@ -124,6 +124,62 @@ class MainPro with ChangeNotifier {
     }
   }
 
+  // score send count of correct answer
+
+  Future<Map<String, dynamic>> submitQuizResult() async {
+    try {
+      final userId = await ConstFun.getKeyValue("userId", _auth.storage);
+      var body = {
+        "userId": _auth.userModel[0].userId,
+        "quizId": selectedData.quizId.toString(),
+        "score": score,
+        "responseTime": responseTime
+      };
+      final result = await http.post(
+        ApiUrls.baseUrl + ApiUrls.submitResult,
+        body: json.encode(body),
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {
+        // calling get rank api here
+        final responseData = await getUserRank();
+        return responseData;
+      }
+
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserRank() async {
+    try {
+      final userId = await ConstFun.getKeyValue("userId", _auth.storage);
+      var body = {
+        "userId": _auth.userModel[0].userId,
+        "quizId": selectedData.quizId.toString(),
+        "endDate": selectedData.endDate == ""
+            ? null
+            : DateTime.parse(selectedData.endDate).toIso8601String(),
+        "endTime": selectedData.endTime == "" ? null : selectedData.endTime,
+      };
+      final result = await http.post(
+        ApiUrls.baseUrl + ApiUrls.getUserRank,
+        body: json.encode(body),
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+
+      return response;
+    } catch (e) {
+      // print(e.toString());
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
   Future<Map<String, dynamic>> bookAQuiz(String quizId) async {
     try {
       final userId = await ConstFun.getKeyValue("userId", _auth.storage);
@@ -157,7 +213,7 @@ class MainPro with ChangeNotifier {
         return format.format(startDate);
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -180,8 +236,11 @@ class MainPro with ChangeNotifier {
 
   ///QUESTION ANSWER LOGICS
   int _seconds;
+  int _perQuestionAnswerSeconds = 0;
   bool enableButton = false;
   int _selectedOption;
+  bool showSolutions = false;
+
   int get selectedOption {
     return _selectedOption;
   }
@@ -197,11 +256,13 @@ class MainPro with ChangeNotifier {
 
   void decrementSeconds() {
     _seconds -= 1;
+    _perQuestionAnswerSeconds += 1;
     notifyListeners();
   }
 
   void resetSeconds() {
     _seconds = selectedData.timePerQues;
+    _perQuestionAnswerSeconds = 0;
     notifyListeners();
   }
 
@@ -212,6 +273,7 @@ class MainPro with ChangeNotifier {
 
   void setSelectedOption(int index) {
     _selectedOption = index;
+    notifyListeners();
   }
 
   int _currentQuestionIndex = 0;
@@ -219,10 +281,18 @@ class MainPro with ChangeNotifier {
     return _currentQuestionIndex;
   }
 
+  void showAnswer(bool val) {
+    showSolutions = val;
+    notifyListeners();
+  }
+
   void clearQuizData() {
     enableButton = false;
     _seconds = null;
-    answerSelections.clear();
+    _perQuestionAnswerSeconds = 0;
+    _selectedOption = null;
+    showSolutions = false;
+    // answerSelections.clear();
     _currentQuestionIndex = 0;
     notifyListeners();
   }
@@ -248,26 +318,70 @@ class MainPro with ChangeNotifier {
     notifyListeners();
   }
 
-  void makeSelections(int index) {
-    final data = answerSelections.where((element) =>
-        element['quesId'] ==
-        selectedData.questions[_currentQuestionIndex].questionId);
+  int score = 0;
+  int responseTime = 0;
+  void calculateTotalScore() {
+    answerSelections.forEach((element) {
+      if (element['rightAnswer']) {
+        score += 1;
+        responseTime = element['second'] + responseTime;
+      }
+    });
+    // print("SCORE : $score");
+    // print("RESPONSE TIME : $responseTime");
+  }
 
-    if (data.isEmpty) {
-      print("DATA DOESN't HAVE THIS VALUE SO ADD IT");
+  void intializeAnswersList() {
+    answerSelections.clear();
+    _perQuestionAnswerSeconds = 0;
+    score = 0;
+    for (int i = 0; i < selectedData.questions.length; i++) {
       answerSelections.add({
-        "quesId": selectedData.questions[_currentQuestionIndex].questionId,
-        "answer": selectedData.questions[_currentQuestionIndex].options[index]
+        "quesId": "",
+        "answer": "",
+        "second": 0,
+        "answerIndex": "",
+        "rightAnswer": false
       });
-    } else {
-      answerSelections.removeWhere((element) =>
-          element['quesId'] ==
-          selectedData.questions[_currentQuestionIndex].questionId);
-      answerSelections.add({
-        "quesId": selectedData.questions[_currentQuestionIndex].questionId,
-        "answer": selectedData.questions[_currentQuestionIndex].options[index]
-      });
-      print("DATA ALREDY HAVING THIS VALUE REPLACE IT");
     }
+  }
+
+  void makeSelections(int index) {
+    answerSelections[_currentQuestionIndex]['quesId'] =
+        selectedData.questions[_currentQuestionIndex].questionId;
+    answerSelections[_currentQuestionIndex]['answer'] =
+        selectedData.questions[_currentQuestionIndex].options[index];
+    answerSelections[_currentQuestionIndex]['second'] =
+        _perQuestionAnswerSeconds;
+    answerSelections[_currentQuestionIndex]['answerIndex'] = index;
+    answerSelections[_currentQuestionIndex]['rightAnswer'] =
+        selectedData.questions[_currentQuestionIndex].rightOption == index;
+    notifyListeners();
+
+    // final data = answerSelections.where((element) =>
+    //     element['quesId'] ==
+    //     selectedData.questions[_currentQuestionIndex].questionId);
+
+    // if (data.isEmpty) {
+    //   // print("DATA DOESN't HAVE THIS VALUE SO ADD IT");
+    //   answerSelections.add({
+    //     "quesId": selectedData.questions[_currentQuestionIndex].questionId,
+    //     "answer": selectedData.questions[_currentQuestionIndex].options[index],
+    //     "second": _seconds,
+    //     "answerIndex": index
+    //   });
+    // } else {
+    //   answerSelections.removeWhere((element) =>
+    //       element['quesId'] ==
+    //       selectedData.questions[_currentQuestionIndex].questionId);
+    //   answerSelections.add({
+    //     "quesId": selectedData.questions[_currentQuestionIndex].questionId,
+    //     "answer": selectedData.questions[_currentQuestionIndex].options[index],
+    //     "second": _seconds,
+    //     "answerIndex": index
+    //   });
+    //   // print("DATA ALREDY HAVING THIS VALUE REPLACE IT");
+    // }
+    // print(answerSelections);
   }
 }

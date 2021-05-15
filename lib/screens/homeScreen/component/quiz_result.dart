@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quizeee_ui/main.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/solution_screen.dart';
 import 'package:quizeee_ui/screens/tabs_screen.dart';
 
@@ -298,6 +300,7 @@ class QuizResult extends StatelessWidget {
           ),
         ),
         onPressed: () {
+          Provider.of<MainPro>(context, listen: false).clearQuizData();
           Navigator.of(context).push(
             CupertinoPageRoute(
               builder: (ctx) => SolutionScreen(),
