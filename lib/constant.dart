@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 const kPrimaryColor = Color(0xFF00303F); // dark blakish green
 const kPrimaryLightColor = Color.fromRGBO(254, 180, 35, 1); // Yellow + little orange
 
+const kNotificationColor = Color.fromRGBO(71,112,118,1);
+
 const kResultColor = Colors.yellow;
 
 const kPrimaryGradientColor = LinearGradient(
