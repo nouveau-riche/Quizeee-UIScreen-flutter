@@ -239,6 +239,8 @@ class MainPro with ChangeNotifier {
   int _perQuestionAnswerSeconds = 0;
   bool enableButton = false;
   int _selectedOption;
+  bool showSolutions = false;
+
   int get selectedOption {
     return _selectedOption;
   }
@@ -271,6 +273,7 @@ class MainPro with ChangeNotifier {
 
   void setSelectedOption(int index) {
     _selectedOption = index;
+    notifyListeners();
   }
 
   int _currentQuestionIndex = 0;
@@ -278,12 +281,18 @@ class MainPro with ChangeNotifier {
     return _currentQuestionIndex;
   }
 
+  void showAnswer(bool val) {
+    showSolutions = val;
+    notifyListeners();
+  }
+
   void clearQuizData() {
     enableButton = false;
     _seconds = null;
     _perQuestionAnswerSeconds = 0;
     _selectedOption = null;
-    answerSelections.clear();
+    showSolutions = false;
+    // answerSelections.clear();
     _currentQuestionIndex = 0;
     notifyListeners();
   }
@@ -347,6 +356,7 @@ class MainPro with ChangeNotifier {
     answerSelections[_currentQuestionIndex]['answerIndex'] = index;
     answerSelections[_currentQuestionIndex]['rightAnswer'] =
         selectedData.questions[_currentQuestionIndex].rightOption == index;
+    notifyListeners();
 
     // final data = answerSelections.where((element) =>
     //     element['quesId'] ==

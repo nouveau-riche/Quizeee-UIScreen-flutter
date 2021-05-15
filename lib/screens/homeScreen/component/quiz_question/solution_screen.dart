@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
+import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../../../constant.dart';
 
@@ -36,73 +39,120 @@ class SolutionScreen extends StatelessWidget {
             },
           ),
         ),
-        title: Text(
-          'Solution 1', // change count dynamically
-          style: TextStyle(
-            color: kSecondaryColor,
-            fontFamily: 'DebugFreeTrial',
-            fontSize: 30,
+        title: Consumer<MainPro>(
+          builder: (con, mainPro, _) => Text(
+            'Solution ${mainPro.currentQuestionIndex + 1}', // change count dynamically
+            style: TextStyle(
+              color: kSecondaryColor,
+              fontFamily: 'DebugFreeTrial',
+              fontSize: 30,
+            ),
           ),
         ),
         actions: [
-          Container(
-            height: 45,
-            width: 40,
-            margin: EdgeInsets.only(
-              left: mq.width * 0.024,
-              right: mq.width * 0.024,
-              top: 7,
-              bottom: 7,
-            ),
-            decoration: BoxDecoration(
-              color: kSecondaryColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: IconButton(
-              icon: Icon(
-                Icons.arrow_forward_ios_outlined,
-                color: kPrimaryColor,
+          Consumer<MainPro>(
+            builder: (con, mainPro, _) => Container(
+              height: 45,
+              width: 40,
+              margin: EdgeInsets.only(
+                left: mq.width * 0.024,
+                right: mq.width * 0.024,
+                top: 7,
+                bottom: 7,
               ),
-              onPressed: () {
-                // change question
-              },
+              decoration: BoxDecoration(
+                color: kSecondaryColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_forward_ios_outlined,
+                  color: kPrimaryColor,
+                ),
+                onPressed: () {
+                  mainPro.showAnswer(false);
+
+                  if (mainPro.incrementQuestions()) {
+                    toast("End", isError: true);
+                  }
+                  // change question
+                },
+              ),
             ),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: mq.height * 0.01,
-          ),
-          buildQuestionNumberIndicator(mq, 1, 10),
-          SizedBox(
-            height: mq.height * 0.1,
-          ),
-          Text(
-            'Q1. Which one is an Indian city?',
-            style: TextStyle(
-                color: kPrimaryLightColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: mq.height * 0.02,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (ctx, index) => buildOption('Jaipur', mq),
-              itemCount: 4,
+      body: Consumer<MainPro>(
+        builder: (context, mainPro, _) => Column(
+          children: [
+            SizedBox(
+              height: mq.height * 0.01,
             ),
-          ),
-          SizedBox(
-            height: mq.height * 0.04,
-          ),
-          buildCheckSolution(mq),
-          SizedBox(
-            height: mq.height * 0.05,
-          ),
-        ],
+            buildQuestionNumberIndicator(mq, mainPro.currentQuestionIndex + 1,
+                mainPro.selectedData.questions.length),
+            SizedBox(
+              height: mq.height * 0.1,
+            ),
+            // Text(
+            //   'Q${mainPro.currentQuestionIndex + 1}. Which one is an Indian city?',
+            //   style: TextStyle(
+            //       color: kPrimaryLightColor,
+            //       fontSize: 16,
+            //       fontWeight: FontWeight.w600),
+            // ),
+            // SizedBox(
+            //   height: mq.height * 0.02,
+            // ),
+            // Expanded(
+            //   child: ListView.builder(
+            //     itemBuilder: (ctx, mainPro.currentQuestionIndex) => buildOption('Jaipur', mq),
+            //     itemCount: 4,
+            //   ),
+            // ),
+            Column(
+              children: List.generate(
+                  mainPro.selectedData.questions[mainPro.currentQuestionIndex]
+                      .options.length, (i) {
+                var questions = mainPro
+                    .selectedData.questions[mainPro.currentQuestionIndex];
+                var options = mainPro.selectedData
+                    .questions[mainPro.currentQuestionIndex].options[i];
+                return Column(
+                  children: [
+                    i == 0
+                        ? Container(
+                            padding: EdgeInsets.only(bottom: mq.height * 0.04),
+                            width: mq.width * 0.7,
+                            child: Center(
+                              child: Text(
+                                'Q${mainPro.currentQuestionIndex + 1} : ${questions.quesText}',
+                                style: TextStyle(
+                                    color: kPrimaryLightColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    buildOption(
+                      '$options',
+                      mq,
+                      i,
+                      mainPro,
+                    ),
+                  ],
+                );
+              }),
+            ),
+            SizedBox(
+              height: mq.height * 0.04,
+            ),
+            buildCheckSolution(mq, mainPro),
+            SizedBox(
+              height: mq.height * 0.05,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -157,14 +207,33 @@ class SolutionScreen extends StatelessWidget {
     );
   }
 
-  Widget buildOption(String option, Size mq) {
+  Widget buildOption(String option, Size mq, int index, MainPro main) {
+    // selected answer index
+    int selectedAnswer =
+        main.answerSelections[main.currentQuestionIndex]['answerIndex'];
+    bool isCorrect =
+        main.selectedData.questions[main.currentQuestionIndex].rightOption ==
+            index;
+
     return Container(
       height: mq.height * 0.07,
       margin: EdgeInsets.symmetric(
           vertical: mq.height * 0.015, horizontal: mq.width * 0.08),
       decoration: BoxDecoration(
         // add some functionality to add border and change color of text if selected
-
+        border: main.showSolutions
+            ? isCorrect
+                ? Border.all(width: 1.5, color: Colors.green)
+                : Border.all(
+                    width: 1.5,
+                    color: selectedAnswer == index
+                        ? kPrimaryLightColor
+                        : Colors.transparent)
+            : Border.all(
+                width: 1.5,
+                color: selectedAnswer == index
+                    ? kPrimaryLightColor
+                    : Colors.transparent),
         gradient: LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
@@ -190,30 +259,28 @@ class SolutionScreen extends StatelessWidget {
     );
   }
 
-  Widget buildCheckSolution(Size mq) {
+  Widget buildCheckSolution(Size mq, MainPro main) {
     return Container(
       height: mq.height * 0.1,
       width: mq.width * 0.25,
       child: GestureDetector(
-        onTap: (){
-
-
+        onTap: () {
           // launch the url for more description of the solution
-
+          if (main.showSolutions) {
+            main.showAnswer(false);
+          } else {
+            main.showAnswer(true);
+          }
         },
         child: Stack(
           children: [
-
             Container(
               padding: EdgeInsets.all(5),
               height: mq.height * 0.14,
               width: mq.height * 0.14,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    kPrimaryLightColor,
-                    kPrimaryColor.withOpacity(0.3)
-                  ],
+                  colors: [kPrimaryLightColor, kPrimaryColor.withOpacity(0.3)],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),

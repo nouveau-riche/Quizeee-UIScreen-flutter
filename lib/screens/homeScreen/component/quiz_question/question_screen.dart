@@ -39,8 +39,8 @@ class _QuizQuestionState extends State<QuizQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final mainPro = Provider.of<MainPro>(context, listen: false);
-
+    final mainPro = Provider.of<MainPro>(context);
+    int index = mainPro.currentQuestionIndex;
     final mq = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: kPrimaryColor,
@@ -88,66 +88,61 @@ class _QuizQuestionState extends State<QuizQuestion> {
           children: [
             Column(
               children: [
-                Selector<MainPro, int>(
-                    selector: (context, main) => main.currentQuestionIndex,
-                    builder: (context, index, _) {
-                      return Column(
-                        children: [
-                          SizedBox(
-                            height: mq.height * 0.01,
-                          ),
-                          buildQuestionNumberIndicator(mq, index + 1,
-                              mainPro.selectedData.questions.length),
-                          SizedBox(
-                            height: mq.height * 0.1,
-                          ),
-                          Column(
-                            children: List.generate(
-                                mainPro.selectedData.questions[index].options
-                                    .length, (i) {
-                              var questions =
-                                  mainPro.selectedData.questions[index];
-                              var options = mainPro
-                                  .selectedData.questions[index].options[i];
-                              return Column(
-                                children: [
-                                  i == 0
-                                      ? Container(
-                                          padding: EdgeInsets.only(
-                                              bottom: mq.height * 0.04),
-                                          width: mq.width * 0.7,
-                                          child: Center(
-                                            child: Text(
-                                              'Q${index + 1} : ${questions.quesText}',
-                                              style: TextStyle(
-                                                  color: kPrimaryLightColor,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                  buildOption('$options', mq, i),
-                                ],
-                              );
-                            }),
-                          ),
-                          // Expanded(
-                          //   child: ListView.builder(
-                          //     itemBuilder: (ctx, index) => ),
-                          //     itemCount: 4,
-                          //   ),
-                          // ),
-                          SizedBox(
-                            height: mq.height * 0.04,
-                          ),
+                Column(
+                  children: [
+                    SizedBox(
+                      height: mq.height * 0.01,
+                    ),
+                    buildQuestionNumberIndicator(
+                        mq, index + 1, mainPro.selectedData.questions.length),
+                    SizedBox(
+                      height: mq.height * 0.1,
+                    ),
+                    Column(
+                      children: List.generate(
+                          mainPro.selectedData.questions[index].options.length,
+                          (i) {
+                        var questions = mainPro.selectedData.questions[index];
+                        var options =
+                            mainPro.selectedData.questions[index].options[i];
+                        return Column(
+                          children: [
+                            i == 0
+                                ? Container(
+                                    padding: EdgeInsets.only(
+                                        bottom: mq.height * 0.04),
+                                    width: mq.width * 0.7,
+                                    child: Center(
+                                      child: Text(
+                                        'Q${index + 1} : ${questions.quesText}',
+                                        style: TextStyle(
+                                            color: kPrimaryLightColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                            buildOption('$options', mq, i),
+                          ],
+                        );
+                      }),
+                    ),
+                    // Expanded(
+                    //   child: ListView.builder(
+                    //     itemBuilder: (ctx, index) => ),
+                    //     itemCount: 4,
+                    //   ),
+                    // ),
+                    SizedBox(
+                      height: mq.height * 0.04,
+                    ),
 
-                          // SizedBox(
-                          //   height: mq.height * 0.1,
-                          // ),
-                        ],
-                      );
-                    }),
+                    // SizedBox(
+                    //   height: mq.height * 0.1,
+                    // ),
+                  ],
+                ),
                 QuestionSeconds(),
 
                 // SizedBox(height: mq.height*0.1,),
@@ -337,6 +332,7 @@ class _QuestionSecondsState extends State<QuestionSeconds>
         mainPro.changeLoadingState(true);
         final response = await mainPro.submitQuizResult();
         mainPro.changeLoadingState(false);
+        mainPro.clearQuizData();
         if (response['status']) {
           Navigator.of(context).pushReplacement(CupertinoPageRoute(
             builder: (ctx) => QuizResult(
@@ -344,7 +340,7 @@ class _QuestionSecondsState extends State<QuestionSeconds>
             ),
           ));
         } else {
-          buildAlertBoxForPayNow(context, response['message']);
+          buildAlertBox(context, response['message']);
         }
         // Navigate to next Screen
 
@@ -356,7 +352,7 @@ class _QuestionSecondsState extends State<QuestionSeconds>
     }
   }
 
-  buildAlertBoxForPayNow(BuildContext context, String msg) {
+  buildAlertBox(BuildContext context, String msg) {
     showDialog(
       barrierDismissible: false,
       context: context,
