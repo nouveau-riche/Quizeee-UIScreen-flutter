@@ -161,6 +161,7 @@ class MainPro with ChangeNotifier {
       var body = {
         "userId": _auth.userModel[0].userId,
         "quizId": selectedData.quizId.toString(),
+        "prizePool": selectedData.prizePool,
         "endDate": selectedData.endDate == "" || selectedData.endDate == "null"
             ? null
             : DateTime.parse(selectedData.endDate).toIso8601String(),
