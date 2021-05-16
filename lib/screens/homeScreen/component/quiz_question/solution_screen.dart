@@ -69,10 +69,10 @@ class SolutionScreen extends StatelessWidget {
                   Icons.arrow_forward_ios_outlined,
                   color: kPrimaryColor,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   mainPro.showAnswer(false);
 
-                  if (mainPro.incrementQuestions()) {
+                  if (await mainPro.incrementQuestions()) {
                     toast("End", isError: true);
                   }
                   // change question

@@ -19,12 +19,12 @@ class MainPro with ChangeNotifier {
   //Global Loader for MainPro
   bool isLoading = false;
 
-  void changeLoadingState(bool val) {
+  Future<void> changeLoadingState(bool val) {
     isLoading = val;
     notifyListeners();
   }
 
-  void upate(Auth auth) async {
+  Future<void> upate(Auth auth) async {
     this._auth = auth;
   }
 
@@ -225,17 +225,17 @@ class MainPro with ChangeNotifier {
   String selectedQuizId;
   int quizIndex;
   dynamic selectedData;
-  void saveDataForQuestions(dynamic data) {
+  Future<void> saveDataForQuestions(dynamic data) async {
     selectedData = data;
   }
 
-  void saveCurrentQuizId({String quizId, int quizIndex}) async {
+  Future<void> saveCurrentQuizId({String quizId, int quizIndex}) async {
     selectedQuizId = quizId;
     quizIndex = quizIndex;
   }
 
   ///QUESTION ANSWER LOGICS
-  int _seconds;
+  int _seconds = 20;
   int _perQuestionAnswerSeconds = 0;
   bool enableButton = false;
   int _selectedOption;
@@ -254,24 +254,24 @@ class MainPro with ChangeNotifier {
     return _seconds;
   }
 
-  void decrementSeconds() {
+  Future<void> decrementSeconds() async {
     _seconds -= 1;
-    _perQuestionAnswerSeconds += 1;
+    print(_seconds);
     notifyListeners();
   }
 
-  void resetSeconds() {
+  Future<void> resetSeconds() async {
     _seconds = selectedData.timePerQues;
     _perQuestionAnswerSeconds = 0;
     notifyListeners();
   }
 
-  void resetSelectedOption() {
+  Future<void> resetSelectedOption() async {
     _selectedOption = null;
     notifyListeners();
   }
 
-  void setSelectedOption(int index) {
+  Future<void> setSelectedOption(int index) async {
     _selectedOption = index;
     notifyListeners();
   }
@@ -281,12 +281,12 @@ class MainPro with ChangeNotifier {
     return _currentQuestionIndex;
   }
 
-  void showAnswer(bool val) {
+  Future<void> showAnswer(bool val) async {
     showSolutions = val;
     notifyListeners();
   }
 
-  void clearQuizData() {
+  Future<void> clearQuizData() async {
     enableButton = false;
     _seconds = null;
     _perQuestionAnswerSeconds = 0;
@@ -297,7 +297,7 @@ class MainPro with ChangeNotifier {
     notifyListeners();
   }
 
-  bool incrementQuestions() {
+  Future<bool> incrementQuestions() async {
     bool quesitonFinsh;
     _currentQuestionIndex += 1;
     if (_currentQuestionIndex >= selectedData.questions.length) {
@@ -306,6 +306,8 @@ class MainPro with ChangeNotifier {
       notifyListeners();
       return quesitonFinsh;
     } else {
+     print(answerSelections);   
+
       _selectedOption = null;
       quesitonFinsh = false;
       notifyListeners();
@@ -313,14 +315,16 @@ class MainPro with ChangeNotifier {
     }
   }
 
-  void enableButtonAns(bool enable) {
+  Future<void> enableButtonAns(bool enable) async {
     enableButton = enable;
+    _time_remain_provider = selectedData.timePerQues;
+    _perQuestionAnswerSeconds = 0;
     notifyListeners();
   }
 
   int score = 0;
   int responseTime = 0;
-  void calculateTotalScore() {
+  Future<void> calculateTotalScore() async {
     answerSelections.forEach((element) {
       if (element['rightAnswer']) {
         score += 1;
@@ -331,10 +335,12 @@ class MainPro with ChangeNotifier {
     // print("RESPONSE TIME : $responseTime");
   }
 
-  void intializeAnswersList() {
+  Future<void> intializeAnswersList() async {
     answerSelections.clear();
     _perQuestionAnswerSeconds = 0;
     score = 0;
+    _time_remain_provider = selectedData.timePerQues;
+
     for (int i = 0; i < selectedData.questions.length; i++) {
       answerSelections.add({
         "quesId": "",
@@ -346,7 +352,7 @@ class MainPro with ChangeNotifier {
     }
   }
 
-  void makeSelections(int index) {
+  Future<void> makeSelections(int index) async {
     answerSelections[_currentQuestionIndex]['quesId'] =
         selectedData.questions[_currentQuestionIndex].questionId;
     answerSelections[_currentQuestionIndex]['answer'] =
@@ -356,6 +362,8 @@ class MainPro with ChangeNotifier {
     answerSelections[_currentQuestionIndex]['answerIndex'] = index;
     answerSelections[_currentQuestionIndex]['rightAnswer'] =
         selectedData.questions[_currentQuestionIndex].rightOption == index;
+
+
     notifyListeners();
 
     // final data = answerSelections.where((element) =>
@@ -383,5 +391,15 @@ class MainPro with ChangeNotifier {
     //   // print("DATA ALREDY HAVING THIS VALUE REPLACE IT");
     // }
     // print(answerSelections);
+  }
+
+  int _time_remain_provider=11; 
+  void intiazlizeTimer() {
+  }
+  int gettime_remain_provider() => _time_remain_provider;
+  updateRemainingTime(){
+    _perQuestionAnswerSeconds += 1;
+    _time_remain_provider --; 
+    notifyListeners();
   }
 }
