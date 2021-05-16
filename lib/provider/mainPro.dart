@@ -149,6 +149,7 @@ class MainPro with ChangeNotifier {
 
       return response;
     } catch (e) {
+      print(e.toString());
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
     }
@@ -160,10 +161,12 @@ class MainPro with ChangeNotifier {
       var body = {
         "userId": _auth.userModel[0].userId,
         "quizId": selectedData.quizId.toString(),
-        "endDate": selectedData.endDate == ""
+        "endDate": selectedData.endDate == "" || selectedData.endDate == "null"
             ? null
             : DateTime.parse(selectedData.endDate).toIso8601String(),
-        "endTime": selectedData.endTime == "" ? null : selectedData.endTime,
+        "endTime": selectedData.endTime == "" || selectedData.endTime == "null"
+            ? null
+            : selectedData.endTime,
       };
       final result = await http.post(
         ApiUrls.baseUrl + ApiUrls.getUserRank,
@@ -174,7 +177,7 @@ class MainPro with ChangeNotifier {
 
       return response;
     } catch (e) {
-      // print(e.toString());
+      print(e.toString());
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
     }
@@ -202,7 +205,7 @@ class MainPro with ChangeNotifier {
     try {
       DateTime now = DateTime.now();
       DateTime startDate = DateTime.parse(date.startDate);
-      if (date.endDate.isNotEmpty) {
+      if (date.endDate.isNotEmpty && date.endDate != "null") {
         DateTime endTime = DateTime.parse(date.endDate);
         if (startDate.isAfter(now)) {
           return format.format(startDate);
@@ -213,7 +216,7 @@ class MainPro with ChangeNotifier {
         return format.format(startDate);
       }
     } catch (e) {
-      // print(e.toString());
+      print(e.toString());
     }
   }
 
