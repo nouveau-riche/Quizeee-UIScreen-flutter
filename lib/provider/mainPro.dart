@@ -306,7 +306,7 @@ class MainPro with ChangeNotifier {
       notifyListeners();
       return quesitonFinsh;
     } else {
-     print(answerSelections);   
+      print(answerSelections);
 
       _selectedOption = null;
       quesitonFinsh = false;
@@ -325,14 +325,16 @@ class MainPro with ChangeNotifier {
   int score = 0;
   int responseTime = 0;
   Future<void> calculateTotalScore() async {
+    print(answerSelections);
     answerSelections.forEach((element) {
       if (element['rightAnswer']) {
         score += 1;
         responseTime = element['second'] + responseTime;
       }
     });
-    // print("SCORE : $score");
-    // print("RESPONSE TIME : $responseTime");
+
+    print("SCORE : $score");
+    print("RESPONSE TIME : $responseTime");
   }
 
   Future<void> intializeAnswersList() async {
@@ -363,7 +365,6 @@ class MainPro with ChangeNotifier {
     answerSelections[_currentQuestionIndex]['rightAnswer'] =
         selectedData.questions[_currentQuestionIndex].rightOption == index;
 
-
     notifyListeners();
 
     // final data = answerSelections.where((element) =>
@@ -393,13 +394,12 @@ class MainPro with ChangeNotifier {
     // print(answerSelections);
   }
 
-  int _time_remain_provider=11; 
-  void intiazlizeTimer() {
-  }
+  int _time_remain_provider = 11;
+  void intiazlizeTimer() {}
   int gettime_remain_provider() => _time_remain_provider;
-  updateRemainingTime(){
+  updateRemainingTime() {
     _perQuestionAnswerSeconds += 1;
-    _time_remain_provider --; 
+    _time_remain_provider--;
     notifyListeners();
   }
 }

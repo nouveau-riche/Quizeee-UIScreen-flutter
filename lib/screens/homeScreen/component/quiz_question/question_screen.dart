@@ -85,7 +85,7 @@ class _QuizQuestionState extends State<QuizQuestion>
   enableButton() async {
     final main = Provider.of<MainPro>(context, listen: false);
     main.enableButtonAns(true);
-    toast("Times Up!", isError: false);
+    // toast("Times Up!", isError: false);
     if (main.enableButton) {
       if (await main.incrementQuestions()) {
         toast("Quiz Completed", isError: false);
@@ -107,6 +107,7 @@ class _QuizQuestionState extends State<QuizQuestion>
         // Navigate to next Screen
 
       } else {
+        main.resetSelectedOption();
         main.enableButtonAns(false);
         print("Show must go on!!");
         startTimmer();
@@ -209,58 +210,8 @@ class _QuizQuestionState extends State<QuizQuestion>
                           SizedBox(
                             height: mq.height * 0.01,
                           ),
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 4,
-                                width: mq.width * 0.88,
-                                decoration: BoxDecoration(
-                                  color: kSecondaryColor.withOpacity(0.4),
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: ((mq.width *
-                                                      0.88 *
-                                                      (100 * index + 1) ~/
-                                                      main.selectedData
-                                                          .questions.length -
-                                                  1) ~/
-                                              100)
-                                          .toDouble(),
-                                      height: 4,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(2),
-                                            bottomRight: Radius.circular(2)),
-                                        gradient: LinearGradient(
-                                            begin: Alignment.centerLeft,
-                                            end: Alignment.centerRight,
-                                            colors: [
-                                              kPrimaryLightColor
-                                                  .withOpacity(0.1),
-                                              kPrimaryLightColor
-                                            ]),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 4,
-                              ),
-                              Text(
-                                '${main.currentQuestionIndex + 1} out of ${main.selectedData.questions.length}',
-                                style: TextStyle(
-                                    color: kPrimaryLightColor.withOpacity(0.8),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
+                          buildQuestionNumberIndicator(mq, index + 1,
+                              main.selectedData.questions.length),
                           SizedBox(
                             height: mq.height * 0.1,
                           ),
@@ -268,74 +219,24 @@ class _QuizQuestionState extends State<QuizQuestion>
                             children: List.generate(
                                 main.selectedData.questions[index].options
                                     .length, (i) {
+                              //initializations
                               var questions =
                                   main.selectedData.questions[index];
                               var options =
                                   main.selectedData.questions[index].options[i];
+                              //--
                               return Column(
                                 children: [
                                   i == 0
-                                      ? Container(
-                                          padding: EdgeInsets.only(
-                                              bottom: mq.height * 0.04),
-                                          width: mq.width * 0.7,
-                                          child: Center(
-                                            child: Text(
-                                              'Q${index + 1} : ${questions.quesText}',
-                                              style: TextStyle(
-                                                  color: kPrimaryLightColor,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                        )
+                                      ? questionsContainer(mq, index, questions)
                                       : Container(),
                                   GestureDetector(
                                     onTap: () {
                                       main.setSelectedOption(i);
                                       main.makeSelections(i);
                                     },
-                                    child: Container(
-                                      height: mq.height * 0.07,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: mq.height * 0.015,
-                                          horizontal: mq.width * 0.08),
-                                      decoration: BoxDecoration(
-                                        // add some functionality to add border and change color of text if selected
-
-                                        border: main.selectedOption != null
-                                            ? Border.all(
-                                                width: 1.5,
-                                                color: main.selectedOption == i
-                                                    ? kPrimaryLightColor
-                                                    : Colors.transparent)
-                                            : Border.all(
-                                                color: Colors.transparent),
-                                        gradient: LinearGradient(
-                                          begin: Alignment.centerLeft,
-                                          end: Alignment.centerRight,
-                                          colors: [
-                                            Colors.grey.withOpacity(0.2),
-                                            Colors.grey.withOpacity(0.1),
-                                          ],
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        options,
-                                        style: TextStyle(
-                                          fontSize: 26,
-
-                                          // if selected change this color to kPrimaryLightColor
-
-                                          color: main.selectedOption == i
-                                              ? kPrimaryLightColor
-                                              : kSecondaryColor,
-                                          fontFamily: 'DebugFreeTrial',
-                                        ),
-                                      )),
-                                    ),
+                                    child:
+                                        optionsContainer(mq, main, i, options),
                                   )
                                 ],
                               );
@@ -350,69 +251,8 @@ class _QuizQuestionState extends State<QuizQuestion>
                 Selector<MainPro, int>(
                     selector: (context, mainSelector) =>
                         mainSelector.gettime_remain_provider(),
-                    builder: (context, seconds, _) {
-                      return Container(
-                        height: mq.height * 0.1,
-                        width: mq.width * 0.25,
-                        child: Stack(
-                          children: [
-                            RotationTransition(
-                              turns: _animation,
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(5),
-                                    height: mq.height * 0.14,
-                                    width: mq.height * 0.14,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          kPrimaryLightColor,
-                                          kPrimaryColor.withOpacity(0.3)
-                                        ],
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                      ),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Container(
-                                      height: mq.height * 0.1,
-                                      width: mq.height * 0.1,
-                                      decoration: BoxDecoration(
-                                        color: kPrimaryColor,
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: -4,
-                                    left: 0,
-                                    right: 0,
-                                    child: Container(
-                                      height: 10,
-                                      width: 10,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: kPrimaryLightColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              child: Text(
-                                '${seconds}s',
-                                style: TextStyle(
-                                    color: kPrimaryLightColor,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
+                    builder: (context, second, _) {
+                      return secondsContainer(mq, second);
                     }),
               ],
             ),
@@ -426,6 +266,178 @@ class _QuizQuestionState extends State<QuizQuestion>
           ],
         );
       }),
+    );
+  }
+
+  Container questionsContainer(Size mq, int index, questions) {
+    return Container(
+      padding: EdgeInsets.only(bottom: mq.height * 0.04),
+      width: mq.width * 0.7,
+      child: Center(
+        child: Text(
+          'Q${index + 1} : ${questions.quesText}',
+          style: TextStyle(
+              color: kPrimaryLightColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w600),
+        ),
+      ),
+    );
+  }
+
+  Container secondsContainer(Size mq, int second) {
+    return Container(
+      height: mq.height * 0.1,
+      width: mq.width * 0.25,
+      child: Stack(
+        children: [
+          RotationTransition(
+            turns: _animation,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(5),
+                  height: mq.height * 0.14,
+                  width: mq.height * 0.14,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        kPrimaryLightColor,
+                        kPrimaryColor.withOpacity(0.3)
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Container(
+                    height: mq.height * 0.1,
+                    width: mq.height * 0.1,
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: -4,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: 10,
+                    width: 10,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: kPrimaryLightColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Align(
+            child: Text(
+              '${second}s',
+              style: TextStyle(
+                  color: kPrimaryLightColor,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container optionsContainer(Size mq, MainPro main, int i, options) {
+    return Container(
+      height: mq.height * 0.07,
+      margin: EdgeInsets.symmetric(
+          vertical: mq.height * 0.015, horizontal: mq.width * 0.08),
+      decoration: BoxDecoration(
+        // add some functionality to add border and change color of text if selected
+
+        border: main.selectedOption != null
+            ? Border.all(
+                width: 1.5,
+                color: main.selectedOption == i
+                    ? kPrimaryLightColor
+                    : Colors.transparent)
+            : Border.all(color: Colors.transparent),
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            Colors.grey.withOpacity(0.2),
+            Colors.grey.withOpacity(0.1),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
+          child: Text(
+        options,
+        style: TextStyle(
+          fontSize: 26,
+
+          // if selected change this color to kPrimaryLightColor
+
+          color:
+              main.selectedOption == i ? kPrimaryLightColor : kSecondaryColor,
+          fontFamily: 'DebugFreeTrial',
+        ),
+      )),
+    );
+  }
+
+  Widget buildQuestionNumberIndicator(Size mq, int current, int total) {
+    int percentage = (100 * current) ~/ total;
+    print(percentage);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 4,
+          width: mq.width * 0.88,
+          decoration: BoxDecoration(
+            color: kSecondaryColor.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(2),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: ((mq.width * 0.88 * percentage) ~/ 100).toDouble(),
+                height: 4,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(2),
+                      bottomRight: Radius.circular(2)),
+                  gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        kPrimaryLightColor.withOpacity(0.1),
+                        kPrimaryLightColor
+                      ]),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 4,
+        ),
+        Text(
+          '$current out of $total',
+          style: TextStyle(
+              color: kPrimaryLightColor.withOpacity(0.8),
+              fontSize: 12,
+              fontWeight: FontWeight.bold),
+        ),
+      ],
     );
   }
 }
