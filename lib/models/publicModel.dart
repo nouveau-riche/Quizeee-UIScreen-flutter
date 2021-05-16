@@ -56,8 +56,8 @@ class PublicQuizes {
     areaOfInterest = json['areaOfInterest'];
     startDate = json['startDate'];
     startTime = json['startTime'];
-    endDate = json['endDate'];
-    endTime = json['endTime'];
+    endDate = json['endDate'].toString();
+    endTime = json['endTime'].toString();
     slots = json['slots'];
     availableSlots = json['availableSlots'];
     noOfQuestions = json['noOfQuestions'];
