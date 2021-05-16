@@ -29,7 +29,7 @@ dependencies:
   otp_count_down:
   image_picker:
   http: ^0.12.1
-  provider:
+  provider: ^4.1.3
   dio:
   shimmer:
   localstorage: ^3.0.6
