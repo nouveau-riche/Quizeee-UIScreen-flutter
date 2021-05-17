@@ -259,14 +259,14 @@ class ReserveSlotScreen extends StatelessWidget {
             Text(
               '$slot',
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
               'SLOTS',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 12.5,
                 fontFamily: 'DebugFreeTrial',
               ),
             ),
@@ -274,7 +274,7 @@ class ReserveSlotScreen extends StatelessWidget {
               Text(
                 'LEFT',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 12.5,
                   fontFamily: 'DebugFreeTrial',
                 ),
               ),

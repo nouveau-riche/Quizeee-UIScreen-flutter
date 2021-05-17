@@ -80,7 +80,7 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
                 ),
                 onPressed: () {
                   mainPro.saveDataForQuestions(data);
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushReplacement(
                       CupertinoPageRoute(builder: (ctx) => RulesScreen()));
                 },
                 child: Text(

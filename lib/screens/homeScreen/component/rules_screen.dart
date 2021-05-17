@@ -138,7 +138,7 @@ class RulesScreen extends StatelessWidget {
           mainPro.clearQuizData();
           mainPro.intializeAnswersList();
           Navigator.of(context)
-              .push(CupertinoPageRoute(builder: (ctx) => QuizQuestion()));
+              .pushReplacement(CupertinoPageRoute(builder: (ctx) => QuizQuestion()));
         },
         child: Text(
           'START THE QUIZ',
