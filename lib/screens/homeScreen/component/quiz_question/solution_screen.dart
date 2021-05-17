@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/widgets/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../constant.dart';
 
@@ -93,22 +94,6 @@ class SolutionScreen extends StatelessWidget {
             SizedBox(
               height: mq.height * 0.1,
             ),
-            // Text(
-            //   'Q${mainPro.currentQuestionIndex + 1}. Which one is an Indian city?',
-            //   style: TextStyle(
-            //       color: kPrimaryLightColor,
-            //       fontSize: 16,
-            //       fontWeight: FontWeight.w600),
-            // ),
-            // SizedBox(
-            //   height: mq.height * 0.02,
-            // ),
-            // Expanded(
-            //   child: ListView.builder(
-            //     itemBuilder: (ctx, mainPro.currentQuestionIndex) => buildOption('Jaipur', mq),
-            //     itemCount: 4,
-            //   ),
-            // ),
             Column(
               children: List.generate(
                   mainPro.selectedData.questions[mainPro.currentQuestionIndex]
@@ -210,7 +195,9 @@ class SolutionScreen extends StatelessWidget {
   Widget buildOption(String option, Size mq, int index, MainPro main) {
     // selected answer index
     int selectedAnswer =
-        main.answerSelections[main.currentQuestionIndex]['answerIndex'];
+        main.answerSelections[main.currentQuestionIndex]['answerIndex'] == ""
+            ? null
+            : main.answerSelections[main.currentQuestionIndex]['answerIndex'];
     bool isCorrect =
         main.selectedData.questions[main.currentQuestionIndex].rightOption ==
             index;
@@ -226,13 +213,17 @@ class SolutionScreen extends StatelessWidget {
                 ? Border.all(width: 1.5, color: Colors.green)
                 : Border.all(
                     width: 1.5,
-                    color: selectedAnswer == index
-                        ? kPrimaryLightColor
+                    color: selectedAnswer != null
+                        ? selectedAnswer == index
+                            ? kPrimaryLightColor
+                            : Colors.transparent
                         : Colors.transparent)
             : Border.all(
                 width: 1.5,
-                color: selectedAnswer == index
-                    ? kPrimaryLightColor
+                color: selectedAnswer != null
+                    ? selectedAnswer == index
+                        ? kPrimaryLightColor
+                        : Colors.transparent
                     : Colors.transparent),
         gradient: LinearGradient(
           begin: Alignment.centerLeft,
@@ -246,13 +237,13 @@ class SolutionScreen extends StatelessWidget {
       ),
       child: Center(
           child: Text(
-        option,
+        option.toString(),
         style: TextStyle(
           fontSize: 26,
 
           // if selected change this color to kPrimaryLightColor
 
-          color: kPrimaryLightColor,
+          color: isCorrect ? Colors.green : kPrimaryLightColor,
           fontFamily: 'DebugFreeTrial',
         ),
       )),
@@ -330,17 +321,35 @@ class SolutionScreen extends StatelessWidget {
             //   onComplete: () {},
             // ),
             Align(
-              child: Text(
-                ' Check\nSolution ',
-                style: TextStyle(
-                    color: kPrimaryLightColor,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600),
+              child: GestureDetector(
+                onTap: () {
+                  launchInBrowser(main.selectedData
+                      .questions[main.currentQuestionIndex].solution);
+                },
+                child: Text(
+                  ' Check\nSolution ',
+                  style: TextStyle(
+                      color: kPrimaryLightColor,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
