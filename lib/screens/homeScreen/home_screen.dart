@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       prize: data.winningPrize.toString(),
                                       isSlotBooked: false,
                                       quizId: data.quizId.toString(),
-                                      totalSlots: data.availableSlots,
+                                      totalSlots: "0",
                                       data: data,
                                       quizIndex: index,
                                     );
