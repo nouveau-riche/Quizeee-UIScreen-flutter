@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:quizeee_ui/models/assignedModel.dart';
 import 'package:quizeee_ui/models/dashboardBanner.dart';
 import 'package:quizeee_ui/models/publicModel.dart';
+import 'package:quizeee_ui/models/userRank.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
 import 'package:quizeee_ui/provider/constFun.dart';
 import 'package:quizeee_ui/provider/initialPro.dart';
@@ -42,6 +43,11 @@ class MainPro with ChangeNotifier {
   List<PublicQuizes> _publicQuiz = [];
   List<PublicQuizes> get publicQuiz {
     return [..._publicQuiz];
+  }
+
+  List<UserRank> _userRank = [];
+  List<UserRank> get userRank {
+    return [..._userRank];
   }
 
   Future<Map<String, dynamic>> getDashBoardData() async {
@@ -109,6 +115,7 @@ class MainPro with ChangeNotifier {
 
   Future<Map<String, dynamic>> checkQuizBookingStatus(String quizId) async {
     try {
+      changeServeStatus = false;
       final userId = await ConstFun.getKeyValue("userId", _auth.storage);
       var body = {"userId": _auth.userModel[0].userId, "quizId": quizId};
       final result = await http.post(
@@ -175,7 +182,10 @@ class MainPro with ChangeNotifier {
         headers: ApiUrls.headers,
       );
       final response = json.decode(result.body) as Map<String, dynamic>;
-
+      _userRank.clear();
+      if (response['status']) {
+        _userRank.add(UserRank.fromJson(response['rankData']));
+      }
       return response;
     } catch (e) {
       print(e.toString());
@@ -184,6 +194,7 @@ class MainPro with ChangeNotifier {
     }
   }
 
+  bool changeServeStatus = false;
   Future<Map<String, dynamic>> bookAQuiz(String quizId) async {
     try {
       final userId = await ConstFun.getKeyValue("userId", _auth.storage);
@@ -194,6 +205,10 @@ class MainPro with ChangeNotifier {
         headers: ApiUrls.headers,
       );
       final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {
+        changeServeStatus = response['status'];
+        notifyListeners();
+      }
       return response;
     } catch (e) {
       return ConstFun.reponseData(
@@ -243,7 +258,7 @@ class MainPro with ChangeNotifier {
   int _perQuestionAnswerSeconds = 0;
   bool enableButton = false;
   int _selectedOption;
-  bool showSolutions = false;
+  bool showSolutions = true;
 
   int get selectedOption {
     return _selectedOption;
@@ -286,7 +301,7 @@ class MainPro with ChangeNotifier {
   }
 
   Future<void> showAnswer(bool val) async {
-    showSolutions = val;
+    showSolutions = true;
     notifyListeners();
   }
 
@@ -295,7 +310,7 @@ class MainPro with ChangeNotifier {
     _seconds = null;
     _perQuestionAnswerSeconds = 0;
     _selectedOption = null;
-    showSolutions = false;
+    showSolutions = true;
     // answerSelections.clear();
     _currentQuestionIndex = 0;
     notifyListeners();

@@ -5,6 +5,7 @@ import 'package:quizeee_ui/main.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/solution_screen.dart';
 import 'package:quizeee_ui/screens/tabs_screen.dart';
+import 'package:quizeee_ui/widgets/centerLoader.dart';
 
 import '../../../constant.dart';
 
@@ -56,92 +57,146 @@ class QuizResult extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: mq.height * 0.085,
-            child: Image.asset('assets/images/stars.png'),
-          ),
-          Text(
-            'COMPLETED',
-            style: TextStyle(
-                fontFamily: 'DebugFreeTrial',
-                color: kResultColor,
-                fontSize: 30),
-          ),
-          SizedBox(
-            height: mq.height * 0.01,
-          ),
-          Text(
-            'SCIENCE QUIZZ',
-            style: TextStyle(color: kSecondaryColor, fontSize: 17),
-          ),
-          SizedBox(
-            height: mq.height * 0.02,
-          ),
-          Container(
-            height: mq.height * 0.14,
-            child: Image.asset('assets/images/cartoon.png'),
-          ),
-          isPracticeQuiz == true
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: mq.height * 0.02,
-                    ),
-                    Text(
-                      'Congratulations !!',
-                      style: TextStyle(
-                          fontFamily: 'DebugFreeTrial',
-                          color: kResultColor,
-                          fontSize: 25),
-                    ),
-                    SizedBox(
-                      height: mq.height * 0.01,
-                    ),
-                    Text(
-                      'You Have Passed The Practice Test',
-                      style: TextStyle(color: kSecondaryColor, fontSize: 15),
-                    ),
-                  ],
-                )
-              : Container(),
-          SizedBox(
-            height: mq.height * 0.04,
-          ),
-          isPracticeQuiz
-              ? Container()
-              : Text(
-                  '#3rd',
-                  style: TextStyle(
-                      color: kResultColor,
-                      fontSize: 26,
-                      fontWeight: FontWeight.w600),
-                ),
-          isPracticeQuiz
-              ? Container()
-              : Text(
-                  'RANK',
-                  style: TextStyle(
-                      color: kResultColor,
-                      fontSize: 26,
-                      fontWeight: FontWeight.w600),
-                ),
-          Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: SafeArea(
+        child: Consumer<MainPro>(builder: (context, mainPro, _) {
+          var rankDetails = mainPro.userRank[0];
+          var selectedQuiz = mainPro.selectedData;
+          return Stack(
             children: [
               Column(
                 children: [
-                  isPracticeQuiz
-                      ? Icon(
-                          Icons.account_balance_wallet,
-                          color: kResultColor,
+                  Container(
+                    height: mq.height * 0.085,
+                    child: Image.asset('assets/images/stars.png'),
+                  ),
+                  Text(
+                    'COMPLETED',
+                    style: TextStyle(
+                        fontFamily: 'DebugFreeTrial',
+                        color: kResultColor,
+                        fontSize: 30),
+                  ),
+                  SizedBox(
+                    height: mq.height * 0.01,
+                  ),
+                  Text(
+                    '${selectedQuiz.quizCategory} QUIZZ',
+                    style: TextStyle(color: kSecondaryColor, fontSize: 17),
+                  ),
+                  SizedBox(
+                    height: mq.height * 0.02,
+                  ),
+                  Container(
+                    height: mq.height * 0.14,
+                    child: Image.asset('assets/images/cartoon.png'),
+                  ),
+                  isPracticeQuiz == true
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              height: mq.height * 0.02,
+                            ),
+                            Text(
+                              'Congratulations !!',
+                              style: TextStyle(
+                                  fontFamily: 'DebugFreeTrial',
+                                  color: kResultColor,
+                                  fontSize: 25),
+                            ),
+                            SizedBox(
+                              height: mq.height * 0.01,
+                            ),
+                            Text(
+                              'You Have Passed The Practice Test',
+                              style: TextStyle(
+                                  color: kSecondaryColor, fontSize: 15),
+                            ),
+                          ],
                         )
                       : Container(),
+                  SizedBox(
+                    height: mq.height * 0.04,
+                  ),
+                  isPracticeQuiz
+                      ? Container()
+                      : Text(
+                          '#${rankDetails.rank}rd',
+                          style: TextStyle(
+                              color: kResultColor,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w600),
+                        ),
+                  isPracticeQuiz
+                      ? Container()
+                      : Text(
+                          'RANK',
+                          style: TextStyle(
+                              color: kResultColor,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w600),
+                        ),
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          isPracticeQuiz
+                              ? Icon(
+                                  Icons.account_balance_wallet,
+                                  color: kResultColor,
+                                )
+                              : Container(),
+                          Text(
+                            'YOUR SCORE',
+                            style: TextStyle(
+                                color: kSecondaryColor,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(
+                            height: mq.height * 0.01,
+                          ),
+                          Text(
+                            '${rankDetails.score}/100',
+                            style: TextStyle(
+                                color: kResultColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          isPracticeQuiz
+                              ? Icon(
+                                  Icons.account_balance_wallet,
+                                  color: kResultColor,
+                                )
+                              : Container(),
+                          Text(
+                            'RESPONSE TIME',
+                            style: TextStyle(
+                                color: kSecondaryColor,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(
+                            height: mq.height * 0.01,
+                          ),
+                          Text(
+                            '${rankDetails.responseTime}sec',
+                            style: TextStyle(
+                                color: kResultColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Spacer(),
                   Text(
-                    'YOUR SCORE',
+                    'PRIZE WON',
                     style: TextStyle(
                         color: kSecondaryColor, fontWeight: FontWeight.w600),
                   ),
@@ -149,71 +204,39 @@ class QuizResult extends StatelessWidget {
                     height: mq.height * 0.01,
                   ),
                   Text(
-                    '90/100',
+                    'Rs. ${rankDetails.prize}/ -',
                     style: TextStyle(
                         color: kResultColor,
-                        fontSize: 20,
+                        fontSize: 24,
                         fontWeight: FontWeight.w600),
                   ),
-                ],
-              ),
-              Column(
-                children: [
-                  isPracticeQuiz
-                      ? Icon(
-                          Icons.account_balance_wallet,
-                          color: kResultColor,
-                        )
-                      : Container(),
-                  Text(
-                    'RESPONSE TIME',
-                    style: TextStyle(
-                        color: kSecondaryColor, fontWeight: FontWeight.w600),
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      isPracticeQuiz
+                          ? buildPlayAgain(mq, context)
+                          : buildReviewSolution(mq, context),
+                      isPracticeQuiz
+                          ? buildBackToQuiz(mq, context)
+                          : buildPlayMoreQuiz(mq, context),
+                    ],
                   ),
                   SizedBox(
-                    height: mq.height * 0.01,
-                  ),
-                  Text(
-                    '65sec',
-                    style: TextStyle(
-                        color: kResultColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600),
+                    height: mq.height * 0.1,
                   ),
                 ],
               ),
+              mainPro.isLoading
+                  ? CenterLoader(
+                      isScaffoldRequired: false,
+                    )
+                  : Container(
+                      // color: Colors.transparent,
+                      )
             ],
-          ),
-          Spacer(),
-          Text(
-            'PRIZE WON',
-            style:
-                TextStyle(color: kSecondaryColor, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: mq.height * 0.01,
-          ),
-          Text(
-            'Rs. 90/ -',
-            style: TextStyle(
-                color: kResultColor, fontSize: 24, fontWeight: FontWeight.w600),
-          ),
-          Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              isPracticeQuiz
-                  ? buildPlayAgain(mq, context)
-                  : buildReviewSolution(mq, context),
-              isPracticeQuiz
-                  ? buildBackToQuiz(mq, context)
-                  : buildPlayMoreQuiz(mq, context),
-            ],
-          ),
-          SizedBox(
-            height: mq.height * 0.1,
-          ),
-        ],
+          );
+        }),
       ),
     );
   }
@@ -274,9 +297,13 @@ class QuizResult extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {
+        onPressed: () async {
+          final mainPro = Provider.of<MainPro>(context, listen: false);
+          mainPro.changeLoadingState(true);
+          await mainPro.getDashBoardData();
+          mainPro.changeLoadingState(false);
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (ctx) => NavigateScreen()),
+              MaterialPageRoute(builder: (ctx) => TabMainScreen()),
               (route) => false);
         },
         child: Text(

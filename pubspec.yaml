@@ -37,6 +37,7 @@ dependencies:
   cached_network_image:
   flutter_countdown_timer:
   flutter_spinkit: ^4.1.2
+  url_launcher:
 
 
 

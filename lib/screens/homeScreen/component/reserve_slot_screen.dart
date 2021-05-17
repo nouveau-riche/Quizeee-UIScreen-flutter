@@ -64,9 +64,15 @@ class ReserveSlotScreen extends StatelessWidget {
           SizedBox(
             height: mq.height * 0.02,
           ),
-          isSlotBooked
-              ? buildPayNow(mq, context)
-              : buildReserveSlot(mq, context),
+          Consumer<MainPro>(builder: (context, mainPro, _) {
+            return Column(
+              children: [
+                mainPro.changeServeStatus || isSlotBooked
+                    ? buildPayNow(mq, context)
+                    : buildReserveSlot(mq, context),
+              ],
+            );
+          }),
           SizedBox(
             height: mq.height * 0.06,
           ),
@@ -456,7 +462,6 @@ class ReserveSlotScreen extends StatelessWidget {
   buildAlertBoxForSlotBook(BuildContext context, Size mq) {
     showDialog(
       context: context,
-
       builder: (context) => CupertinoAlertDialog(
         content: Text(
           'SLOT BOOKED',
