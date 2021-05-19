@@ -9,6 +9,7 @@ import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../../../constant.dart';
 import '../../../../main.dart';
+import '../../../tabs_screen.dart';
 import '../quiz_result.dart';
 
 class QuizQuestion extends StatefulWidget {
@@ -128,7 +129,7 @@ class _QuizQuestionState extends State<QuizQuestion>
           TextButton(
             onPressed: () {
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (ctx) => NavigateScreen()),
+                  MaterialPageRoute(builder: (ctx) => TabMainScreen()),
                   (route) => false);
             },
             child: Text(

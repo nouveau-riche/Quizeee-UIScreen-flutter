@@ -68,7 +68,7 @@ class ReserveSlotScreen extends StatelessWidget {
             return Column(
               children: [
                 mainPro.changeServeStatus || isSlotBooked
-                    ? buildPayNow(mq, context)
+                    ? buildPayNow(mq, context, isSlotBooked)
                     : buildReserveSlot(mq, context),
               ],
             );
@@ -433,7 +433,7 @@ class ReserveSlotScreen extends StatelessWidget {
     );
   }
 
-  Widget buildPayNow(Size mq, BuildContext context) {
+  Widget buildPayNow(Size mq, BuildContext context, bool isBooked) {
     return SizedBox(
       height: mq.height * 0.058,
       width: mq.width * 0.55,
@@ -445,10 +445,20 @@ class ReserveSlotScreen extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          buildAlertBoxForPayNow(context);
+          if (isSlotBooked) {
+            Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (ctx) => LetsStartOrPlayPracticeQuiz(
+                  data: data,
+                ),
+              ),
+            );
+          } else {
+            buildAlertBoxForPayNow(context);
+          }
         },
         child: Text(
-          'PAY NOW',
+          isBooked ? "PLAY NOW" : 'PAY NOW',
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',
@@ -464,7 +474,7 @@ class ReserveSlotScreen extends StatelessWidget {
       context: context,
       builder: (context) => CupertinoAlertDialog(
         content: Text(
-          'SLOT BOOKED',
+          'PAY Rs. $entryPrize/-',
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
         ),
         actions: [
@@ -557,7 +567,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
         Navigator.of(context).pop();
       },
       child: Text(
-        'DONE',
+        'PROCEED',
         style: TextStyle(color: Colors.black54),
       ),
     );
