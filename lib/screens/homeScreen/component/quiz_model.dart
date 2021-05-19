@@ -74,7 +74,6 @@ class QuizBox extends StatelessWidget {
                 child: GestureDetector(
                     onTap: () async {
                       bool booked = await reverseSlot(quizId, quizIndex);
-
                       Future.delayed(Duration(milliseconds: 500), () {
                         Navigator.of(context).push(CupertinoPageRoute(
                           builder: (ctx) => ReserveSlotScreen(

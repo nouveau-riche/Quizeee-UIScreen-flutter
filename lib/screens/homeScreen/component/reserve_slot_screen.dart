@@ -68,7 +68,7 @@ class ReserveSlotScreen extends StatelessWidget {
             return Column(
               children: [
                 mainPro.changeServeStatus || isSlotBooked
-                    ? buildPayNow(mq, context, isSlotBooked)
+                    ? buildPayNow(mq, context, mainPro.changeServeStatus)
                     : buildReserveSlot(mq, context),
               ],
             );
@@ -445,7 +445,7 @@ class ReserveSlotScreen extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          if (isSlotBooked) {
+          if (isBooked) {
             Navigator.of(context).push(
               CupertinoPageRoute(
                 builder: (ctx) => LetsStartOrPlayPracticeQuiz(
