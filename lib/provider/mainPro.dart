@@ -50,6 +50,13 @@ class MainPro with ChangeNotifier {
     return [..._userRank];
   }
 
+  clearDashBoard() {
+    _assignedQuiz.clear();
+    _publicQuiz.clear();
+    _userRank.clear();
+    _dashboardBanner.clear();
+  }
+
   Future<Map<String, dynamic>> getDashBoardData() async {
     try {
       final userId = await ConstFun.getKeyValue("userId", _auth.storage);

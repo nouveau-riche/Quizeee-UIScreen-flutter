@@ -68,7 +68,12 @@ class ReserveSlotScreen extends StatelessWidget {
             return Column(
               children: [
                 mainPro.changeServeStatus || isSlotBooked
-                    ? buildPayNow(mq, context, mainPro.changeServeStatus)
+                    ? buildPayNow(
+                        mq,
+                        context,
+                        mainPro.changeServeStatus
+                            ? mainPro.changeServeStatus
+                            : isSlotBooked)
                     : buildReserveSlot(mq, context),
               ],
             );
@@ -306,12 +311,17 @@ class ReserveSlotScreen extends StatelessWidget {
         data.prizePool.length,
         (index) {
           var prizes = data.prizePool[index];
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              buildRankList('#${prizes.rankNo} rank'),
-              buildMoney(int.parse(prizes.prize))
-            ],
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 50),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                buildRankList('#${prizes.rankNo} rank'),
+                Spacer(),
+                buildMoney(int.parse(prizes.prize))
+              ],
+            ),
           );
         },
       ),
@@ -350,12 +360,15 @@ class ReserveSlotScreen extends StatelessWidget {
           const SizedBox(
             width: 5,
           ),
-          Text(
-            rank,
-            style: TextStyle(
-              color: kPrimaryLightColor,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+          Container(
+            width: 80,
+            child: Text(
+              rank,
+              style: TextStyle(
+                color: kPrimaryLightColor,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -377,7 +390,7 @@ class ReserveSlotScreen extends StatelessWidget {
                   fontWeight: FontWeight.w700),
             ),
             Text(
-              'Rs. $entryPrize',
+              '₹ $entryPrize',
               style: TextStyle(
                   color: kPrimaryLightColor,
                   fontSize: 28.5,
@@ -474,7 +487,7 @@ class ReserveSlotScreen extends StatelessWidget {
       context: context,
       builder: (context) => CupertinoAlertDialog(
         content: Text(
-          'PAY Rs. $entryPrize/-',
+          'PAY ₹ $entryPrize/-',
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
         ),
         actions: [
@@ -498,7 +511,7 @@ class ReserveSlotScreen extends StatelessWidget {
       context: context,
       builder: (context) => CupertinoAlertDialog(
         content: Text(
-          'PAY Rs. $entryPrize/-',
+          'PAY ₹ $entryPrize/-',
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
         ),
         actions: [

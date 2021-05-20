@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
 
 import '../../provider/initialPro.dart';
 import '../../widgets/toast.dart';
@@ -255,6 +256,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
   Future<void> submitOtp() async {
     final authPro = Provider.of<Auth>(context, listen: false);
+    final mainPro = Provider.of<MainPro>(context, listen: false);
     var body;
     var response;
     bool isEmail;
@@ -325,6 +327,8 @@ class _OTPScreenState extends State<OTPScreen> {
 
     if (response['status']) {
       toast(response['msg'], isError: !response['status']);
+      mainPro.clearQuizData();
+      mainPro.clearDashBoard();
       Future.delayed(Duration(seconds: 1), () {
         Navigator.pushAndRemoveUntil(
             context,

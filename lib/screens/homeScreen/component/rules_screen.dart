@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +9,40 @@ import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/question_s
 
 import '../../../constant.dart';
 
-class RulesScreen extends StatelessWidget {
+class RulesScreen extends StatefulWidget {
+  @override
+  _RulesScreenState createState() => _RulesScreenState();
+}
+
+class _RulesScreenState extends State<RulesScreen> {
+  int timmer = 5;
+  Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  startTimer() {
+    Timer.periodic(Duration(seconds: 1), (_timer) {
+      if (timmer == 0) {
+        _timer.cancel();
+        navigateToQuiz();
+      } else {
+        setState(() => timmer -= 1);
+      }
+    });
+  }
+
+  navigateToQuiz() {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    mainPro.clearQuizData();
+    mainPro.intializeAnswersList();
+    Navigator.of(context)
+        .push(CupertinoPageRoute(builder: (ctx) => QuizQuestion()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -133,15 +168,9 @@ class RulesScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {
-          final mainPro = Provider.of<MainPro>(context, listen: false);
-          mainPro.clearQuizData();
-          mainPro.intializeAnswersList();
-          Navigator.of(context)
-              .push(CupertinoPageRoute(builder: (ctx) => QuizQuestion()));
-        },
+        onPressed: () {},
         child: Text(
-          'START THE QUIZ',
+          'QUIZ STARTS IN $timmer',
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',
