@@ -220,6 +220,8 @@ class ReserveSlotScreen extends StatelessWidget {
   }
 
   Widget buildSlotsLeftGradientBar(Size mq, double totalSlots, double slotsLeft) {
+    print(totalSlots);
+    print(slotsLeft);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -227,7 +229,7 @@ class ReserveSlotScreen extends StatelessWidget {
         LinearPercentIndicator(
           width: mq.width * 0.6,
           lineHeight: 7.0,
-          percent: 10.0/10.0, // slotsLeft~/totalSlots add this
+          percent: 1.0 - (slotsLeft/totalSlots),
           backgroundColor: kSecondaryColor.withOpacity(0.4),
           linearGradient: LinearGradient(
             begin: Alignment.centerLeft,
