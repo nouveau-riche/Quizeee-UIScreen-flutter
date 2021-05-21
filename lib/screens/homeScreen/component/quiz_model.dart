@@ -84,6 +84,10 @@ class QuizBox extends StatelessWidget {
                             ),
                           );
                         } else {
+
+
+
+
                           Navigator.of(context).push(CupertinoPageRoute(
                             builder: (ctx) => ReserveSlotScreen(
                               isSlotBooked: data.bookingStatus == 1,

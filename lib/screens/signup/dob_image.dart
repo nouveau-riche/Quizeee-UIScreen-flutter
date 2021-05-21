@@ -297,7 +297,7 @@ class _DOBImageState extends State<DOBImage> {
             ),
             Consumer<Auth>(
               builder: (con, auth, _) => auth.isLoading
-                  ? SpinKitWave(color: kSecondaryColor)
+                  ? SpinKitPouringHourglass(color: kSecondaryColor)
                   : ConstrainedBox(
                       constraints:
                           BoxConstraints.tightFor(width: 68, height: 55),

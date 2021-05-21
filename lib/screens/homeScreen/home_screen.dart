@@ -20,17 +20,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  List<Widget> allQuizes = [
-    QuizBox(
-      image: 'assets/images/pos1.png',
-      category: 'HISTORY',
-      time: '03H: 12M: 02S',
-      entryPrize: '5',
-      slots: '4',
-      prize: '49',
-      isSlotBooked: false,
-    ),
-  ];
+  // List<Widget> allQuizes = [
+  //   QuizBox(
+  //     image: 'assets/images/pos1.png',
+  //     category: 'HISTORY',
+  //     time: '03H: 12M: 02S',
+  //     entryPrize: '5',
+  //     slots: '4',
+  //     prize: '49',
+  //     isSlotBooked: false,
+  //   ),
+  // ];
 
   Future<void> getDashboardData() async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
@@ -213,12 +213,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                       category: data.quizCategory.toUpperCase(),
                                       time: mainPro.stateEndDate(data),
                                       entryPrize: data.entryAmount.toString(),
-                                      slots: data.slots.toString(),
+                                      slots: data.availableSlots.toString(),
                                       prize: data.winningPrize.toString(),
                                       isSlotBooked: data.slots == 0,
                                       quizId: data.quizId.toString(),
-                                      totalSlots:
-                                          data.availableSlots.toString(),
+                                      totalSlots:data.slots.toString(),
+
                                       data: data,
                                       quizIndex: index,
                                     );
