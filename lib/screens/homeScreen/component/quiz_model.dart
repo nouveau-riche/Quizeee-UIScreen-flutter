@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/lets_start_or_play_practice_quiz.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/reserve_slot_screen.dart';
 
@@ -84,9 +86,9 @@ class QuizBox extends StatelessWidget {
                             ),
                           );
                         } else {
-
-
-
+                          Provider.of<MainPro>(context, listen: false)
+                              .saveCurrentQuizId(
+                                  quizId: quizId, quizIndex: quizIndex);
 
                           Navigator.of(context).push(CupertinoPageRoute(
                             builder: (ctx) => ReserveSlotScreen(
