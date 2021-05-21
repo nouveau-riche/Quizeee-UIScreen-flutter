@@ -37,7 +37,7 @@ class CenterLoader extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              SpinKitWave(color: kSecondaryColor),
+              SpinKitPouringHourglass(color: kSecondaryColor),
               Spacer(),
               Text(
                 "Loading....",

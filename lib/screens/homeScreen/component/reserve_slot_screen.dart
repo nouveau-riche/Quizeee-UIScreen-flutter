@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/lets_start_or_play_practice_quiz.dart';
 import 'package:quizeee_ui/widgets/toast.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../../constant.dart';
 
@@ -47,7 +48,7 @@ class ReserveSlotScreen extends StatelessWidget {
           slotsLeft == null
               ? Container()
               : buildSlotsLeftGradientBar(
-                  mq, int.parse(totalSlots), int.parse(slotsLeft)),
+                  mq, double.parse(totalSlots), double.parse(slotsLeft)),
           Text(
             'PRICE BREAKDOWN',
             style:
@@ -218,39 +219,23 @@ class ReserveSlotScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSlotsLeftGradientBar(Size mq, int totalSlots, int slotsLeft) {
-    int remainingSlots = slotsLeft - totalSlots;
-    int percentage = (100 * remainingSlots) ~/ totalSlots;
-    print(percentage);
-
+  Widget buildSlotsLeftGradientBar(Size mq, double totalSlots, double slotsLeft) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        buildSlotTag(totalSlots, mq.height * 0.06, mq.width * 0.1, true),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 2),
-          width: mq.width * 0.65,
-          height: 7,
-          color: kSecondaryColor.withOpacity(0.4),
-          child: Row(
-            children: [
-              Container(
-                width: ((mq.width * 0.65 * percentage) ~/ 100).toDouble(),
-                height: 7,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                        kPrimaryLightColor.withOpacity(0.1),
-                        kPrimaryLightColor
-                      ]),
-                ),
-              ),
-            ],
+        buildSlotTag(slotsLeft.toInt(), mq.height * 0.06, mq.width * 0.1, true),
+        LinearPercentIndicator(
+          width: mq.width * 0.6,
+          lineHeight: 7.0,
+          percent: 10.0/10.0, // slotsLeft~/totalSlots add this
+          backgroundColor: kSecondaryColor.withOpacity(0.4),
+          linearGradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [kPrimaryLightColor.withOpacity(0.1), kPrimaryLightColor],
           ),
         ),
-        buildSlotTag(slotsLeft, mq.height * 0.06, mq.width * 0.1, false),
+        buildSlotTag(totalSlots.toInt(), mq.height * 0.06, mq.width * 0.1, false),
       ],
     );
   }

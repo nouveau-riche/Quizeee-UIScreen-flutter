@@ -343,7 +343,7 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget buildNextButton() {
     return Consumer<Auth>(
       builder: (con, auth, _) => auth.isLoading
-          ? SpinKitWave(color: kSecondaryColor)
+          ? SpinKitPouringHourglass(color: kSecondaryColor)
           : ConstrainedBox(
               constraints: BoxConstraints.tightFor(width: 68, height: 55),
               child: ElevatedButton(

@@ -208,7 +208,7 @@ class LoginScreen extends StatelessWidget {
   Widget buildNextButton(BuildContext context) {
     return Consumer<Auth>(
       builder: (con, auth, _) => auth.isLoading
-          ? SpinKitWave(color: kSecondaryColor)
+          ? SpinKitPouringHourglass(color: kSecondaryColor)
           : ConstrainedBox(
               constraints: const BoxConstraints.tightFor(width: 68, height: 55),
               child: ElevatedButton(
