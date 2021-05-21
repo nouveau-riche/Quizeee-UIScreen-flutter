@@ -20,6 +20,7 @@ class PublicQuizes {
   List<PrizePool> prizePool;
   List<Questions> questions;
   Age age;
+  int bookingStatus;
   String creationTimeStamp;
 
   PublicQuizes(
@@ -31,6 +32,7 @@ class PublicQuizes {
       this.quizSubCategory,
       this.areaOfInterest,
       this.startDate,
+      this.bookingStatus,
       this.startTime,
       this.endDate,
       this.endTime,
@@ -58,6 +60,7 @@ class PublicQuizes {
     startTime = json['startTime'];
     endDate = json['endDate'].toString();
     endTime = json['endTime'].toString();
+    bookingStatus = json['bookingStatus'];
     slots = json['slots'];
     availableSlots = json['availableSlots'];
     noOfQuestions = json['noOfQuestions'];

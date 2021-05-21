@@ -50,6 +50,13 @@ class MainPro with ChangeNotifier {
     return [..._userRank];
   }
 
+  clearDashBoard() {
+    _assignedQuiz.clear();
+    _publicQuiz.clear();
+    _userRank.clear();
+    _dashboardBanner.clear();
+  }
+
   Future<Map<String, dynamic>> getDashBoardData() async {
     try {
       final userId = await ConstFun.getKeyValue("userId", _auth.storage);
@@ -385,32 +392,6 @@ class MainPro with ChangeNotifier {
         selectedData.questions[_currentQuestionIndex].rightOption == index;
 
     notifyListeners();
-
-    // final data = answerSelections.where((element) =>
-    //     element['quesId'] ==
-    //     selectedData.questions[_currentQuestionIndex].questionId);
-
-    // if (data.isEmpty) {
-    //   // print("DATA DOESN't HAVE THIS VALUE SO ADD IT");
-    //   answerSelections.add({
-    //     "quesId": selectedData.questions[_currentQuestionIndex].questionId,
-    //     "answer": selectedData.questions[_currentQuestionIndex].options[index],
-    //     "second": _seconds,
-    //     "answerIndex": index
-    //   });
-    // } else {
-    //   answerSelections.removeWhere((element) =>
-    //       element['quesId'] ==
-    //       selectedData.questions[_currentQuestionIndex].questionId);
-    //   answerSelections.add({
-    //     "quesId": selectedData.questions[_currentQuestionIndex].questionId,
-    //     "answer": selectedData.questions[_currentQuestionIndex].options[index],
-    //     "second": _seconds,
-    //     "answerIndex": index
-    //   });
-    //   // print("DATA ALREDY HAVING THIS VALUE REPLACE IT");
-    // }
-    // print(answerSelections);
   }
 
   int _time_remain_provider = 11;
@@ -419,6 +400,18 @@ class MainPro with ChangeNotifier {
   updateRemainingTime() {
     _perQuestionAnswerSeconds += 1;
     _time_remain_provider--;
+    notifyListeners();
+  }
+
+  bool showCountDownTimer = false;
+  bool quizStarted = false;
+  switchToCountDown(bool val) {
+    showCountDownTimer = val;
+    notifyListeners();
+  }
+
+  switchQuizStarted(bool val) {
+    quizStarted = val;
     notifyListeners();
   }
 }

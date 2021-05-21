@@ -204,7 +204,7 @@ class QuizResult extends StatelessWidget {
                     height: mq.height * 0.01,
                   ),
                   Text(
-                    'Rs. ${rankDetails.prize}/ -',
+                    '₹ ${rankDetails.prize}/ -',
                     style: TextStyle(
                         color: kResultColor,
                         fontSize: 24,

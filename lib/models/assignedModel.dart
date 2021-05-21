@@ -17,6 +17,7 @@ class AssignedQuiz {
   int timePerQues;
   int entryAmount;
   int winningPrize;
+  int bookingStatus;
   List<PrizePool> prizePool;
   List<Questions> questions;
   List<int> access;
@@ -26,6 +27,7 @@ class AssignedQuiz {
       {this.sId,
       this.quizId,
       this.slot,
+      this.bookingStatus,
       this.availableSlots,
       this.quizMasterId,
       this.quizTitle,
@@ -50,6 +52,7 @@ class AssignedQuiz {
     sId = json['_id'];
     quizId = json['quizId'];
     slot = json['slot'].toString();
+    bookingStatus = json['bookingStatus'];
     availableSlots = json['availableSlots'].toString();
     quizMasterId = json['quizMasterId'];
     quizTitle = json['quizTitle'];
