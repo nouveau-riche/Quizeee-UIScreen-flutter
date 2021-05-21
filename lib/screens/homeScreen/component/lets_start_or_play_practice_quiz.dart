@@ -39,6 +39,15 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
     }
   }
 
+  Future<void> playPracticeQuiz(BuildContext context) async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    final resp =
+        await mainPro.getPracticeQuiz(data.questions.length, data.quizCategory);
+    if (!resp['status']) {
+      toast(resp['message'], isError: true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -129,7 +138,8 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
                       Navigator.of(context).push(
                           CupertinoPageRoute(builder: (ctx) => RulesScreen()));
                     } else {
-                      toast("Navigate to practive quiz", isError: false);
+                      playPracticeQuiz(context);
+                      // toast("Navigate to practive quiz", isError: false);
                     }
                   },
                   child: Text(

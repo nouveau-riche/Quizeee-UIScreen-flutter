@@ -223,6 +223,23 @@ class MainPro with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> getPracticeQuiz(
+      int quizQuestions, String quizCategory) async {
+    try {
+      var body = {"noOfQuestions": quizQuestions, "quizCategory": quizCategory};
+      final result = await http.post(
+        ApiUrls.baseUrl + ApiUrls.pracQuiz,
+        body: json.encode(body),
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
   DateFormat format = DateFormat("dd-MMMM , hh:mm");
   String stateEndDate(dynamic date) {
     try {
