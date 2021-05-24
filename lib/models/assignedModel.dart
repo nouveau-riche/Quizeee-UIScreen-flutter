@@ -59,9 +59,9 @@ class AssignedQuiz {
     quizCategory = json['quizCategory'];
     quizSubCategory = json['quizSubCategory'];
     areaOfInterest = json['areaOfInterest'];
-    startDate = json['startDate'];
+    startDate = json['startDate'].toString();
     startTime = json['startTime'];
-    endDate = json['endDate'];
+    endDate = json['endDate'].toString();
     endTime = json['endTime'];
     noOfQuestions = json['noOfQuestions'];
     difficultyLevel = json['difficultyLevel'];

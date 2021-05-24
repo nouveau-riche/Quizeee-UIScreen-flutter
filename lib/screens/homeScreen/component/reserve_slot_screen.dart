@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quizeee_ui/navigatorAnimation/navigatorParent.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/lets_start_or_play_practice_quiz.dart';
+import 'package:quizeee_ui/widgets/centerLoader.dart';
 import 'package:quizeee_ui/widgets/toast.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
@@ -38,51 +40,67 @@ class ReserveSlotScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: Column(
-        children: [
-          SizedBox(
-            height: mq.height * 0.04,
-          ),
-          buildAppBar(context, mq.width * 0.045),
-          buildQuizPoster(mq),
-          slotsLeft == null
-              ? Container()
-              : buildSlotsLeftGradientBar(
-                  mq, double.parse(totalSlots), double.parse(slotsLeft)),
-          Text(
-            'PRICE BREAKDOWN',
-            style:
-                TextStyle(color: kSecondaryColor, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: mq.height * 0.015,
-          ),
-          buildRankWisePrizeRow(),
-          Spacer(),
-          buildDivider(mq),
-          buildEntryFeeAndLevel(),
-          buildDivider(mq),
-          SizedBox(
-            height: mq.height * 0.02,
-          ),
-          Consumer<MainPro>(builder: (context, mainPro, _) {
-            return Column(
+      body: Consumer<MainPro>(
+        builder: (con, mainPro, _) => Stack(
+          children: [
+            Column(
               children: [
-                mainPro.changeServeStatus || isSlotBooked
-                    ? buildPayNow(
+                SizedBox(
+                  height: mq.height * 0.04,
+                ),
+                buildAppBar(context, mq.width * 0.045),
+                buildQuizPoster(mq),
+                slotsLeft == null
+                    ? Container()
+                    : buildSlotsLeftGradientBar(
                         mq,
-                        context,
+                        double.parse(totalSlots),
                         mainPro.changeServeStatus
-                            ? mainPro.changeServeStatus
-                            : isSlotBooked)
-                    : buildReserveSlot(mq, context),
+                            ? double.parse(
+                                (int.parse(slotsLeft) - 1).toString())
+                            : double.parse(slotsLeft)),
+                Text(
+                  'PRICE BREAKDOWN',
+                  style: TextStyle(
+                      color: kSecondaryColor, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: mq.height * 0.015,
+                ),
+                buildRankWisePrizeRow(),
+                Spacer(),
+                buildDivider(mq),
+                buildEntryFeeAndLevel(),
+                buildDivider(mq),
+                SizedBox(
+                  height: mq.height * 0.02,
+                ),
+                Consumer<MainPro>(builder: (context, mainPro, _) {
+                  return Column(
+                    children: [
+                      mainPro.changeServeStatus || isSlotBooked
+                          ? buildPayNow(
+                              mq,
+                              context,
+                              mainPro.changeServeStatus
+                                  ? mainPro.changeServeStatus
+                                  : isSlotBooked)
+                          : buildReserveSlot(mq, context),
+                    ],
+                  );
+                }),
+                SizedBox(
+                  height: mq.height * 0.06,
+                ),
               ],
-            );
-          }),
-          SizedBox(
-            height: mq.height * 0.06,
-          ),
-        ],
+            ),
+            mainPro.isLoading
+                ? CenterLoader(
+                    isScaffoldRequired: false,
+                  )
+                : Container()
+          ],
+        ),
       ),
     );
   }
@@ -219,7 +237,8 @@ class ReserveSlotScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSlotsLeftGradientBar(Size mq, double totalSlots, double slotsLeft) {
+  Widget buildSlotsLeftGradientBar(
+      Size mq, double totalSlots, double slotsLeft) {
     print(totalSlots);
     print(slotsLeft);
     return Row(
@@ -229,7 +248,7 @@ class ReserveSlotScreen extends StatelessWidget {
         LinearPercentIndicator(
           width: mq.width * 0.6,
           lineHeight: 7.0,
-          percent: 1.0 - (slotsLeft/totalSlots),
+          percent: 1.0 - (slotsLeft / totalSlots),
           backgroundColor: kSecondaryColor.withOpacity(0.4),
           linearGradient: LinearGradient(
             begin: Alignment.centerLeft,
@@ -237,7 +256,8 @@ class ReserveSlotScreen extends StatelessWidget {
             colors: [kPrimaryLightColor.withOpacity(0.1), kPrimaryLightColor],
           ),
         ),
-        buildSlotTag(totalSlots.toInt(), mq.height * 0.06, mq.width * 0.1, false),
+        buildSlotTag(
+            totalSlots.toInt(), mq.height * 0.06, mq.width * 0.1, false),
       ],
     );
   }
@@ -487,7 +507,9 @@ class ReserveSlotScreen extends StatelessWidget {
               style: TextStyle(color: Colors.black54),
             ),
           ),
-          ConfirmBooking(),
+          ConfirmBooking(
+            data: data,
+          ),
         ],
       ),
     );
@@ -539,7 +561,9 @@ class ReserveSlotScreen extends StatelessWidget {
 }
 
 class ConfirmBooking extends StatefulWidget {
-  const ConfirmBooking({
+  dynamic data;
+  ConfirmBooking({
+    this.data,
     Key key,
   }) : super(key: key);
 
@@ -552,8 +576,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     mainPro.changeLoadingState(true);
     final resp = await mainPro.bookAQuiz(mainPro.selectedQuizId);
+    await mainPro.getDashBoardData();
     mainPro.changeLoadingState(false);
-
     toast(resp['message'], isError: !resp['status']);
     // Navigator.of(context).pop();
   }

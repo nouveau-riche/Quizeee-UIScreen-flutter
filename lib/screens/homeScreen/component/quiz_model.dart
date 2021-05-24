@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quizeee_ui/navigatorAnimation/navigatorParent.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/lets_start_or_play_practice_quiz.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/reserve_slot_screen.dart';
+import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../../constant.dart';
 
@@ -76,7 +78,7 @@ class QuizBox extends StatelessWidget {
                 child: GestureDetector(
                     onTap: () async {
                       // bool booked = await reverseSlot(quizId, quizIndex);
-                      Future.delayed(Duration(milliseconds: 500), () {
+                      Future.delayed(Duration(milliseconds: 500), () async {
                         if (data.bookingStatus == 1) {
                           Navigator.of(context).push(
                             CupertinoPageRoute(
@@ -85,14 +87,18 @@ class QuizBox extends StatelessWidget {
                               ),
                             ),
                           );
+                        } else if (data.bookingStatus == 2) {
+                          toast("Already Played..", isError: false);
                         } else {
+                          // bool booked = await reverseSlot(quizId, quizIndex);
+
                           Provider.of<MainPro>(context, listen: false)
                               .saveCurrentQuizId(
                                   quizId: quizId, quizIndex: quizIndex);
 
-                          Navigator.of(context).push(CupertinoPageRoute(
-                            builder: (ctx) => ReserveSlotScreen(
-                              isSlotBooked: data.bookingStatus == 1,
+                          Navigator.of(context).push(FadeNavigation(
+                            widget: ReserveSlotScreen(
+                              isSlotBooked: false,
                               category: category,
                               image: image,
                               prize: prize,
@@ -107,13 +113,18 @@ class QuizBox extends StatelessWidget {
                         }
                       });
                     },
-                    child: buildReserveSlot(
-                        context,
-                        mq.height * 0.055,
-                        mq.width * 0.28,
-                        data.bookingStatus == 1
-                            ? "PLAY\nNOW"
-                            : "RESERVE\nSLOT")),
+                    child: data.bookingStatus != 1 && slots == "0"
+                        ? Container()
+                        : data.bookingStatus == 2
+                            ? buildReserveSlot(context, mq.height * 0.055,
+                                mq.width * 0.28, "PLAYED")
+                            : buildReserveSlot(
+                                context,
+                                mq.height * 0.055,
+                                mq.width * 0.28,
+                                data.bookingStatus == 1
+                                    ? "PLAY\nNOW"
+                                    : "RESERVE\nSLOT")),
               ),
         Positioned(
           top: mq.height * 0.027,
