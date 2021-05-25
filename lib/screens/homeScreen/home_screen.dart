@@ -1,15 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
-import 'package:quizeee_ui/widgets/toast.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../widgets/my_drawer.dart';
 import '../../widgets/shimmer_effect.dart';
+import '../../widgets/toast.dart';
 import 'component/quiz_model.dart';
 import '../../constant.dart';
+import '../notification/notification_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -18,18 +20,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  // List<Widget> allQuizes = [
-  //   QuizBox(
-  //     image: 'assets/images/pos1.png',
-  //     category: 'HISTORY',
-  //     time: '03H: 12M: 02S',
-  //     entryPrize: '5',
-  //     slots: '4',
-  //     prize: '49',
-  //     isSlotBooked: false,
-  //   ),
-  // ];
 
   Future<void> getDashboardData() async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
@@ -95,20 +85,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: TextDecoration.underline),
           ),
           actions: [
-            Container(
-              width: 42,
-              margin: EdgeInsets.only(left: 15, right: 15, top: 7, bottom: 7),
-              decoration: BoxDecoration(
-                color: kSecondaryColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (ctx) => NotificationScreen(),
+                  ),
+                );
+              },
               child: Container(
-                  margin: EdgeInsets.all(7),
-                  child: Image.asset('assets/images/notification.png')),
+                width: 42,
+                margin: EdgeInsets.only(left: 15, right: 15, top: 7, bottom: 7),
+                decoration: BoxDecoration(
+                  color: kSecondaryColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Container(
+                    margin: EdgeInsets.all(7),
+                    child: Image.asset('assets/images/notification.png')),
+              ),
             ),
           ],
         ),
-        drawer: Drawer(),
+        drawer: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(100),
+            bottomRight: Radius.circular(40),
+          ),
+          child: MyDrawer(),
+        ),
         body: Consumer<MainPro>(builder: (context, mainPro, _) {
           return FutureBuilder(
               future: mainPro.assignedQuiz.isEmpty && mainPro.publicQuiz.isEmpty
