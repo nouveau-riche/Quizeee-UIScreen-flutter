@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constant.dart';
+import '../../constant.dart';
 
 class NotificationScreen extends StatelessWidget {
   @override
@@ -15,12 +15,13 @@ class NotificationScreen extends StatelessWidget {
             height: mq.height * 0.045,
           ),
           buildAppBar(context, mq),
-          SizedBox(
-            height: mq.height * 0.02,
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (ctx, index) =>
+                  buildNotificationMessage(mq, 'New game starts in 2 minutes'),
+              itemCount: 3,
+            ),
           ),
-          buildNotificationMessage(mq, 'New game starts in 2 minutes'),
-          buildNotificationMessage(mq, 'New game starts in 2 minutes'),
-          buildNotificationMessage(mq, 'Congratulations! You won Rs. 30'),
         ],
       ),
     );
@@ -32,7 +33,7 @@ class NotificationScreen extends StatelessWidget {
       children: [
         Container(
           height: 45,
-          width: mq.width * 0.10,
+          width: mq.width * 0.12,
           margin: EdgeInsets.only(left: mq.width * 0.02),
           decoration: BoxDecoration(
             color: kSecondaryColor,
@@ -60,7 +61,7 @@ class NotificationScreen extends StatelessWidget {
               'NOTIFICATION',
               style: TextStyle(
                   color: kPrimaryColor,
-                  fontSize: 14,
+                  fontSize: 12.5,
                   fontWeight: FontWeight.bold),
             ),
           ),
@@ -71,18 +72,19 @@ class NotificationScreen extends StatelessWidget {
 
   Widget buildNotificationMessage(Size mq, String message) {
     return Container(
-      margin: EdgeInsets.only(top: mq.width * 0.05),
+      margin: EdgeInsets.only(top: mq.height * 0.01),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Container(
-            height: 60,
+            height: mq.height * 0.06,
             width: mq.width * 0.125,
+            padding: EdgeInsets.all(8),
             margin: EdgeInsets.only(left: mq.width * 0.02),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: kNotificationColor,
+              color: const Color.fromRGBO(52, 94, 103,1),
             ),
             child: Image.asset('assets/images/notification.png'),
           ),
@@ -93,7 +95,7 @@ class NotificationScreen extends StatelessWidget {
                 width: mq.width * 0.75,
                 height: mq.height * 0.06,
                 decoration: BoxDecoration(
-                  color: kNotificationColor,
+                  color: const Color.fromRGBO(71, 112, 118,1),
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Row(
@@ -114,10 +116,10 @@ class NotificationScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  '10:30 PM',
+                  '10:30 PM', // change time according to notification
                   style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 12,
+                      fontSize: 11,
                       fontWeight: FontWeight.bold),
                 ),
               ),
