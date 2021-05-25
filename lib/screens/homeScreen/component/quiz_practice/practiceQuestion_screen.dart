@@ -38,6 +38,13 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
   Animation _animation;
 
   int seconds = 5 + 1; // change this duration according to api and + 1
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -46,7 +53,7 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
   }
 
   void startTimmer() {
-    Timer.periodic(Duration(seconds: 1), (t) {
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer _timer) {
       var timeinfo = Provider.of<MainPro>(context, listen: false);
       timeinfo.updateRemainingTimePractice(false);
     });
@@ -56,7 +63,16 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
     final main = Provider.of<MainPro>(context, listen: false);
     //increment Question index
     if (main.currentPracQuestion == main.selectedPracQuizData.length - 1) {
-      print("DONE");
+      _timer.cancel();
+      main.calculateTotalScore();
+      toast("Good job...", isError: false);
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.of(context).pushReplacement(CupertinoPageRoute(
+          builder: (ctx) => QuizResult(
+            isPracticeQuiz: true,
+          ),
+        ));
+      });
     } else {
       main.updateRemainingTimePractice(true);
     }
@@ -112,7 +128,7 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
-    print("BUILD METHOD");
+    // print("BUILD METHOD");
     return Scaffold(
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
@@ -356,7 +372,7 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
 
   Widget buildQuestionNumberIndicator(Size mq, int current, int total) {
     int percentage = (100 * current) ~/ total;
-    print(percentage);
+    // print(percentage);
 
     return Column(
       mainAxisSize: MainAxisSize.min,

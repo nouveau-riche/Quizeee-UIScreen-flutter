@@ -8,6 +8,7 @@ import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/question_screen.dart';
 
 import '../../../constant.dart';
+import '../../tabs_screen.dart';
 import 'quiz_practice/practiceQuestion_screen.dart';
 
 class RulesScreen extends StatefulWidget {
@@ -81,7 +82,9 @@ class _RulesScreenState extends State<RulesScreen> {
               color: kPrimaryColor,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (ctx) => TabMainScreen()),
+                  (route) => false);
             },
           ),
         ),

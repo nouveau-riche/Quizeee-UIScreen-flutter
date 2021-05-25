@@ -75,7 +75,7 @@ class MainPro with ChangeNotifier {
           headers: ApiUrls.headers, body: json.encode(body));
       final response = json.decode(result.body) as Map<String, dynamic>;
       if (ConstFun.checkStatus(result)) {
-        // // print(response);
+        // // // print(response);
         if (response['status']) {
           _assignedQuiz.clear();
           _publicQuiz.clear();
@@ -170,7 +170,7 @@ class MainPro with ChangeNotifier {
 
       return response;
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
     }
@@ -204,7 +204,7 @@ class MainPro with ChangeNotifier {
       }
       return response;
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
     }
@@ -248,7 +248,7 @@ class MainPro with ChangeNotifier {
           _pracQuiz.add(PracticeQuizModel.fromJson(element));
         });
       }
-      print(pracQuiz);
+      // print(pracQuiz);
       return response;
     } catch (e) {
       return ConstFun.reponseData(
@@ -274,7 +274,7 @@ class MainPro with ChangeNotifier {
         return format.format(startDate);
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -327,7 +327,7 @@ class MainPro with ChangeNotifier {
 
   Future<void> decrementSeconds() async {
     _seconds -= 1;
-    print(_seconds);
+    // print(_seconds);
     notifyListeners();
   }
 
@@ -357,17 +357,6 @@ class MainPro with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> clearQuizData() async {
-    enableButton = false;
-    _seconds = null;
-    _perQuestionAnswerSeconds = 0;
-    _selectedOption = null;
-    showSolutions = true;
-    // answerSelections.clear();
-    _currentQuestionIndex = 0;
-    notifyListeners();
-  }
-
   Future<bool> incrementQuestions() async {
     bool quesitonFinsh;
     _currentQuestionIndex += 1;
@@ -377,7 +366,7 @@ class MainPro with ChangeNotifier {
       notifyListeners();
       return quesitonFinsh;
     } else {
-      print(answerSelections);
+      // print(answerSelections);
 
       _selectedOption = null;
       quesitonFinsh = false;
@@ -396,7 +385,7 @@ class MainPro with ChangeNotifier {
   int score = 0;
   int responseTime = 0;
   Future<void> calculateTotalScore() async {
-    print(answerSelections);
+    // print(answerSelections);
     answerSelections.forEach((element) {
       if (element['rightAnswer']) {
         score += 1;
@@ -404,8 +393,8 @@ class MainPro with ChangeNotifier {
       }
     });
 
-    print("SCORE : $score");
-    print("RESPONSE TIME : $responseTime");
+    // print("SCORE : $score");
+    // print("RESPONSE TIME : $responseTime");
   }
 
   Future<void> intializeAnswersList() async {
@@ -457,6 +446,21 @@ class MainPro with ChangeNotifier {
 
   switchQuizStarted(bool val) {
     quizStarted = val;
+    notifyListeners();
+  }
+
+  Future<void> clearQuizData() async {
+    enableButton = false;
+    _seconds = null;
+    _perQuestionAnswerSeconds = 0;
+    _selectedOption = null;
+    showSolutions = true;
+    // answerSelections.clear();
+    _currentQuestionIndex = 0;
+    pracQuizQuestionSec = 0;
+    pracSeconds = 0;
+    currentPracQuestion = 0;
+    selectedOptionPrac = null;
     notifyListeners();
   }
 
@@ -512,6 +516,6 @@ class MainPro with ChangeNotifier {
         selectedPracQuizData[currentPracQuestion].rightOption == index;
     notifyListeners();
 
-    print(answerSelections);
+    // print(answerSelections);
   }
 }
