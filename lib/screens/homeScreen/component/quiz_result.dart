@@ -44,7 +44,9 @@ class QuizResult extends StatelessWidget {
               color: kPrimaryColor,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (ctx) => TabMainScreen()),
+                  (route) => false);
             },
           ),
         ),

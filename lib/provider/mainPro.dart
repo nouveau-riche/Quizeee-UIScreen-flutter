@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quizeee_ui/models/assignedModel.dart';
 import 'package:quizeee_ui/models/dashboardBanner.dart';
+import 'package:quizeee_ui/models/pracQuizModel.dart';
 import 'package:quizeee_ui/models/publicModel.dart';
 import 'package:quizeee_ui/models/userRank.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
@@ -50,11 +51,17 @@ class MainPro with ChangeNotifier {
     return [..._userRank];
   }
 
+  List<PracticeQuizModel> _pracQuiz = [];
+  List<PracticeQuizModel> get pracQuiz {
+    return [..._pracQuiz];
+  }
+
   clearDashBoard() {
     _assignedQuiz.clear();
     _publicQuiz.clear();
     _userRank.clear();
     _dashboardBanner.clear();
+    changeServeStatus = false;
   }
 
   Future<Map<String, dynamic>> getDashBoardData() async {
@@ -178,7 +185,9 @@ class MainPro with ChangeNotifier {
         "prizePool": selectedData.prizePool,
         "endDate": selectedData.endDate == "" || selectedData.endDate == "null"
             ? null
-            : DateTime.parse(selectedData.endDate).toIso8601String(),
+            : DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(selectedData.endDate))
+                .toIso8601String(),
         "endTime": selectedData.endTime == "" || selectedData.endTime == "null"
             ? null
             : selectedData.endTime,
@@ -233,6 +242,13 @@ class MainPro with ChangeNotifier {
         headers: ApiUrls.headers,
       );
       final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {
+        _pracQuiz.clear();
+        response['practiceQuestions'].forEach((element) {
+          _pracQuiz.add(PracticeQuizModel.fromJson(element));
+        });
+      }
+      print(pracQuiz);
       return response;
     } catch (e) {
       return ConstFun.reponseData(
@@ -244,9 +260,11 @@ class MainPro with ChangeNotifier {
   String stateEndDate(dynamic date) {
     try {
       DateTime now = DateTime.now();
-      DateTime startDate = DateTime.parse(date.startDate);
+      DateTime startDate =
+          DateTime.fromMillisecondsSinceEpoch(int.parse(date.startDate));
       if (date.endDate.isNotEmpty && date.endDate != "null") {
-        DateTime endTime = DateTime.parse(date.endDate);
+        DateTime endTime =
+            DateTime.fromMillisecondsSinceEpoch(int.parse(date.endDate));
         if (startDate.isAfter(now)) {
           return format.format(startDate);
         } else {
@@ -261,7 +279,7 @@ class MainPro with ChangeNotifier {
   }
 
   String formatDate(String date) {
-    DateTime startDate = DateTime.parse(date);
+    DateTime startDate = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
     return format.format(startDate);
   }
 
@@ -272,12 +290,18 @@ class MainPro with ChangeNotifier {
     selectedData = data;
   }
 
+  dynamic selectedPracQuizData;
+  Future<void> saveDataForPracQuestions(dynamic data) async {
+    selectedPracQuizData = data;
+  }
+
   Future<void> saveCurrentQuizId({String quizId, int quizIndex}) async {
     selectedQuizId = quizId;
     quizIndex = quizIndex;
   }
 
   ///QUESTION ANSWER LOGICS
+  int pracQuizQuestionSec = 0;
   int _seconds = 20;
   int _perQuestionAnswerSeconds = 0;
   bool enableButton = false;
@@ -295,6 +319,10 @@ class MainPro with ChangeNotifier {
       return selectedData.timePerQues;
     }
     return _seconds;
+  }
+
+  void addPracQuizQuestion(int sec) {
+    pracQuizQuestionSec = sec;
   }
 
   Future<void> decrementSeconds() async {
@@ -430,5 +458,60 @@ class MainPro with ChangeNotifier {
   switchQuizStarted(bool val) {
     quizStarted = val;
     notifyListeners();
+  }
+
+  //TODO: PROACTICE QUIZ LOGICS
+  int currentPracQuestion = 0;
+  int pracSeconds = 0;
+  int selectedOptionPrac = null;
+  Future<void> resetSelectedOptionPrac() async {
+    selectedOptionPrac = null;
+    notifyListeners();
+  }
+
+  Future<void> setSelectedOptionPrac(int index) async {
+    selectedOptionPrac = index;
+    notifyListeners();
+  }
+
+  updateRemainingTimePractice(bool reset) {
+    if (reset) {
+      pracSeconds = 0;
+      selectedOptionPrac = null;
+      currentPracQuestion++;
+    } else {
+      pracSeconds++;
+    }
+    notifyListeners();
+  }
+
+  Future<void> intializeAnswersListPractice() async {
+    answerSelections.clear();
+    pracSeconds = 0;
+    score = 0;
+
+    for (int i = 0; i < selectedPracQuizData.length; i++) {
+      answerSelections.add({
+        "quesId": "",
+        "answer": "",
+        "second": 0,
+        "answerIndex": "",
+        "rightAnswer": false
+      });
+    }
+  }
+
+  Future<void> makeSelectionsPrac(int index) async {
+    answerSelections[currentPracQuestion]['quesId'] =
+        selectedPracQuizData[currentPracQuestion].practiceQuesId;
+    answerSelections[currentPracQuestion]['answer'] =
+        selectedPracQuizData[currentPracQuestion].options[index];
+    answerSelections[currentPracQuestion]['second'] = pracSeconds;
+    answerSelections[currentPracQuestion]['answerIndex'] = index;
+    answerSelections[currentPracQuestion]['rightAnswer'] =
+        selectedPracQuizData[currentPracQuestion].rightOption == index;
+    notifyListeners();
+
+    print(answerSelections);
   }
 }

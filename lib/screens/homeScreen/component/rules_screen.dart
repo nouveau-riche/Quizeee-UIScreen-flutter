@@ -8,8 +8,12 @@ import 'package:quizeee_ui/provider/mainPro.dart';
 import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/question_screen.dart';
 
 import '../../../constant.dart';
+import 'quiz_practice/practiceQuestion_screen.dart';
 
 class RulesScreen extends StatefulWidget {
+  final bool isPracticeQuiz;
+
+  const RulesScreen({Key key, @required this.isPracticeQuiz}) : super(key: key);
   @override
   _RulesScreenState createState() => _RulesScreenState();
 }
@@ -38,9 +42,17 @@ class _RulesScreenState extends State<RulesScreen> {
   navigateToQuiz() {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     mainPro.clearQuizData();
-    mainPro.intializeAnswersList();
-    Navigator.of(context)
-        .push(CupertinoPageRoute(builder: (ctx) => QuizQuestion()));
+    if (widget.isPracticeQuiz) {
+      mainPro.intializeAnswersListPractice();
+
+      Navigator.of(context)
+          .push(CupertinoPageRoute(builder: (ctx) => PracticeQuizQuestion()));
+    } else {
+      mainPro.intializeAnswersList();
+
+      Navigator.of(context)
+          .push(CupertinoPageRoute(builder: (ctx) => QuizQuestion()));
+    }
   }
 
   @override

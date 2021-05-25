@@ -10,7 +10,6 @@ import 'package:quizeee_ui/widgets/toast.dart';
 import '../../widgets/shimmer_effect.dart';
 import 'component/quiz_model.dart';
 import '../../constant.dart';
-import 'component/reserve_slot_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -217,8 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       prize: data.winningPrize.toString(),
                                       isSlotBooked: data.slots == 0,
                                       quizId: data.quizId.toString(),
-                                      totalSlots:data.slots.toString(),
-
+                                      totalSlots: data.slots.toString(),
                                       data: data,
                                       quizIndex: index,
                                     );

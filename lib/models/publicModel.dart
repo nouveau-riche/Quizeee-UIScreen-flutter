@@ -56,7 +56,7 @@ class PublicQuizes {
     quizCategory = json['quizCategory'];
     quizSubCategory = json['quizSubCategory'];
     areaOfInterest = json['areaOfInterest'];
-    startDate = json['startDate'];
+    startDate = json['startDate'].toString();
     startTime = json['startTime'];
     endDate = json['endDate'].toString();
     endTime = json['endTime'].toString();

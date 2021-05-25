@@ -38,7 +38,7 @@ dependencies:
   flutter_countdown_timer:
   flutter_spinkit: ^4.1.2
   url_launcher:
-  percent_indicator: ^3.0.1
+  percent_indicator:
 
 
 

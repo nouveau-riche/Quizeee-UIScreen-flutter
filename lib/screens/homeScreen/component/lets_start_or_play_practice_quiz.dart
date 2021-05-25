@@ -18,33 +18,33 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     mainPro.showCountDownTimer = false;
     mainPro.quizStarted = false;
-    DateTime startDate = data.startDate;
-    if (startDate.isAfter(DateTime.now())) {
-      // show LETS START
-
-      mainPro.switchToCountDown(false);
-      mainPro.switchQuizStarted(true);
+    DateTime startDate =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(data.startDate));
+    final difference = startDate.difference(DateTime.now()).inDays;
+    if (difference <= 1) {
+      // show countDownTimer
+      mainPro.switchToCountDown(true);
+      mainPro.switchQuizStarted(false);
     } else {
-      // show WILL START AT
-      final difference = DateTime.now().difference(startDate).inMinutes;
-      if (difference <= 60) {
-        // show countDownTimer
-        mainPro.switchToCountDown(true);
-        mainPro.switchQuizStarted(false);
-      } else {
-        // show dateTime in format
-        mainPro.switchToCountDown(false);
-        mainPro.switchQuizStarted(false);
-      }
+      // show dateTime in format
+      mainPro.switchToCountDown(false);
+      mainPro.switchQuizStarted(false);
     }
+    // }
   }
 
   Future<void> playPracticeQuiz(BuildContext context) async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     final resp =
-        await mainPro.getPracticeQuiz(data.questions.length, data.quizCategory);
+        await mainPro.getPracticeQuiz(data.questions.length, "Science");
     if (!resp['status']) {
       toast(resp['message'], isError: true);
+    } else {
+      mainPro.saveDataForPracQuestions(mainPro.pracQuiz);
+      Navigator.of(context).pushReplacement(CupertinoPageRoute(
+          builder: (ctx) => RulesScreen(
+                isPracticeQuiz: true,
+              )));
     }
   }
 
@@ -101,12 +101,21 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
                 child: Center(
                   child: mainPro.showCountDownTimer
                       ? CountdownTimer(
-                          endTime: DateTime.parse(data.startDate)
-                              .millisecondsSinceEpoch,
+                          endTime: int.parse(data.startDate),
+                          // endTime: DateTime.now()
+                          //     .add(Duration(seconds: 10))
+                          //     .millisecondsSinceEpoch,
                           onEnd: () {
+                            mainPro.switchQuizStarted(true);
                             mainPro.saveDataForQuestions(data);
-                            Navigator.of(context).push(CupertinoPageRoute(
-                                builder: (ctx) => RulesScreen()));
+                            toast("Let's begin...", isError: false);
+                            Future.delayed(Duration(seconds: 1), () {
+                              Navigator.of(context)
+                                  .pushReplacement(CupertinoPageRoute(
+                                      builder: (ctx) => RulesScreen(
+                                            isPracticeQuiz: false,
+                                          )));
+                            });
                           },
                           textStyle: TextStyle(
                             fontSize: 15,
@@ -135,8 +144,10 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
                   onPressed: () {
                     if (mainPro.quizStarted) {
                       mainPro.saveDataForQuestions(data);
-                      Navigator.of(context).push(
-                          CupertinoPageRoute(builder: (ctx) => RulesScreen()));
+                      Navigator.of(context).push(CupertinoPageRoute(
+                          builder: (ctx) => RulesScreen(
+                                isPracticeQuiz: false,
+                              )));
                     } else {
                       playPracticeQuiz(context);
                       // toast("Navigate to practive quiz", isError: false);
