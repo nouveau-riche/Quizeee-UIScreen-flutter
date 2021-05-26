@@ -68,12 +68,13 @@ class AssignedQuiz {
     timePerQues = json['timePerQues'];
     entryAmount = json['entryAmount'];
     winningPrize = json['winningPrize'];
-    if (json['prizePool'] != null) {
-      prizePool = new List<PrizePool>();
-      json['prizePool'].forEach((v) {
-        prizePool.add(new PrizePool.fromJson(v));
-      });
-    }
+    json['prizePool'] = null;
+    // if (json['prizePool'] != null) {
+    //   prizePool = new List<PrizePool>();
+    //   json['prizePool'].forEach((v) {
+    //     prizePool.add(new PrizePool.fromJson(v));
+    //   });
+    // }
     if (json['questions'] != null) {
       questions = new List<Questions>();
       json['questions'].forEach((v) {

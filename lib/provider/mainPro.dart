@@ -149,12 +149,21 @@ class MainPro with ChangeNotifier {
 
   Future<Map<String, dynamic>> submitQuizResult() async {
     try {
+      // ""questionId"":101, ""userOption"":2},{""questionId"":102, ""userOption"":2}
       final userId = await ConstFun.getKeyValue("userId", _auth.storage);
+
+      var reviewSolutions = [];
+      answerSelections.forEach((element) {
+        reviewSolutions.add(
+            {"questionId": element['quesId'], "userOption": element['answer']});
+      });
+
       var body = {
         "userId": _auth.userModel[0].userId,
         "quizId": selectedData.quizId.toString(),
         "score": score,
-        "responseTime": responseTime
+        "responseTime": responseTime,
+        "reviewSolutions": reviewSolutions
       };
       final result = await http.post(
         ApiUrls.baseUrl + ApiUrls.submitResult,

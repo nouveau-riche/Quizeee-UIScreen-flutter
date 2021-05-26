@@ -94,6 +94,7 @@ class _QuizQuestionState extends State<QuizQuestion>
         _controller.stop();
         main.changeLoadingState(true);
         final response = await main.submitQuizResult();
+        await main.getDashBoardData();
         main.changeLoadingState(false);
         main.clearQuizData();
         if (response['status']) {

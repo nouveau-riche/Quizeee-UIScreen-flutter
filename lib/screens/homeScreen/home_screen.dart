@@ -177,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           : "0",
                                       data: data,
                                       quizIndex: index,
+                                      isAssignedQuiz: true,
                                     );
                                   }))
                                 ],
@@ -224,6 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       totalSlots: data.slots.toString(),
                                       data: data,
                                       quizIndex: index,
+                                      isAssignedQuiz: false,
                                     );
                                   }))
                                 ],

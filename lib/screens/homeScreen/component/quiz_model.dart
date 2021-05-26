@@ -11,6 +11,7 @@ import '../../../constant.dart';
 
 class QuizBox extends StatelessWidget {
   final Function reverseSlot;
+  final bool isAssignedQuiz;
   final String image;
   final String category;
   final String time;
@@ -24,6 +25,7 @@ class QuizBox extends StatelessWidget {
   final int quizIndex;
 
   QuizBox({
+    this.isAssignedQuiz,
     this.reverseSlot,
     this.totalSlots,
     this.quizIndex,
@@ -61,7 +63,9 @@ class QuizBox extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   buildCategory(mq.height * 0.038, mq.width * 0.28),
-                  buildEntryPrize(mq.height * 0.07, mq.width * 0.28),
+                  isAssignedQuiz
+                      ? Container()
+                      : buildEntryPrize(mq.height * 0.07, mq.width * 0.28),
                 ],
               ),
             ],
@@ -77,9 +81,8 @@ class QuizBox extends StatelessWidget {
                 bottom: mq.height * 0.1,
                 child: GestureDetector(
                     onTap: () async {
-                      // bool booked = await reverseSlot(quizId, quizIndex);
-                      Future.delayed(Duration(milliseconds: 500), () async {
-                        if (data.bookingStatus == 1) {
+                      if (isAssignedQuiz) {
+                        if (data.bookingStatus == -1) {
                           Navigator.of(context).push(
                             CupertinoPageRoute(
                               builder: (ctx) => LetsStartOrPlayPracticeQuiz(
@@ -87,31 +90,45 @@ class QuizBox extends StatelessWidget {
                               ),
                             ),
                           );
-                        } else if (data.bookingStatus == 2) {
-                          toast("Already Played..", isError: false);
-                        } else {
-                          // bool booked = await reverseSlot(quizId, quizIndex);
-
-                          Provider.of<MainPro>(context, listen: false)
-                              .saveCurrentQuizId(
-                                  quizId: quizId, quizIndex: quizIndex);
-
-                          Navigator.of(context).push(FadeNavigation(
-                            widget: ReserveSlotScreen(
-                              isSlotBooked: false,
-                              category: category,
-                              image: image,
-                              prize: prize,
-                              time: time,
-                              entryPrize: entryPrize,
-                              difficultyLevel: data.difficultyLevel.toString(),
-                              totalSlots: totalSlots,
-                              slotsLeft: slots,
-                              data: data,
-                            ),
-                          ));
                         }
-                      });
+                      } else {
+                        // bool booked = await reverseSlot(quizId, quizIndex);
+                        Future.delayed(Duration(milliseconds: 500), () async {
+                          if (data.bookingStatus == 1) {
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                builder: (ctx) => LetsStartOrPlayPracticeQuiz(
+                                  data: data,
+                                ),
+                              ),
+                            );
+                          } else if (data.bookingStatus == 2) {
+                            toast("Already Played..", isError: false);
+                          } else {
+                            // bool booked = await reverseSlot(quizId, quizIndex);
+
+                            Provider.of<MainPro>(context, listen: false)
+                                .saveCurrentQuizId(
+                                    quizId: quizId, quizIndex: quizIndex);
+
+                            Navigator.of(context).push(FadeNavigation(
+                              widget: ReserveSlotScreen(
+                                isSlotBooked: false,
+                                category: category,
+                                image: image,
+                                prize: prize,
+                                time: time,
+                                entryPrize: entryPrize,
+                                difficultyLevel:
+                                    data.difficultyLevel.toString(),
+                                totalSlots: totalSlots,
+                                slotsLeft: slots,
+                                data: data,
+                              ),
+                            ));
+                          }
+                        });
+                      }
                     },
                     child: data.bookingStatus != 1 && slots == "0"
                         ? Container()
