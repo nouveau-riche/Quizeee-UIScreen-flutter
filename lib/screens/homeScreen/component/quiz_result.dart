@@ -156,7 +156,7 @@ class QuizResult extends StatelessWidget {
                               children: [
                                 isPracticeQuiz
                                     ? Icon(
-                                        Icons.account_balance_wallet,
+                                        Icons.watch_later,
                                         color: kResultColor,
                                       )
                                     : Container(),
@@ -355,7 +355,7 @@ class QuizResult extends StatelessWidget {
                           ],
                         ),
                         Spacer(),
-                        Text(
+                        isPracticeQuiz ? Container() : Text(
                           'PRIZE WON',
                           style: TextStyle(
                               color: kSecondaryColor,

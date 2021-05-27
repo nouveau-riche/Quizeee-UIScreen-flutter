@@ -314,10 +314,10 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
               padding: const EdgeInsets.all(8.0),
               child: Align(
                 child: Text(
-                  'NEXT',
+                  'Next',
                   style: TextStyle(
                       color: kPrimaryLightColor,
-                      fontSize: 22,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold),
                 ),
               ),
@@ -372,7 +372,6 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
 
   Widget buildQuestionNumberIndicator(Size mq, int current, int total) {
     int percentage = (100 * current) ~/ total;
-    // print(percentage);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
