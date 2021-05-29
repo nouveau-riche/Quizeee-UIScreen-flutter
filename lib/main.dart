@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:quizeee_ui/provider/initialPro.dart';
@@ -40,7 +41,35 @@ void main() {
   // };
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    initOneSignal();
+  }
+
+  Future<void> initOneSignal() async {
+    await OneSignal.shared.init(oneSignalKey).catchError((e) {
+      print(e.toString());
+    });
+
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
+
+    OneSignal.shared.setNotificationOpenedHandler((openedResult) {
+      print(openedResult.notification);
+    });
+
+    OneSignal.shared.setNotificationReceivedHandler((notification) {
+      print(notification.androidNotificationId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -78,18 +107,18 @@ class _NavigateScreenState extends State<NavigateScreen> {
         Navigator.pushAndRemoveUntil(
             context,
             CupertinoPageRoute(builder: (context) => TabMainScreen()),
-                (route) => false);
+            (route) => false);
       } else {
         Navigator.pushAndRemoveUntil(
             context,
             CupertinoPageRoute(builder: (context) => LoginScreen()),
-                (route) => false);
+            (route) => false);
       }
     } else {
       Navigator.pushAndRemoveUntil(
           context,
           CupertinoPageRoute(builder: (context) => LoginScreen()),
-              (route) => false);
+          (route) => false);
     }
   }
 
@@ -99,15 +128,15 @@ class _NavigateScreenState extends State<NavigateScreen> {
       body: Container(
         child: FutureBuilder(
           future: checkLogin(),
-          builder: (con, snap) =>
-              Stack(
-                children: [
-                  LoginScreen(),
-                  CenterLoader(
-                    isScaffoldRequired: false,
-                  )
-                ],
-              ),),
+          builder: (con, snap) => Stack(
+            children: [
+              LoginScreen(),
+              CenterLoader(
+                isScaffoldRequired: false,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

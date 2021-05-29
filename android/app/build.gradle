@@ -21,6 +21,21 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+buildscript {
+    repositories {
+        // ...
+        maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal
+    }
+    dependencies {
+        // ...
+        // OneSignal-Gradle-Plugin
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.6, 0.99.99]'
+    }
+}
+
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -44,6 +59,10 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders = [
+            onesignal_app_id: "300d9f0e-1975-4739-bc25-ca0f1dce1c1b",
+            onesignal_google_project_number: "REMOTE"
+        ]
     }
 
     buildTypes {

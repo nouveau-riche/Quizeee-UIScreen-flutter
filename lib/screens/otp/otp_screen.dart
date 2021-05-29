@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:quizeee_ui/provider/mainPro.dart';
@@ -291,6 +292,9 @@ class _OTPScreenState extends State<OTPScreen> {
     } else {
       print(widget.image);
       FormData body;
+      var status = await OneSignal.shared.getPermissionSubscriptionState();
+
+      print(status.subscriptionStatus.userId);
       if (widget.image != null) {
         var fileContent = widget.image.readAsBytesSync();
         var fileContentBase64 = base64.encode(fileContent);
@@ -301,7 +305,7 @@ class _OTPScreenState extends State<OTPScreen> {
           "phone": "+91" + widget.phone,
           "referralCode": widget.referralCode,
           "dateOfBirth": widget.dob.toIso8601String(),
-          "deviceId": "1234",
+          "deviceId": status.subscriptionStatus.userId.toString(),
           "otpCode": _pinPutController.text,
           "profilePic": await MultipartFile.fromFile(widget.image.path,
               filename: 'upload.png')
@@ -314,7 +318,7 @@ class _OTPScreenState extends State<OTPScreen> {
           "phone": "+91" + widget.phone,
           "referralCode": widget.referralCode,
           "dateOfBirth": widget.dob.toIso8601String(),
-          "deviceId": "1234",
+          "deviceId": status.subscriptionStatus.userId.toString(),
           "otpCode": _pinPutController.text,
           "profilePic": null
         });

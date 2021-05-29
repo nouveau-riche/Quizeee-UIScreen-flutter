@@ -29,6 +29,7 @@ class ApiUrls {
   static String checkBookinStatus = "check-booking-status";
   static String bookQuiz = "book-quizeee-master-quiz-slot";
   static String pracQuiz = "get-practice-questionByCategory";
+  static String getUserQuiz = "get-user-quizzes-details/";
 
   //QUIZ SUBMIT
   static String submitResult = "add-quiz-result";
