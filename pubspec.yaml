@@ -39,6 +39,7 @@ dependencies:
   flutter_spinkit: ^4.1.2
   url_launcher:
   percent_indicator:
+  onesignal_flutter: ^2.6.3
 
 
 

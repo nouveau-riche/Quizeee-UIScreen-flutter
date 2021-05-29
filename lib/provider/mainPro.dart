@@ -154,8 +154,12 @@ class MainPro with ChangeNotifier {
 
       var reviewSolutions = [];
       answerSelections.forEach((element) {
-        reviewSolutions.add(
-            {"questionId": element['quesId'], "userOption": element['answer']});
+        if (element['questionId'] != "") {
+          reviewSolutions.add({
+            "questionId": element['quesId'],
+            "userOption": element['answer']
+          });
+        }
       });
 
       var body = {
@@ -265,6 +269,31 @@ class MainPro with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> getUsersQuiz(
+      int quizQuestions, String quizCategory) async {
+    try {
+      var body = {"noOfQuestions": quizQuestions, "quizCategory": quizCategory};
+      final result = await http.get(
+        ApiUrls.baseUrl + ApiUrls.getUserQuiz,
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {
+        // response['practiceQuestions'].forEach((element) {
+        //   _pracQuiz.add(PracticeQuizModel.fromJson(element));
+        // });
+      }
+      // print(pracQuiz);
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
+  /// ------------------------------
+  /// LOGICS
+  /// ------------------------------
   DateFormat format = DateFormat("dd-MMMM , hh:mm");
   String stateEndDate(dynamic date) {
     try {
