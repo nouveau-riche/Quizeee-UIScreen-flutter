@@ -34,4 +34,8 @@ class ApiUrls {
   //QUIZ SUBMIT
   static String submitResult = "add-quiz-result";
   static String getUserRank = "get-user-rank";
+
+  // NOTIFICATIONS
+  static String getUserNotifications = "all-user-notifications/";
+  static String deleteNotifications = "del-notification";
 }

@@ -8,6 +8,7 @@ import 'package:quizeee_ui/models/dashboardBanner.dart';
 import 'package:quizeee_ui/models/pracQuizModel.dart';
 import 'package:quizeee_ui/models/publicModel.dart';
 import 'package:quizeee_ui/models/userRank.dart';
+import 'package:quizeee_ui/models/usernotifications.dart';
 import 'package:quizeee_ui/provider/apiUrl.dart';
 import 'package:quizeee_ui/provider/constFun.dart';
 import 'package:quizeee_ui/provider/initialPro.dart';
@@ -54,6 +55,11 @@ class MainPro with ChangeNotifier {
   List<PracticeQuizModel> _pracQuiz = [];
   List<PracticeQuizModel> get pracQuiz {
     return [..._pracQuiz];
+  }
+
+  List<UserNotificationModel> _userNotifications = [];
+  List<UserNotificationModel> get userNofications {
+    return [..._userNotifications];
   }
 
   clearDashBoard() {
@@ -266,6 +272,52 @@ class MainPro with ChangeNotifier {
     } catch (e) {
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> getUsersNotifications() async {
+    try {
+      final result = await http.get(
+        ApiUrls.baseUrl +
+            ApiUrls.getUserNotifications +
+            _auth.userModel[0].userId.toString(),
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {
+        _userNotifications.clear();
+
+        response['notifications'].forEach((element) {
+          _userNotifications.add(UserNotificationModel.fromJson(element));
+        });
+      }
+      print(_userNotifications);
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteNotications(String noticationId) async {
+    try {
+      changeLoadingState(true);
+      final result = await http.post(
+          ApiUrls.baseUrl + ApiUrls.deleteNotifications,
+          headers: ApiUrls.headers,
+          body: json.encode({"notificationId": noticationId}));
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {
+        await getUsersNotifications();
+      }
+      print(_userNotifications);
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    } finally {
+      changeLoadingState(false);
+      notifyListeners();
     }
   }
 

@@ -16,7 +16,32 @@ class TabMainScreen extends StatefulWidget {
   _TabMainScreenState createState() => _TabMainScreenState();
 }
 
-class _TabMainScreenState extends State<TabMainScreen> {
+class _TabMainScreenState extends State<TabMainScreen>
+    with WidgetsBindingObserver {
+  AppLifecycleState state;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState appLifecycleState) {
+    super.didChangeAppLifecycleState(state);
+    state = appLifecycleState;
+    if (state == AppLifecycleState.paused) {
+      getDashboardData();
+    }
+  }
+
+  Future<void> getDashboardData() async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    await mainPro.getDashBoardData();
+    await mainPro.getDashBoardBanner();
+    mainPro.notifyListeners();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
