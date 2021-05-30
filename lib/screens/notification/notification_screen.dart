@@ -57,8 +57,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               children: [
                                 Column(
                                   children: [
-                                    buildNotificationMessage(mq,
-                                        data.userNofications[index].message),
+                                    buildNotificationMessage(
+                                        mq,
+                                        data.userNofications[index].message,
+                                        data.formatTime.format(DateTime.parse(
+                                            data.userNofications[index]
+                                                .notificationDate))),
                                     SizedBox(
                                       height: mq.height * 0.02,
                                     )
@@ -137,7 +141,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  Widget buildNotificationMessage(Size mq, String message) {
+  Widget buildNotificationMessage(Size mq, String message, String time) {
     return Container(
       margin: EdgeInsets.only(top: mq.height * 0.01),
       child: Row(
@@ -183,7 +187,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  '10:30 PM', // change time according to notification
+                  time,
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 11,

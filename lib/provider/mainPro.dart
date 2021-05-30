@@ -347,6 +347,7 @@ class MainPro with ChangeNotifier {
   /// LOGICS
   /// ------------------------------
   DateFormat format = DateFormat("dd-MMMM , hh:mm");
+  DateFormat formatTime = DateFormat("h:mm a");
   String stateEndDate(dynamic date) {
     try {
       DateTime now = DateTime.now();

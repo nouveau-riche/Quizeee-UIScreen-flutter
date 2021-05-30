@@ -5,10 +5,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../otp/otp_screen.dart';
 import '../../provider/initialPro.dart';
 import '../../widgets/toast.dart';
 import '../../constant.dart';
-import '../otp/otp_screen.dart';
 import '../../utility/custom_calendar.dart';
 
 enum CalendarViews { dates, months, year }
@@ -66,17 +66,9 @@ class _DOBImageState extends State<DOBImage> {
   File image;
   final picker = ImagePicker();
 
-  // Future pickImageFromGallery() async {
-  //   var img = await ImagePicker.pickImage(source: ImageSource.gallery);
-  //
-  //   setState(() {
-  //     image = img;
-  //   });
-  // }
 
   Future pickImageFromGallery() async {
     try {
-      print('working fine');
       final imageFile = await picker.getImage(source: ImageSource.gallery);
       if (mounted) {
         setState(() {
