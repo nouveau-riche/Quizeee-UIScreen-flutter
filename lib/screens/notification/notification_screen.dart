@@ -1,28 +1,95 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+import 'package:quizeee_ui/models/usernotifications.dart';
+import 'package:quizeee_ui/provider/mainPro.dart';
+import 'package:quizeee_ui/widgets/centerLoader.dart';
+import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../constant.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
+  @override
+  _NotificationScreenState createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  Future<void> getNotifications() async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    final response = await mainPro.getUsersNotifications();
+  }
+
+  Future<void> deleteNotification(String notiId) async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    toast("Loading....", isError: false);
+    final response = await mainPro.deleteNotications(notiId);
+    mainPro.notifyListeners();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
-
+    final mainPro = Provider.of<MainPro>(context);
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: Column(
-        children: [
-          SizedBox(
-            height: mq.height * 0.045,
-          ),
-          buildAppBar(context, mq),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (ctx, index) =>
-                  buildNotificationMessage(mq, 'New game starts in 2 minutes'),
-              itemCount: 3,
+      body: SafeArea(
+        child: Column(
+          children: [
+            buildAppBar(context, mq),
+            SizedBox(
+              height: mq.height * 0.04,
             ),
-          ),
-        ],
+            FutureBuilder(
+                future: getNotifications(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      mainPro.userNofications.isEmpty) {
+                    return Center(
+                      child: SpinKitPouringHourglass(color: kSecondaryColor),
+                    );
+                  }
+                  return Expanded(
+                    child: Stack(
+                      children: [
+                        Consumer<MainPro>(
+                          builder: (con, data, _) => ListView.builder(
+                            itemBuilder: (ctx, index) => Stack(
+                              children: [
+                                Column(
+                                  children: [
+                                    buildNotificationMessage(mq,
+                                        data.userNofications[index].message),
+                                    SizedBox(
+                                      height: mq.height * 0.02,
+                                    )
+                                  ],
+                                ),
+                                Positioned(
+                                    right: 10,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        deleteNotification(
+                                            data.userNofications[index].sId);
+                                      },
+                                      child: Icon(
+                                        Icons.dangerous,
+                                        color: kSecondaryColor,
+                                      ),
+                                    ))
+                              ],
+                            ),
+                            itemCount: data.userNofications.length,
+                          ),
+                        ),
+                        mainPro.isLoading
+                            ? CenterLoader(isScaffoldRequired: false)
+                            : Container()
+                      ],
+                    ),
+                  );
+                }),
+          ],
+        ),
       ),
     );
   }
@@ -75,7 +142,7 @@ class NotificationScreen extends StatelessWidget {
       margin: EdgeInsets.only(top: mq.height * 0.01),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
             height: mq.height * 0.06,
@@ -84,7 +151,7 @@ class NotificationScreen extends StatelessWidget {
             margin: EdgeInsets.only(left: mq.width * 0.02),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color.fromRGBO(52, 94, 103,1),
+              color: const Color.fromRGBO(52, 94, 103, 1),
             ),
             child: Image.asset('assets/images/notification.png'),
           ),
@@ -95,7 +162,7 @@ class NotificationScreen extends StatelessWidget {
                 width: mq.width * 0.75,
                 height: mq.height * 0.06,
                 decoration: BoxDecoration(
-                  color: const Color.fromRGBO(71, 112, 118,1),
+                  color: const Color.fromRGBO(71, 112, 118, 1),
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Row(
