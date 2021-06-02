@@ -136,18 +136,6 @@ class ReserveSlotScreen extends StatelessWidget {
               fontWeight: FontWeight.bold),
         ),
         Spacer(),
-        Container(
-          width: 42,
-          margin: EdgeInsets.only(left: 15, right: 15, top: 7, bottom: 7),
-          decoration: BoxDecoration(
-            color: kSecondaryColor,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset('assets/images/rules.png'),
-          ),
-        ),
       ],
     );
   }
@@ -205,36 +193,38 @@ class ReserveSlotScreen extends StatelessWidget {
   }
 
   Widget buildQuizTime(double height, double width) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(
-          'QUIZ STARTS AT ',
-          style: TextStyle(
-              fontFamily: 'DebugFreeTrial',
-              color: kPrimaryLightColor,
-              fontSize: 18),
-        ),
-        Container(
-          height: height,
-          width: width,
-          margin: EdgeInsets.only(top: 2),
-          decoration: BoxDecoration(
-            color: kPrimaryLightColor,
-            borderRadius: BorderRadius.circular(7),
+    return Consumer<MainPro>(builder: (context, mainPro, _) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            mainPro.isStartOrEnd(data),
+            style: TextStyle(
+                fontFamily: 'DebugFreeTrial',
+                color: kPrimaryLightColor,
+                fontSize: 18),
           ),
-          child: Center(
-            child: Text(
-              time,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
+          Container(
+            height: height,
+            width: width,
+            margin: EdgeInsets.only(top: 2),
+            decoration: BoxDecoration(
+              color: kPrimaryLightColor,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: Center(
+              child: Text(
+                time,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   Widget buildSlotsLeftGradientBar(

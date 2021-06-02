@@ -102,6 +102,11 @@ class _DOBImageState extends State<DOBImage> {
   }
 
   Future<void> sendOtp() async {
+    if (_selectedDateTime.isAfter(DateTime.now())) {
+      toast("Please select a valid date of birth", isError: true);
+      return;
+    }
+
     var body = {
       "phone": "+91" + widget.phoneNumber,
     };
@@ -319,8 +324,9 @@ class _DOBImageState extends State<DOBImage> {
                       ),
                     ),
             ),
-            SizedBox(height: mq.height*0.02,),
-
+            SizedBox(
+              height: mq.height * 0.02,
+            ),
           ],
         ),
       ),

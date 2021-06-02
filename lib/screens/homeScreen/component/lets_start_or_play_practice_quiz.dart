@@ -213,18 +213,6 @@ class LetsStartOrPlayPracticeQuiz extends StatelessWidget {
             },
           ),
         ),
-        Container(
-          width: 42,
-          margin: EdgeInsets.only(left: 15, right: 15, top: 7, bottom: 7),
-          decoration: BoxDecoration(
-            color: kSecondaryColor,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset('assets/images/rules.png'),
-          ),
-        ),
       ],
     );
   }

@@ -8,6 +8,7 @@ import 'package:quizeee_ui/screens/homeScreen/component/reserve_slot_screen.dart
 import 'package:quizeee_ui/widgets/toast.dart';
 
 import '../../../constant.dart';
+import 'rules_screen.dart';
 
 class QuizBox extends StatelessWidget {
   final Function reverseSlot;
@@ -74,7 +75,7 @@ class QuizBox extends StatelessWidget {
         slots != null
             ? buildSlotsTag(mq.height * 0.062, mq.width * 0.11)
             : Container(),
-        int.parse(totalSlots) == 0
+        int.parse(totalSlots) == 0 && !isAssignedQuiz
             ? Container()
             : Positioned(
                 right: mq.width * 0.055,
@@ -83,13 +84,22 @@ class QuizBox extends StatelessWidget {
                     onTap: () async {
                       if (isAssignedQuiz) {
                         if (data.bookingStatus == -1) {
-                          Navigator.of(context).push(
-                            CupertinoPageRoute(
-                              builder: (ctx) => LetsStartOrPlayPracticeQuiz(
-                                data: data,
-                              ),
-                            ),
-                          );
+                          final mainPro =
+                              Provider.of<MainPro>(context, listen: false);
+                          mainPro.saveDataForQuestions(data);
+                          Navigator.of(context).push(CupertinoPageRoute(
+                              builder: (ctx) => RulesScreen(
+                                    isPracticeQuiz: false,
+                                  )));
+                          // Navigator.of(context).push(
+                          //   CupertinoPageRoute(
+                          //     builder: (ctx) => LetsStartOrPlayPracticeQuiz(
+                          //       data: data,
+                          //     ),
+                          //   ),
+                          // );
+                        } else {
+                          // 2 played
                         }
                       } else {
                         // bool booked = await reverseSlot(quizId, quizIndex);
@@ -130,18 +140,24 @@ class QuizBox extends StatelessWidget {
                         });
                       }
                     },
-                    child: data.bookingStatus != 1 && slots == "0"
-                        ? Container()
-                        : data.bookingStatus == 2
-                            ? buildReserveSlot(context, mq.height * 0.055,
-                                mq.width * 0.28, "PLAYED")
-                            : buildReserveSlot(
-                                context,
-                                mq.height * 0.055,
-                                mq.width * 0.28,
-                                data.bookingStatus == 1
-                                    ? "PLAY\nNOW"
-                                    : "RESERVE\nSLOT")),
+                    child: isAssignedQuiz
+                        ? buildReserveSlot(
+                            context,
+                            mq.height * 0.055,
+                            mq.width * 0.28,
+                            data.bookingStatus == 2 ? "PLAYED" : "PLAY\nNOW")
+                        : data.bookingStatus != 1 && slots == "0"
+                            ? Container()
+                            : data.bookingStatus == 2
+                                ? buildReserveSlot(context, mq.height * 0.055,
+                                    mq.width * 0.28, "PLAYED")
+                                : buildReserveSlot(
+                                    context,
+                                    mq.height * 0.055,
+                                    mq.width * 0.28,
+                                    data.bookingStatus == 1
+                                        ? "PLAY\nNOW"
+                                        : "RESERVE\nSLOT")),
               ),
         Positioned(
           top: mq.height * 0.027,
@@ -177,13 +193,15 @@ class QuizBox extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: kSecondaryColor),
         ),
-        Text(
-          'QUIZ STARTS AT',
-          style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              color: kSecondaryColor),
-        ),
+        Consumer<MainPro>(builder: (context, mainPro, _) {
+          return Text(
+            mainPro.isStartOrEnd(data),
+            style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: kSecondaryColor),
+          );
+        }),
         Container(
           height: height,
           width: width,
