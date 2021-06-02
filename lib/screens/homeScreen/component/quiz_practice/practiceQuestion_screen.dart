@@ -65,7 +65,7 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
     if (main.currentPracQuestion == main.selectedPracQuizData.length - 1) {
       _timer.cancel();
       main.calculateTotalScore();
-      toast("Good job...", isError: false);
+      // toast("Good job...", isError: false);
       Future.delayed(Duration(seconds: 1), () {
         Navigator.of(context).pushReplacement(CupertinoPageRoute(
           builder: (ctx) => QuizResult(

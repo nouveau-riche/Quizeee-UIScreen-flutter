@@ -52,38 +52,48 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     child: Stack(
                       children: [
                         Consumer<MainPro>(
-                          builder: (con, data, _) => ListView.builder(
-                            itemBuilder: (ctx, index) => Stack(
-                              children: [
-                                Column(
-                                  children: [
-                                    buildNotificationMessage(
-                                        mq,
-                                        data.userNofications[index].message,
-                                        data.formatTime.format(DateTime.parse(
-                                            data.userNofications[index]
-                                                .notificationDate))),
-                                    SizedBox(
-                                      height: mq.height * 0.02,
-                                    )
-                                  ],
-                                ),
-                                Positioned(
-                                    right: 10,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        deleteNotification(
-                                            data.userNofications[index].sId);
-                                      },
-                                      child: Icon(
-                                        Icons.dangerous,
-                                        color: kSecondaryColor,
+                          builder: (con, data, _) => data
+                                  .userNofications.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    "No Notifications Received Yet!",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  itemBuilder: (ctx, index) => Stack(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          buildNotificationMessage(
+                                              mq,
+                                              data.userNofications[index]
+                                                  .message,
+                                              data.formatTime.format(
+                                                  DateTime.parse(data
+                                                      .userNofications[index]
+                                                      .notificationDate))),
+                                          SizedBox(
+                                            height: mq.height * 0.02,
+                                          )
+                                        ],
                                       ),
-                                    ))
-                              ],
-                            ),
-                            itemCount: data.userNofications.length,
-                          ),
+                                      Positioned(
+                                          right: 10,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              deleteNotification(data
+                                                  .userNofications[index].sId);
+                                            },
+                                            child: Icon(
+                                              Icons.dangerous,
+                                              color: kSecondaryColor,
+                                            ),
+                                          ))
+                                    ],
+                                  ),
+                                  itemCount: data.userNofications.length,
+                                ),
                         ),
                         mainPro.isLoading
                             ? CenterLoader(isScaffoldRequired: false)

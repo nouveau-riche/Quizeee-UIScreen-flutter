@@ -346,7 +346,7 @@ class MainPro with ChangeNotifier {
   /// ------------------------------
   /// LOGICS
   /// ------------------------------
-  DateFormat format = DateFormat("dd-MMMM , hh:mm");
+  DateFormat format = DateFormat("dd-MMMM , hh:mm a");
   DateFormat formatTime = DateFormat("h:mm a");
   String stateEndDate(dynamic date) {
     try {
@@ -363,6 +363,27 @@ class MainPro with ChangeNotifier {
         }
       } else {
         return format.format(startDate);
+      }
+    } catch (e) {
+      // print(e.toString());
+    }
+  }
+
+  String isStartOrEnd(dynamic date) {
+    try {
+      DateTime now = DateTime.now();
+      DateTime startDate =
+          DateTime.fromMillisecondsSinceEpoch(int.parse(date.startDate));
+      if (date.endDate.isNotEmpty && date.endDate != "null") {
+        DateTime endTime =
+            DateTime.fromMillisecondsSinceEpoch(int.parse(date.endDate));
+        if (startDate.isAfter(now)) {
+          return "QUIZ STARTS AT";
+        } else {
+          return "QUIZ ENDS AT";
+        }
+      } else {
+        return "QUIZ STARTS AT";
       }
     } catch (e) {
       // print(e.toString());
