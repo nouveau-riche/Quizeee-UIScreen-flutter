@@ -120,7 +120,10 @@ class QuizBox extends StatelessWidget {
                             Provider.of<MainPro>(context, listen: false)
                                 .saveCurrentQuizId(
                                     quizId: quizId, quizIndex: quizIndex);
-
+                            Provider.of<MainPro>(context, listen: false)
+                                .changeServeStatus = false;
+                            Provider.of<MainPro>(context, listen: false)
+                                .notifyListeners();
                             Navigator.of(context).push(FadeNavigation(
                               widget: ReserveSlotScreen(
                                 isSlotBooked: false,

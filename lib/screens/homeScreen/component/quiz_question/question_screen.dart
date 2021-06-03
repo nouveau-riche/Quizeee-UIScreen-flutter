@@ -151,123 +151,133 @@ class _QuizQuestionState extends State<QuizQuestion>
     _timer.cancel();
   }
 
+  Future<bool> willPop(BuildContext context) async {
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
     print("BUILD METHOD");
-    return Scaffold(
-      backgroundColor: kPrimaryColor,
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () {
+        willPop(context);
+      },
+      child: Scaffold(
         backgroundColor: kPrimaryColor,
-        elevation: 0,
-        centerTitle: true,
-        leading: Container(
-          height: 45,
-          width: 40,
-          margin: EdgeInsets.only(
-            left: mq.width * 0.024,
-            right: mq.width * 0.024,
-            top: 7,
-            bottom: 7,
-          ),
-          decoration: BoxDecoration(
-            color: kSecondaryColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios_outlined,
-              color: kPrimaryColor,
-            ),
-            onPressed: () {
-              userExitsQuiz();
-              // Navigator.of(context).pop();
-            },
-          ),
+        appBar: AppBar(
+          backgroundColor: kPrimaryColor,
+          elevation: 0,
+          centerTitle: true,
+          leading: Container(
+              // height: 45,
+              // width: 40,
+              // margin: EdgeInsets.only(
+              //   left: mq.width * 0.024,
+              //   right: mq.width * 0.024,
+              //   top: 7,
+              //   bottom: 7,
+              // ),
+              // decoration: BoxDecoration(
+              //   color: kSecondaryColor,
+              //   borderRadius: BorderRadius.circular(10),
+              // ),
+              // child: IconButton(
+              //   icon: Icon(
+              //     Icons.arrow_back_ios_outlined,
+              //     color: kPrimaryColor,
+              //   ),
+              //   onPressed: () {
+              //     // userExitsQuiz();
+              //     // Navigator.of(context).pop();
+              //   },
+              // ),
+              ),
+          title: Consumer<MainPro>(builder: (context, main, _) {
+            return Text(
+              '${main.selectedData.quizCategory} QUIZ',
+              style: TextStyle(
+                color: kSecondaryColor,
+                fontFamily: 'DebugFreeTrial',
+                fontSize: 30,
+              ),
+            );
+          }),
         ),
-        title: Consumer<MainPro>(builder: (context, main, _) {
-          return Text(
-            '${main.selectedData.quizCategory} QUIZ',
-            style: TextStyle(
-              color: kSecondaryColor,
-              fontFamily: 'DebugFreeTrial',
-              fontSize: 30,
-            ),
+        body: Consumer<MainPro>(builder: (context, main, _) {
+          // int index = main.currentQuestionIndex;
+
+          return Stack(
+            children: [
+              Column(
+                children: [
+                  Selector<MainPro, int>(
+                      selector: (context, mainSelector) =>
+                          mainSelector.currentQuestionIndex,
+                      builder: (context, index, _) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: mq.height * 0.01,
+                            ),
+                            buildQuestionNumberIndicator(mq, index + 1,
+                                main.selectedData.questions.length),
+                            SizedBox(
+                              height: mq.height * 0.1,
+                            ),
+                            Column(
+                              children: List.generate(
+                                  main.selectedData.questions[index].options
+                                      .length, (i) {
+                                //initializations
+                                var questions =
+                                    main.selectedData.questions[index];
+                                var options = main
+                                    .selectedData.questions[index].options[i];
+                                //--
+                                return Column(
+                                  children: [
+                                    i == 0
+                                        ? questionsContainer(
+                                            mq, index, questions)
+                                        : Container(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        main.setSelectedOption(i);
+                                        main.makeSelections(i);
+                                      },
+                                      child: optionsContainer(
+                                          mq, main, i, options),
+                                    )
+                                  ],
+                                );
+                              }),
+                            ),
+                            SizedBox(
+                              height: mq.height * 0.04,
+                            ),
+                          ],
+                        );
+                      }),
+                  Selector<MainPro, int>(
+                      selector: (context, mainSelector) =>
+                          mainSelector.gettime_remain_provider(),
+                      builder: (context, second, _) {
+                        return secondsContainer(mq, second);
+                      }),
+                ],
+              ),
+              main.isLoading
+                  ? CenterLoader(
+                      isScaffoldRequired: true,
+                    )
+                  : Container(
+                      // color: Colors.transparent,
+                      )
+            ],
           );
         }),
       ),
-      body: Consumer<MainPro>(builder: (context, main, _) {
-        // int index = main.currentQuestionIndex;
-
-        return Stack(
-          children: [
-            Column(
-              children: [
-                Selector<MainPro, int>(
-                    selector: (context, mainSelector) =>
-                        mainSelector.currentQuestionIndex,
-                    builder: (context, index, _) {
-                      return Column(
-                        children: [
-                          SizedBox(
-                            height: mq.height * 0.01,
-                          ),
-                          buildQuestionNumberIndicator(mq, index + 1,
-                              main.selectedData.questions.length),
-                          SizedBox(
-                            height: mq.height * 0.1,
-                          ),
-                          Column(
-                            children: List.generate(
-                                main.selectedData.questions[index].options
-                                    .length, (i) {
-                              //initializations
-                              var questions =
-                                  main.selectedData.questions[index];
-                              var options =
-                                  main.selectedData.questions[index].options[i];
-                              //--
-                              return Column(
-                                children: [
-                                  i == 0
-                                      ? questionsContainer(mq, index, questions)
-                                      : Container(),
-                                  GestureDetector(
-                                    onTap: () {
-                                      main.setSelectedOption(i);
-                                      main.makeSelections(i);
-                                    },
-                                    child:
-                                        optionsContainer(mq, main, i, options),
-                                  )
-                                ],
-                              );
-                            }),
-                          ),
-                          SizedBox(
-                            height: mq.height * 0.04,
-                          ),
-                        ],
-                      );
-                    }),
-                Selector<MainPro, int>(
-                    selector: (context, mainSelector) =>
-                        mainSelector.gettime_remain_provider(),
-                    builder: (context, second, _) {
-                      return secondsContainer(mq, second);
-                    }),
-              ],
-            ),
-            main.isLoading
-                ? CenterLoader(
-                    isScaffoldRequired: true,
-                  )
-                : Container(
-                    // color: Colors.transparent,
-                    )
-          ],
-        );
-      }),
     );
   }
 

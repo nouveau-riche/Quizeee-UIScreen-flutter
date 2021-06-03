@@ -129,113 +129,95 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
     // print("BUILD METHOD");
-    return Scaffold(
-      backgroundColor: kPrimaryColor,
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () {},
+      child: Scaffold(
         backgroundColor: kPrimaryColor,
-        elevation: 0,
-        centerTitle: true,
-        leading: Container(
-          height: 45,
-          width: 40,
-          margin: EdgeInsets.only(
-            left: mq.width * 0.024,
-            right: mq.width * 0.024,
-            top: 7,
-            bottom: 7,
-          ),
-          decoration: BoxDecoration(
-            color: kSecondaryColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios_outlined,
-              color: kPrimaryColor,
-            ),
-            onPressed: () {
-              userExitsQuiz();
-              // Navigator.of(context).pop();
-            },
-          ),
+        appBar: AppBar(
+          backgroundColor: kPrimaryColor,
+          elevation: 0,
+          centerTitle: true,
+          leading: Container(),
+          title: Consumer<MainPro>(builder: (context, main, _) {
+            return Text(
+              '${main.selectedPracQuizData[0].quizCategory} QUIZ',
+              style: TextStyle(
+                color: kSecondaryColor,
+                fontFamily: 'DebugFreeTrial',
+                fontSize: 30,
+              ),
+            );
+          }),
         ),
-        title: Consumer<MainPro>(builder: (context, main, _) {
-          return Text(
-            '${main.selectedPracQuizData[0].quizCategory} QUIZ',
-            style: TextStyle(
-              color: kSecondaryColor,
-              fontFamily: 'DebugFreeTrial',
-              fontSize: 30,
-            ),
+        body: Consumer<MainPro>(builder: (context, main, _) {
+          // int index = main.currentQuestionIndex;
+
+          return Stack(
+            children: [
+              Column(
+                children: [
+                  Selector<MainPro, int>(
+                      selector: (context, mainSelector) =>
+                          mainSelector.currentPracQuestion,
+                      builder: (context, index, _) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: mq.height * 0.01,
+                            ),
+                            buildQuestionNumberIndicator(mq, index + 1,
+                                main.selectedPracQuizData.length),
+                            SizedBox(
+                              height: mq.height * 0.1,
+                            ),
+                            Column(
+                              children: List.generate(
+                                  main.selectedPracQuizData[index].options
+                                      .length, (i) {
+                                //initializations
+                                var questions =
+                                    main.selectedPracQuizData[index];
+                                var options =
+                                    main.selectedPracQuizData[index].options[i];
+                                //--
+                                return Column(
+                                  children: [
+                                    i == 0
+                                        ? questionsContainer(
+                                            mq, index, questions)
+                                        : Container(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        main.setSelectedOptionPrac(i);
+                                        main.makeSelectionsPrac(i);
+                                      },
+                                      child: optionsContainer(
+                                          mq, main, i, options),
+                                    )
+                                  ],
+                                );
+                              }),
+                            ),
+                            SizedBox(
+                              height: mq.height * 0.04,
+                            ),
+                          ],
+                        );
+                      }),
+                  secondsContainer(mq, nexQuestion)
+                ],
+              ),
+              main.isLoading
+                  ? CenterLoader(
+                      isScaffoldRequired: true,
+                    )
+                  : Container(
+                      // color: Colors.transparent,
+                      )
+            ],
           );
         }),
       ),
-      body: Consumer<MainPro>(builder: (context, main, _) {
-        // int index = main.currentQuestionIndex;
-
-        return Stack(
-          children: [
-            Column(
-              children: [
-                Selector<MainPro, int>(
-                    selector: (context, mainSelector) =>
-                        mainSelector.currentPracQuestion,
-                    builder: (context, index, _) {
-                      return Column(
-                        children: [
-                          SizedBox(
-                            height: mq.height * 0.01,
-                          ),
-                          buildQuestionNumberIndicator(
-                              mq, index + 1, main.selectedPracQuizData.length),
-                          SizedBox(
-                            height: mq.height * 0.1,
-                          ),
-                          Column(
-                            children: List.generate(
-                                main.selectedPracQuizData[index].options.length,
-                                (i) {
-                              //initializations
-                              var questions = main.selectedPracQuizData[index];
-                              var options =
-                                  main.selectedPracQuizData[index].options[i];
-                              //--
-                              return Column(
-                                children: [
-                                  i == 0
-                                      ? questionsContainer(mq, index, questions)
-                                      : Container(),
-                                  GestureDetector(
-                                    onTap: () {
-                                      main.setSelectedOptionPrac(i);
-                                      main.makeSelectionsPrac(i);
-                                    },
-                                    child:
-                                        optionsContainer(mq, main, i, options),
-                                  )
-                                ],
-                              );
-                            }),
-                          ),
-                          SizedBox(
-                            height: mq.height * 0.04,
-                          ),
-                        ],
-                      );
-                    }),
-                secondsContainer(mq, nexQuestion)
-              ],
-            ),
-            main.isLoading
-                ? CenterLoader(
-                    isScaffoldRequired: true,
-                  )
-                : Container(
-                    // color: Colors.transparent,
-                    )
-          ],
-        );
-      }),
     );
   }
 
