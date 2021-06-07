@@ -1,6 +1,6 @@
 {
-    "name": "quizeee_ui",
-    "short_name": "quizeee_ui",
+    "name": "com.quizeee.quizeee",
+    "short_name": "com.quizeee.quizeee",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

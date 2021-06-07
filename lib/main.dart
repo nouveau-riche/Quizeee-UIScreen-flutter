@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'package:quizeee_ui/provider/initialPro.dart';
-import 'package:quizeee_ui/provider/mainPro.dart';
-import 'package:quizeee_ui/provider/states.dart';
-import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/question_screen.dart';
-import 'package:quizeee_ui/screens/homeScreen/component/quiz_result.dart';
-import 'package:quizeee_ui/screens/login/login_screen.dart';
-import 'package:quizeee_ui/screens/tabs_screen.dart';
+import 'package:com.quizeee.quizeee/provider/initialPro.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/provider/states.dart';
+import 'package:com.quizeee.quizeee/screens/homeScreen/component/quiz_question/question_screen.dart';
+import 'package:com.quizeee.quizeee/screens/homeScreen/component/quiz_result.dart';
+import 'package:com.quizeee.quizeee/screens/login/login_screen.dart';
+import 'package:com.quizeee.quizeee/screens/tabs_screen.dart';
 import './constant.dart';
 import 'widgets/centerLoader.dart';
 

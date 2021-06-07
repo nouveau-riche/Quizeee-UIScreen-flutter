@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import 'package:quizeee_ui/provider/mainPro.dart';
-import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/question_screen.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/screens/homeScreen/component/quiz_question/question_screen.dart';
 
 import '../../../constant.dart';
 import '../../tabs_screen.dart';

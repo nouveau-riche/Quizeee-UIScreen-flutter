@@ -3,18 +3,18 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:quizeee_ui/models/assignedModel.dart';
-import 'package:quizeee_ui/models/dashboardBanner.dart';
-import 'package:quizeee_ui/models/pracQuizModel.dart';
-import 'package:quizeee_ui/models/publicModel.dart';
-import 'package:quizeee_ui/models/userRank.dart';
-import 'package:quizeee_ui/models/usernotifications.dart';
-import 'package:quizeee_ui/provider/apiUrl.dart';
-import 'package:quizeee_ui/provider/constFun.dart';
-import 'package:quizeee_ui/provider/initialPro.dart';
+import 'package:com.quizeee.quizeee/models/assignedModel.dart';
+import 'package:com.quizeee.quizeee/models/dashboardBanner.dart';
+import 'package:com.quizeee.quizeee/models/pracQuizModel.dart';
+import 'package:com.quizeee.quizeee/models/publicModel.dart';
+import 'package:com.quizeee.quizeee/models/userRank.dart';
+import 'package:com.quizeee.quizeee/models/usernotifications.dart';
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
+import 'package:com.quizeee.quizeee/provider/constFun.dart';
+import 'package:com.quizeee.quizeee/provider/initialPro.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:quizeee_ui/widgets/toast.dart';
+import 'package:com.quizeee.quizeee/widgets/toast.dart';
 
 class MainPro with ChangeNotifier {
   Auth _auth;

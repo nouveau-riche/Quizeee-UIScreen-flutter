@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:quizeee_ui/provider/apiUrl.dart';
-import 'package:quizeee_ui/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../widgets/my_drawer.dart';

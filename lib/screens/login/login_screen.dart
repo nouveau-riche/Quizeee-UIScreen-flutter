@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import 'package:quizeee_ui/provider/initialPro.dart';
-import 'package:quizeee_ui/provider/states.dart';
+import 'package:com.quizeee.quizeee/provider/initialPro.dart';
+import 'package:com.quizeee.quizeee/provider/states.dart';
 import '../../provider/initialPro.dart';
 import '../../constant.dart';
 import '../otp/otp_screen.dart';

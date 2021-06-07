@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quizeee_ui/navigatorAnimation/navigatorParent.dart';
-import 'package:quizeee_ui/provider/mainPro.dart';
-import 'package:quizeee_ui/screens/homeScreen/component/lets_start_or_play_practice_quiz.dart';
-import 'package:quizeee_ui/screens/homeScreen/component/reserve_slot_screen.dart';
-import 'package:quizeee_ui/widgets/toast.dart';
+import 'package:com.quizeee.quizeee/navigatorAnimation/navigatorParent.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/screens/homeScreen/component/lets_start_or_play_practice_quiz.dart';
+import 'package:com.quizeee.quizeee/screens/homeScreen/component/reserve_slot_screen.dart';
+import 'package:com.quizeee.quizeee/widgets/toast.dart';
 
 import '../../../constant.dart';
 import 'rules_screen.dart';

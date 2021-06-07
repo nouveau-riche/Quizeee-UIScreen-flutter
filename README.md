@@ -1,4 +1,4 @@
-# quizeee_ui
+# com.quizeee.quizeee
 
 A new Flutter application.
 

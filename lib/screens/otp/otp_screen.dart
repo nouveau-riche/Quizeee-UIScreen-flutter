@@ -8,7 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:pinput/pin_put/pin_put.dart';
-import 'package:quizeee_ui/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
 
 import '../../provider/initialPro.dart';
 import '../../widgets/toast.dart';

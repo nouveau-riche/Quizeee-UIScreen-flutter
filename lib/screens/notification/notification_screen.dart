@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:quizeee_ui/models/usernotifications.dart';
-import 'package:quizeee_ui/provider/mainPro.dart';
-import 'package:quizeee_ui/widgets/centerLoader.dart';
-import 'package:quizeee_ui/widgets/toast.dart';
+import 'package:com.quizeee.quizeee/models/usernotifications.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/widgets/centerLoader.dart';
+import 'package:com.quizeee.quizeee/widgets/toast.dart';
 
 import '../../constant.dart';
 

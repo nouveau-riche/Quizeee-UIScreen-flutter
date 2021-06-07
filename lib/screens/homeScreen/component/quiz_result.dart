@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quizeee_ui/main.dart';
-import 'package:quizeee_ui/provider/mainPro.dart';
-import 'package:quizeee_ui/screens/homeScreen/component/quiz_question/solution_screen.dart';
-import 'package:quizeee_ui/screens/homeScreen/component/rules_screen.dart';
-import 'package:quizeee_ui/screens/tabs_screen.dart';
-import 'package:quizeee_ui/widgets/centerLoader.dart';
+import 'package:com.quizeee.quizeee/main.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/screens/homeScreen/component/quiz_question/solution_screen.dart';
+import 'package:com.quizeee.quizeee/screens/homeScreen/component/rules_screen.dart';
+import 'package:com.quizeee.quizeee/screens/tabs_screen.dart';
+import 'package:com.quizeee.quizeee/widgets/centerLoader.dart';
 
 import '../../../constant.dart';
 import 'lets_start_or_play_practice_quiz.dart';
