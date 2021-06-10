@@ -94,7 +94,7 @@ class WalletScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: mq.height * 0.01,
+              height: mq.height * 0.006,
             ),
             Container(
               margin: EdgeInsets.only(right: 5),
@@ -126,14 +126,7 @@ class WalletScreen extends StatelessWidget {
       width: mq.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        gradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.2),
-            Color.fromRGBO(86, 125, 130, 1)
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
+        color: const Color.fromRGBO(86, 125, 130, 1),
       ),
       margin: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
@@ -187,8 +180,8 @@ class WalletScreen extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.white,
-            offset: Offset(1.0, 5.0),
-            blurRadius: 25.0,
+            offset: Offset(1.0, 20.0),
+            blurRadius: 20.0,
           )
         ],
         color: kPrimaryColor,
@@ -198,14 +191,14 @@ class WalletScreen extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: mq.height * 0.02,
+            height: mq.height * 0.025,
           ),
           const Text(
             'RECENT TRANSACTION HISTORY',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           SizedBox(
-            height: mq.height * 0.04,
+            height: mq.height * 0.05,
           ),
           buildRecentTransactionGradientBar(mq, 60),
           buildRecentTransactionGradientBar(mq, 35),

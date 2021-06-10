@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../constant.dart';
 import './components/edit_profile.dart';
 import './components/transaction_history.dart';
+import './components/performance_chart.dart';
 
 class AccountScreen extends StatelessWidget {
   File image;
@@ -16,7 +17,7 @@ class AccountScreen extends StatelessWidget {
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: kPrimaryColor,
+        backgroundColor: Color.fromRGBO(0, 40, 62, 1),
         centerTitle: true,
         title: const Text(
           'ACCOUNT',
@@ -30,30 +31,47 @@ class AccountScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            buildSelectImage(),
-            TextButton.icon(
-              onPressed: () {
-                Navigator.of(context).push(
-                  CupertinoPageRoute(builder: (ctx) => EditProfile()),
-                );
-              },
-              icon: const Icon(
-                Icons.edit,
-                color: kSecondaryColor,
-                size: 16,
+            Container(
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(0, 40, 62, 1),
+                borderRadius: BorderRadius.circular(35),
               ),
-              label: Text(
-                'Edit Profile',
-                style: TextStyle(
-                    color: kSecondaryColor, fontWeight: FontWeight.bold),
+              child: Column(
+                children: [
+                  buildSelectImage(),
+                  TextButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(builder: (ctx) => EditProfile()),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                      color: kSecondaryColor,
+                      size: 16,
+                    ),
+                    label: Text(
+                      'Edit Profile',
+                      style: TextStyle(
+                          color: kSecondaryColor, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  buildTransactionHistory(mq, context),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  buildPerformanceChart(mq,context),
+                  SizedBox(
+                    height: mq.height * 0.04,
+                  ),
+                ],
               ),
             ),
             SizedBox(
-              height: 10,
-            ),
-            buildTransactionHistory(mq, context),
-            SizedBox(
-              height: mq.height * 0.06,
+              height: mq.height * 0.04,
             ),
             buildStrengthCard(mq),
             SizedBox(
@@ -135,6 +153,32 @@ class AccountScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget buildPerformanceChart(Size mq, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          CupertinoPageRoute(builder: (ctx) => PerformanceChartScreen()),
+        );
+      },
+      child: Container(
+        height: mq.height * 0.065,
+        width: mq.width,
+        margin: EdgeInsets.symmetric(horizontal: mq.width * 0.1),
+        decoration: BoxDecoration(
+          color: kPrimaryLightColor,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Center(
+          child: const Text(
+            '  PERFORMANCE CHART',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5),
+          ),
         ),
       ),
     );
