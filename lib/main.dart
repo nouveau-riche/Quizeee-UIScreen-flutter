@@ -60,10 +60,15 @@ class _MyAppState extends State<MyApp> {
           update: (_, auth, products) => products..upate(auth),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Quizeee',
-        home: NavigateScreen(),
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus.unfocus();
+        },
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Quizeee',
+          home: NavigateScreen(),
+        ),
       ),
     );
   }
