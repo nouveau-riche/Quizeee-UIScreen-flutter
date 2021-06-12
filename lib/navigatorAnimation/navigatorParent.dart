@@ -10,11 +10,6 @@ class SlideNavigation extends PageRouteBuilder {
                 Animation<double> secAnimation, Widget child) {
               animation =
                   CurvedAnimation(parent: animation, curve: Curves.easeInOut);
-              // return ScaleTransition(
-              //   scale: animation,
-              //   alignment: Alignment.center,
-              //   child: child,
-              // );
               return SlideTransition(
                 transformHitTests: true,
                 position:

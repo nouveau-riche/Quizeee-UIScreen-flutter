@@ -121,25 +121,86 @@ class _QuizQuestionState extends State<QuizQuestion>
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => CupertinoAlertDialog(
-        content: Text(
-          msg,
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (ctx) => TabMainScreen()),
-                  (route) => false);
-            },
-            child: Text(
-              'OK',
-              style: TextStyle(color: Colors.black54),
+      builder: (context) =>
+          CupertinoAlertDialog(
+            title: Text(
+              'Science Quiz',// add quiz name
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+            content: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        const Text(
+                          'Your Score',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          '2/7', // add correctAns and Total Question
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text(
+                          'Response Time',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          '2 Sec', // add time taken
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                Text(
+                  'Result will be\navailable on date ',//add date
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'Ok',
+                  style: TextStyle(color: Colors.black54),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+      //     CupertinoAlertDialog(
+      //   content: Text(
+      //     msg,
+      //     style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+      //   ),
+      //   actions: [
+      //     TextButton(
+      //       onPressed: () {
+      //         Navigator.of(context).pushAndRemoveUntil(
+      //             MaterialPageRoute(builder: (ctx) => TabMainScreen()),
+      //             (route) => false);
+      //       },
+      //       child: Text(
+      //         'OK',
+      //         style: TextStyle(color: Colors.black54),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 

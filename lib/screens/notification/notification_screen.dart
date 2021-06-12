@@ -197,7 +197,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  time, // change time according to notification
+                  time,
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 11,

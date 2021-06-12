@@ -8,6 +8,8 @@ const kNotificationColor = Color.fromRGBO(71, 112, 118, 1);
 
 const kResultColor = Colors.yellow;
 
+
+
 const kPrimaryGradientColor = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,

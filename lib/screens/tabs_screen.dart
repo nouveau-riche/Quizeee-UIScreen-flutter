@@ -144,7 +144,7 @@ class _TabsScreenState extends State<TabsScreen> {
                         fit: BoxFit.cover,
                       ),
               ),
-              label: 'Create'),
+              label: 'Private'),
           BottomNavigationBarItem(
               icon: Container(
                 height: 28,
