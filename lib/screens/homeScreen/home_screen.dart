@@ -134,7 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               mq, mainPro.dashboardBanner[0].bannerImg)
                           : Container(),
                       SizedBox(
-                        height: mq.height * 0.018,
+                        height: mq.height * 0.015,
+                      ),
+                      buildPlayPractiseQuiz(mq, context),
+                      SizedBox(
+                        height: mq.height * 0.015,
                       ),
                       Consumer<MainPro>(
                         builder: (context, mainPro, _) => mainPro
@@ -241,9 +245,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// yashjimanu@gmail
-//
-
 Widget buildPoster(Size mq, String imgNetwork) {
   return Container(
     height: mq.height * 0.16,
@@ -261,6 +262,31 @@ Widget buildPoster(Size mq, String imgNetwork) {
         errorWidget: (context, url, error) => Image.asset(
           "assets/images/poster.png",
           fit: BoxFit.cover,
+        ),
+      ),
+    ),
+  );
+}
+
+Widget buildPlayPractiseQuiz(Size mq, BuildContext context) {
+  return Container(
+    height: mq.height * 0.058,
+    width: mq.width,
+    margin: EdgeInsets.symmetric(horizontal: mq.width * 0.052),
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: kSecondaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      onPressed: () {},
+      child: Text(
+        'Play Practise Quiz',
+        style: TextStyle(
+          color: kPrimaryColor,
+          fontFamily: 'DebugFreeTrial',
+          fontSize: 28,
         ),
       ),
     ),
