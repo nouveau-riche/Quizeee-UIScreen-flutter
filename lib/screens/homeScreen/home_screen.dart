@@ -12,6 +12,7 @@ import '../../widgets/toast.dart';
 import 'component/quiz_model.dart';
 import '../../constant.dart';
 import '../notification/notification_screen.dart';
+import 'component/rules_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -23,8 +24,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> getDashboardData() async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
-    final resp = await mainPro.getDashBoardData();
-    final res = await mainPro.getDashBoardBanner();
+    if (mainPro.dashboardBanner.isEmpty ||
+        mainPro.assignedQuiz.isEmpty && mainPro.publicQuiz.isEmpty) {
+      final resp = await mainPro.getDashBoardData();
+      final res = await mainPro.getDashBoardBanner();
+    }
   }
 
   Future<bool> checkBookingStatus(String quizId, int quizIndex) async {
@@ -268,6 +272,24 @@ Widget buildPoster(Size mq, String imgNetwork) {
   );
 }
 
+Future<void> playPracticeQuiz(BuildContext context) async {
+  final mainPro = Provider.of<MainPro>(context, listen: false);
+  toast("Loading Practice Quiz...", isError: false);
+  final resp = await mainPro.getPracticeQuiz(10, "random");
+
+  if (!resp['status']) {
+    toast(resp['message'], isError: true);
+  } else {
+    mainPro.saveDataForPracQuestions(mainPro.pracQuiz);
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.of(context).pushReplacement(CupertinoPageRoute(
+          builder: (ctx) => RulesScreen(
+                isPracticeQuiz: true,
+              )));
+    });
+  }
+}
+
 Widget buildPlayPractiseQuiz(Size mq, BuildContext context) {
   return Container(
     height: mq.height * 0.058,
@@ -280,7 +302,9 @@ Widget buildPlayPractiseQuiz(Size mq, BuildContext context) {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        playPracticeQuiz(context);
+      },
       child: Text(
         'Play Practise Quiz',
         style: TextStyle(

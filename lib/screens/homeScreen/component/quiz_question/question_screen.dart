@@ -104,7 +104,7 @@ class _QuizQuestionState extends State<QuizQuestion>
             ),
           ));
         } else {
-          buildAlertBox(context, response['message']);
+          buildAlertBox(context, response['message'], main);
         }
         // Navigate to next Screen
 
@@ -117,71 +117,70 @@ class _QuizQuestionState extends State<QuizQuestion>
     }
   }
 
-  buildAlertBox(BuildContext context, String msg) {
+  buildAlertBox(BuildContext context, String msg, MainPro mainPro) {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) =>
-          CupertinoAlertDialog(
-            title: Text(
-              'Science Quiz',// add quiz name
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            content: Column(
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(
+          'Science Quiz', // add quiz name
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
                   children: [
-                    Column(
-                      children: [
-                        const Text(
-                          'Your Score',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        Text(
-                          '2/7', // add correctAns and Total Question
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        )
-                      ],
+                    const Text(
+                      'Your Score',
+                      style: TextStyle(fontSize: 16),
                     ),
-                    Column(
-                      children: [
-                        const Text(
-                          'Response Time',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          '2 Sec', // add time taken
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
+                    Text(
+                      '${mainPro.score ?? 0}/${mainPro.selectedData.questions.length ?? 0}', // add correctAns and Total Question
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    )
                   ],
                 ),
-                Text(
-                  'Result will be\navailable on date ',//add date
-                  style: TextStyle(
-                    fontSize: 15,
-                  ),
+                Column(
+                  children: [
+                    const Text(
+                      'Response Time',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      '${mainPro.responseTime} Sec', // add time taken
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
               ],
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text(
-                  'Ok',
-                  style: TextStyle(color: Colors.black54),
-                ),
+            Text(
+              '$msg', //add date
+              style: TextStyle(
+                fontSize: 15,
               ),
-            ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              'Ok',
+              style: TextStyle(color: Colors.black54),
+            ),
           ),
+        ],
+      ),
       //     CupertinoAlertDialog(
       //   content: Text(
       //     msg,

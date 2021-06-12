@@ -453,14 +453,21 @@ class QuizResult extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {
-          Navigator.of(context).pushReplacement(
-            CupertinoPageRoute(
-              builder: (ctx) => LetsStartOrPlayPracticeQuiz(
-                data: mainPro.selectedData,
-              ),
-            ),
-          );
+        onPressed: () async {
+          final mainPro = Provider.of<MainPro>(context, listen: false);
+          mainPro.changeLoadingState(true);
+          await mainPro.getDashBoardData();
+          mainPro.changeLoadingState(false);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (ctx) => TabMainScreen()),
+              (route) => false);
+          // Navigator.of(context).pushReplacement(
+          //   CupertinoPageRoute(
+          //     builder: (ctx) => LetsStartOrPlayPracticeQuiz(
+          //       data: mainPro.selectedData,
+          //     ),
+          //   ),
+          // );
         },
         child: Text(
           'BACK TO QUIZ',

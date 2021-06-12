@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,10 +62,15 @@ class _MyAppState extends State<MyApp> {
           update: (_, auth, products) => products..upate(auth),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Quizeee',
-        home: NavigateScreen(),
+      child: GestureDetector(
+        onTap: () {
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
+        },
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Quizeee',
+          home: NavigateScreen(),
+        ),
       ),
     );
   }
