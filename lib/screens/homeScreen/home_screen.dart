@@ -306,7 +306,7 @@ Widget buildPlayPractiseQuiz(Size mq, BuildContext context) {
         playPracticeQuiz(context);
       },
       child: Text(
-        'Play Practise Quiz',
+        'Play Practice Quiz',
         style: TextStyle(
           color: kPrimaryColor,
           fontFamily: 'DebugFreeTrial',
