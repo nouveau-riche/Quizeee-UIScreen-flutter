@@ -17,13 +17,13 @@ class AccountScreen extends StatelessWidget {
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color.fromRGBO(0, 40, 62, 1),
+        backgroundColor: Color.fromRGBO(0, 44, 62, 1),
         centerTitle: true,
         title: const Text(
           'ACCOUNT',
           style: TextStyle(
             color: kSecondaryColor,
-            fontSize: 35,
+            fontSize: 40,
             fontFamily: 'DebugFreeTrial',
           ),
         ),
@@ -33,8 +33,11 @@ class AccountScreen extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Color.fromRGBO(0, 40, 62, 1),
-                borderRadius: BorderRadius.circular(35),
+                color: Color.fromRGBO(0, 44, 62, 1),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(35),
+                  bottomRight: Radius.circular(35),
+                ),
               ),
               child: Column(
                 children: [
@@ -63,7 +66,7 @@ class AccountScreen extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  buildPerformanceChart(mq,context),
+                  buildPerformanceChart(mq, context),
                   SizedBox(
                     height: mq.height * 0.04,
                   ),
@@ -157,7 +160,6 @@ class AccountScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Widget buildPerformanceChart(Size mq, BuildContext context) {
     return GestureDetector(

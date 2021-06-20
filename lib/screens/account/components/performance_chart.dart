@@ -3,28 +3,47 @@ import 'package:flutter/material.dart';
 import '../../../constant.dart';
 
 class PerformanceChartScreen extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: Column(
-        children: [
-          SizedBox(
-            height: mq.height * 0.05,
-          ),
-          buildAppBar(context, mq),
-          SizedBox(
-            height: mq.height * 0.025,
-          ),
-          Text(
-            'CATEGORY',
-            style: TextStyle(color: kPrimaryLightColor),
-          ),
-          SizedBox(
-            height: mq.height * 0.025,
-          ),
-          buildTransactionHistory(mq, context),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: mq.height * 0.05,
+            ),
+            buildAppBar(context, mq),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildHeader(mq, context, 'CATEGORY'),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildChart(mq),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildHeader(mq, context, 'SUB-CATEGORY'),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildChart(mq),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildHeader(mq, context, 'AREA OF INTEREST'),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildChart(mq),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -55,13 +74,13 @@ class PerformanceChartScreen extends StatelessWidget {
         ),
         Text(
           'PERFORMANCE CHART',
-          style: TextStyle(fontSize: 24, color: kSecondaryColor),
+          style: TextStyle(fontSize: 22, color: kSecondaryColor),
         ),
       ],
     );
   }
 
-  Widget buildTransactionHistory(Size mq, BuildContext context) {
+  Widget buildHeader(Size mq, BuildContext context, String type) {
     return Container(
       height: mq.height * 0.065,
       width: mq.width,
@@ -78,12 +97,222 @@ class PerformanceChartScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Center(
-        child: const Text(
-          '  SUB-CATEGORY',
+        child: Text(
+          type,
           style: TextStyle(
               color: kPrimaryLightColor,
               fontWeight: FontWeight.bold,
               fontSize: 12.5),
+        ),
+      ),
+    );
+  }
+
+  Widget buildChart(Size mq) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildYAxis(mq),
+        Column(
+          children: [
+            Container(
+              height: mq.height * 0.24,
+              width: mq.width * 0.8,
+              margin: EdgeInsets.only(left: 2),
+              child: Container(
+                height: mq.height * 0.24,
+                width: mq.width * 0.8,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: kSecondaryColor, width: 1.5),
+                    left: BorderSide(color: kSecondaryColor, width: 1.5),
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Divider(
+                          color: kSecondaryColor,
+                        ),
+                        SizedBox(
+                          height: mq.height * 0.046,
+                        ),
+                        Divider(
+                          color: kSecondaryColor,
+                        ),
+                        SizedBox(
+                          height: mq.height * 0.046,
+                        ),
+                        Divider(
+                          color: kSecondaryColor,
+                        ),
+                        SizedBox(
+                          height: mq.height * 0.046,
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: Container(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            SizedBox(
+                              width: mq.width * 0.05,
+                            ),
+                            buildGraphBar(mq, 20),
+                            SizedBox(
+                              width: mq.width * 0.05,
+                            ),
+                            buildGraphBar(mq, 40),
+                            SizedBox(
+                              width: mq.width * 0.05,
+                            ),
+                            buildGraphBar(mq, 50),
+                            SizedBox(
+                              width: mq.width * 0.05,
+                            ),
+                            buildGraphBar(mq, 60.0),
+                            SizedBox(
+                              width: mq.width * 0.05,
+                            ),
+                            buildGraphBar(mq, 10.0),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            buildXAxis(mq),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildYAxis(Size mq) {
+    return Container(
+      height: mq.height * 0.24,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          SizedBox(
+            height: mq.height * 0.005,
+          ),
+          Text(
+            '60',
+            style: TextStyle(color: kPrimaryLightColor, fontSize: 9),
+          ),
+          SizedBox(
+            height: mq.height * 0.045,
+          ),
+          Text(
+            '40',
+            style: TextStyle(color: kPrimaryLightColor, fontSize: 9),
+          ),
+          SizedBox(
+            height: mq.height * 0.045,
+          ),
+          Text(
+            '20',
+            style: TextStyle(color: kPrimaryLightColor, fontSize: 9),
+          ),
+          SizedBox(
+            height: mq.height * 0.045,
+          ),
+          Text(
+            '00',
+            style: TextStyle(color: kPrimaryLightColor, fontSize: 9),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildXAxis(Size mq) {
+    return Container(
+      width: mq.width * 0.86,
+      margin: EdgeInsets.only(left: 2, top: 4),
+      child: Row(
+        children: [
+          SizedBox(
+            width: mq.width * 0.08,
+          ),
+          Container(
+            width: 30,
+            margin: EdgeInsets.only(left: 4),
+            child: Text(
+              'Math',
+              style: TextStyle(color: kPrimaryLightColor, fontSize: 8.5),
+            ),
+          ),
+          SizedBox(
+            width: mq.width * 0.05,
+          ),
+          Container(
+            width: 30,
+            child: Text(
+              'Science',
+              style: TextStyle(color: kPrimaryLightColor, fontSize: 8.5),
+            ),
+          ),
+          SizedBox(
+            width: mq.width * 0.05,
+          ),
+          Container(
+            width: 30,
+            margin: EdgeInsets.only(left: 2),
+            child: Text(
+              'Java',
+              style: TextStyle(color: kPrimaryLightColor, fontSize: 8.5),
+            ),
+          ),
+          SizedBox(
+            width: mq.width * 0.05,
+          ),
+          Container(
+            width: 30,
+            child: Text(
+              'History',
+              style: TextStyle(color: kPrimaryLightColor, fontSize: 8.5),
+            ),
+          ),
+          SizedBox(
+            width: mq.width * 0.05,
+          ),
+          Container(
+            width: 30,
+            margin: EdgeInsets.only(left: 2),
+            child: Text(
+              'Games',
+              style: TextStyle(color: kPrimaryLightColor, fontSize: 8.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildGraphBar(Size mq, double score) {
+    double height = mq.height * 0.062;
+
+    double sc = score / 20.0;
+
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 4),
+      height: height * sc,
+      width: 22,
+      decoration: BoxDecoration(
+        color: kPrimaryLightColor,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
       ),
     );
