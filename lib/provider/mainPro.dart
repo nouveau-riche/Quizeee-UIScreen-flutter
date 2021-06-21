@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:com.quizeee.quizeee/models/assignedPerformance.dart';
+import 'package:com.quizeee.quizeee/models/publicPerformace.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:com.quizeee.quizeee/models/assignedModel.dart';
@@ -29,6 +31,10 @@ class MainPro with ChangeNotifier {
 
   Future<void> upate(Auth auth) async {
     this._auth = auth;
+  }
+
+  String get getUserID {
+    return _auth.userModel[0].userId.toString();
   }
 
   // Model References
@@ -60,6 +66,16 @@ class MainPro with ChangeNotifier {
   List<UserNotificationModel> _userNotifications = [];
   List<UserNotificationModel> get userNofications {
     return [..._userNotifications];
+  }
+
+  List<PublicPerformace> _publicPerformace = [];
+  List<PublicPerformace> get publicPerformace {
+    return [..._publicPerformace];
+  }
+
+  List<AssignedPerformace> _assignedPerformace = [];
+  List<AssignedPerformace> get assignedPerformace {
+    return [..._assignedPerformace];
   }
 
   clearDashBoard() {
@@ -340,6 +356,39 @@ class MainPro with ChangeNotifier {
     } catch (e) {
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserPerformance() async {
+    try {
+      // changeLoadingState(true);
+      final result = await http.post(ApiUrls.baseUrl + ApiUrls.userPerformance,
+          headers: ApiUrls.headers,
+          body: json.encode({"userId": _auth.userModel[0].userId.toString()}));
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {
+        _assignedPerformace.clear();
+        _publicPerformace.clear();
+        _publicPerformace.add(PublicPerformace.fromJson(response['public']));
+        _assignedPerformace
+            .add(AssignedPerformace.fromJson(response['assigned']));
+        // response['public'].forEach((key, val) {
+        //   print(key);
+        //   //
+        // });
+        // response['assigned'].forEach((element) {
+        //   //
+        // });
+      }
+      print(_assignedPerformace.length);
+      print(_publicPerformace.length);
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    } finally {
+      // changeLoadingState(false);
+      notifyListeners();
     }
   }
 

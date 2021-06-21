@@ -1,14 +1,32 @@
 import 'dart:io';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant.dart';
 import './components/edit_profile.dart';
 import './components/transaction_history.dart';
 import './components/performance_chart.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
+  @override
+  _AccountScreenState createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
   File image;
+
+  Future<void> getUserPerformance() async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    if (mainPro.assignedPerformace.isEmpty) {
+      final resp = await mainPro.getUserPerformance();
+      if (!resp['status']) {
+        toast(resp['msg'], isError: true);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,87 +46,102 @@ class AccountScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(0, 44, 62, 1),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(35),
-                  bottomRight: Radius.circular(35),
-                ),
-              ),
+      body: FutureBuilder(
+          future: getUserPerformance(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return SingleChildScrollView(
               child: Column(
                 children: [
-                  buildSelectImage(),
-                  TextButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        CupertinoPageRoute(builder: (ctx) => EditProfile()),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                      color: kSecondaryColor,
-                      size: 16,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(0, 44, 62, 1),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(35),
+                        bottomRight: Radius.circular(35),
+                      ),
                     ),
-                    label: Text(
-                      'Edit Profile',
-                      style: TextStyle(
-                          color: kSecondaryColor, fontWeight: FontWeight.bold),
+                    child: Column(
+                      children: [
+                        buildSelectImage(),
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                  builder: (ctx) => EditProfile()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.edit,
+                            color: kSecondaryColor,
+                            size: 16,
+                          ),
+                          label: Text(
+                            'Edit Profile',
+                            style: TextStyle(
+                                color: kSecondaryColor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildTransactionHistory(mq, context),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildPerformanceChart(mq, context),
+                        SizedBox(
+                          height: mq.height * 0.04,
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: mq.height * 0.02,
                   ),
-                  buildTransactionHistory(mq, context),
-                  SizedBox(
-                    height: 10,
+                  const Text(
+                    'ASSIGNED QUIZ',
+                    style: TextStyle(
+                      fontFamily: 'RapierZero',
+                      color: kPrimaryLightColor,
+                      fontSize: 20,
+                    ),
                   ),
-                  buildPerformanceChart(mq, context),
                   SizedBox(
-                    height: mq.height * 0.04,
+                    height: mq.height * 0.02,
+                  ),
+                  Consumer<MainPro>(builder: (con, mainPro, _) {
+                    var data = mainPro.assignedPerformace[0];
+                    return buildStrengthCard(mq, data);
+                  }),
+                  SizedBox(
+                    height: mq.height * 0.02,
+                  ),
+                  const Text(
+                    'PUBLIC QUIZ',
+                    style: TextStyle(
+                      fontFamily: 'RapierZero',
+                      color: kPrimaryLightColor,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(
+                    height: mq.height * 0.02,
+                  ),
+                  Consumer<MainPro>(builder: (con, mainPro, _) {
+                    var data = mainPro.publicPerformace[0];
+                    return buildStrengthCard(mq, data);
+                  }),
+                  SizedBox(
+                    height: mq.height * 0.02,
                   ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: mq.height * 0.02,
-            ),
-            const Text(
-              'ASSIGNED QUIZ',
-              style: TextStyle(
-                fontFamily: 'RapierZero',
-                color: kPrimaryLightColor,
-                fontSize: 20,
-              ),
-            ),
-            SizedBox(
-              height: mq.height * 0.02,
-            ),
-            buildStrengthCard(mq),
-            SizedBox(
-              height: mq.height * 0.02,
-            ),
-            const Text(
-              'PUBLIC QUIZ',
-              style: TextStyle(
-                fontFamily: 'RapierZero',
-                color: kPrimaryLightColor,
-                fontSize: 20,
-              ),
-            ),
-            SizedBox(
-              height: mq.height * 0.02,
-            ),
-            buildStrengthCard(mq),
-            SizedBox(
-              height: mq.height * 0.02,
-            ),
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 
@@ -207,7 +240,7 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget buildStrengthCard(Size mq) {
+  Widget buildStrengthCard(Size mq, dynamic data) {
     return Container(
       width: mq.width * 0.74,
       padding: EdgeInsets.all(10),
@@ -235,7 +268,7 @@ class AccountScreen extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                '50%',
+                '${data.averagePercentage.toString().length >= 4 ? data.averagePercentage.toString().substring(0, 4) : data.averagePercentage}%',
                 style: const TextStyle(
                   color: kSecondaryColor,
                 ),
@@ -256,16 +289,29 @@ class AccountScreen extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          buildSubjectStrength('Science', 50),
-          buildSubjectStrength('History', 80),
+          Column(
+            children: List.generate(data.strengths.length, (index) {
+              var strength = data.strengths[index];
+              return buildSubjectStrength('${strength.category}',
+                  "${strength.percentage.toString().length >= 4 ? strength.percentage.toString().substring(0, 4) : strength.percentage.toString()}");
+            }),
+          ),
           const SizedBox(
             height: 10,
           ),
-          buildMatchHistory(mq),
+          buildMatchHistory(
+            mq,
+            data.totalMatchesPlayed.toString(),
+            data.totalMatchesWinned.toString(),
+          ),
           const SizedBox(
             height: 15,
           ),
-          buildWinPercentage(mq,68),
+          buildWinPercentage(
+              mq,
+              data.winningPercentage.toString().length >= 4
+                  ? data.winningPercentage.toString().substring(0, 4)
+                  : data.winningPercentage.toString()),
           const SizedBox(
             height: 5,
           ),
@@ -274,7 +320,7 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSubjectStrength(String subject, int percentage) {
+  Widget buildSubjectStrength(String subject, String percentage) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -297,7 +343,7 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget buildMatchHistory(Size mq) {
+  Widget buildMatchHistory(Size mq, String totalPlayed, String totalWinned) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -326,7 +372,7 @@ class AccountScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '35',
+                  totalPlayed,
                   style: const TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 12),
                 ),
@@ -347,7 +393,7 @@ class AccountScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '20',
+                  totalWinned,
                   style: const TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 12),
                 ),
@@ -359,7 +405,7 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget buildWinPercentage(Size mq, int winPercentage) {
+  Widget buildWinPercentage(Size mq, String winPercentage) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

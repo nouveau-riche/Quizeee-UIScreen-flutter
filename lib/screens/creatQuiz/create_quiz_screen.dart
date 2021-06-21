@@ -1,9 +1,18 @@
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/screens/creatQuiz/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant.dart';
 
-class CreateQuizScreen extends StatelessWidget {
+class CreateQuizScreen extends StatefulWidget {
+  @override
+  _CreateQuizScreenState createState() => _CreateQuizScreenState();
+}
+
+class _CreateQuizScreenState extends State<CreateQuizScreen> {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -92,7 +101,14 @@ class CreateQuizScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          final mainPro = Provider.of<MainPro>(context, listen: false);
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+                builder: (ctx) =>
+                    WebViewGlobal(url: ApiUrls.createQuiz + mainPro.getUserID)),
+          );
+        },
         child: Text(
           'Create Now',
           style: TextStyle(

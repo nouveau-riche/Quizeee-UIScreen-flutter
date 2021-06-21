@@ -38,4 +38,11 @@ class ApiUrls {
   // NOTIFICATIONS
   static String getUserNotifications = "all-user-notifications/";
   static String deleteNotifications = "del-notification";
+
+  // USER ACCOUNT
+  static String userPerformance = "performance-history";
+
+  //WEBVIEWS
+  static String createQuiz =
+      "https://quizeee-free-quiz.netlify.app/web/add-user-free-quiz/";
 }

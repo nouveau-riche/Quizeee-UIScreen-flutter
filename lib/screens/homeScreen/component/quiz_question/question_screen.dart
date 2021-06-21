@@ -123,11 +123,17 @@ class _QuizQuestionState extends State<QuizQuestion>
       context: context,
       builder: (context) => CupertinoAlertDialog(
         title: Text(
-          'Science Quiz', // add quiz name
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          '${mainPro.selectedData.quizCategory} QUIZ', // add quiz name
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         content: Column(
           children: [
+            SizedBox(
+              height: 15,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -136,6 +142,9 @@ class _QuizQuestionState extends State<QuizQuestion>
                     const Text(
                       'Your Score',
                       style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(
+                      height: 6,
                     ),
                     Text(
                       '${mainPro.score ?? 0}/${mainPro.selectedData.questions.length ?? 0}', // add correctAns and Total Question
@@ -152,6 +161,9 @@ class _QuizQuestionState extends State<QuizQuestion>
                         fontSize: 16,
                       ),
                     ),
+                    SizedBox(
+                      height: 6,
+                    ),
                     Text(
                       '${mainPro.responseTime} Sec', // add time taken
                       style: const TextStyle(
@@ -161,22 +173,25 @@ class _QuizQuestionState extends State<QuizQuestion>
                 ),
               ],
             ),
+            SizedBox(
+              height: 12,
+            ),
             Text(
               '$msg', //add date
-              style: TextStyle(
-                fontSize: 15,
-              ),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (ctx) => TabMainScreen()),
+                  (route) => false);
             },
             child: const Text(
-              'Ok',
-              style: TextStyle(color: Colors.black54),
+              'OK',
+              style: TextStyle(color: Colors.black),
             ),
           ),
         ],
@@ -189,9 +204,7 @@ class _QuizQuestionState extends State<QuizQuestion>
       //   actions: [
       //     TextButton(
       //       onPressed: () {
-      //         Navigator.of(context).pushAndRemoveUntil(
-      //             MaterialPageRoute(builder: (ctx) => TabMainScreen()),
-      //             (route) => false);
+
       //       },
       //       child: Text(
       //         'OK',
