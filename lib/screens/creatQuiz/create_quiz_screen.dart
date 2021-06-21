@@ -45,7 +45,11 @@ class CreateQuizScreen extends StatelessWidget {
               margin: EdgeInsets.all(20),
               child: Text(
                 'Create free quiz & play with your friends & family',
-                style: TextStyle(fontSize: 28, color: kPrimaryLightColor),
+                style: TextStyle(
+                  fontSize: 32,
+                  color: kPrimaryLightColor,
+                  fontFamily: 'DebugFreeTrial',
+                ),
               ),
             ),
             SizedBox(
@@ -60,7 +64,11 @@ class CreateQuizScreen extends StatelessWidget {
               margin: EdgeInsets.all(20),
               child: const Text(
                 'If You Want to become an quizeee master or want to create quiz for your students?\nFor more information please connect with the admin',
-                style: TextStyle(fontSize: 24, color: kPrimaryLightColor),
+                style: TextStyle(
+                  fontSize: 26,
+                  color: kPrimaryLightColor,
+                  fontFamily: 'DebugFreeTrial',
+                ),
               ),
             ),
             SizedBox(
