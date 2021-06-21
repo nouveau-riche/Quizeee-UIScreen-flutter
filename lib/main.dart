@@ -64,7 +64,11 @@ class _MyAppState extends State<MyApp> {
       ],
       child: GestureDetector(
         onTap: () {
+// <<<<<<< HEAD
           SystemChannels.textInput.invokeMethod('TextInput.hide');
+// =======
+          FocusManager.instance.primaryFocus.unfocus();
+// >>>>>>> nikunj-ui
         },
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

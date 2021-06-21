@@ -78,39 +78,45 @@ class WalletScreen extends StatelessWidget {
         ),
         Column(
           children: [
-            Container(
-              margin: EdgeInsets.only(right: 5),
-              width: mq.width * 0.44,
-              height: mq.height * 0.055,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              child: Center(
-                child: const Text(
-                  'REFILL',
-                  style: TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
+            GestureDetector(
+              onTap: (){},
+              child: Container(
+                margin: EdgeInsets.only(right: 5),
+                width: mq.width * 0.44,
+                height: mq.height * 0.055,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                child: Center(
+                  child: const Text(
+                    'REFILL',
+                    style: TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
+                  ),
                 ),
               ),
             ),
             SizedBox(
               height: mq.height * 0.006,
             ),
-            Container(
-              margin: EdgeInsets.only(right: 5),
-              width: mq.width * 0.44,
-              height: mq.height * 0.055,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Color.fromRGBO(86, 125, 130, 1),
-              ),
-              child: Center(
-                child: const Text(
-                  'WITHDRAW',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontFamily: 'DebugFreeTrial'),
+            GestureDetector(
+              onTap: (){},
+              child: Container(
+                margin: EdgeInsets.only(right: 5),
+                width: mq.width * 0.44,
+                height: mq.height * 0.055,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color.fromRGBO(86, 125, 130, 1),
+                ),
+                child: Center(
+                  child: const Text(
+                    'WITHDRAW',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontFamily: 'DebugFreeTrial'),
+                  ),
                 ),
               ),
             ),

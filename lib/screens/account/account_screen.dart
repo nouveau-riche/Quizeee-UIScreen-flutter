@@ -17,13 +17,13 @@ class AccountScreen extends StatelessWidget {
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color.fromRGBO(0, 40, 62, 1),
+        backgroundColor: Color.fromRGBO(0, 44, 62, 1),
         centerTitle: true,
         title: const Text(
           'ACCOUNT',
           style: TextStyle(
             color: kSecondaryColor,
-            fontSize: 35,
+            fontSize: 40,
             fontFamily: 'DebugFreeTrial',
           ),
         ),
@@ -33,8 +33,11 @@ class AccountScreen extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Color.fromRGBO(0, 40, 62, 1),
-                borderRadius: BorderRadius.circular(35),
+                color: Color.fromRGBO(0, 44, 62, 1),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(35),
+                  bottomRight: Radius.circular(35),
+                ),
               ),
               child: Column(
                 children: [
@@ -63,7 +66,7 @@ class AccountScreen extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  buildPerformanceChart(mq,context),
+                  buildPerformanceChart(mq, context),
                   SizedBox(
                     height: mq.height * 0.04,
                   ),
@@ -71,17 +74,38 @@ class AccountScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: mq.height * 0.04,
+              height: mq.height * 0.02,
+            ),
+            const Text(
+              'ASSIGNED QUIZ',
+              style: TextStyle(
+                fontFamily: 'RapierZero',
+                color: kPrimaryLightColor,
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(
+              height: mq.height * 0.02,
             ),
             buildStrengthCard(mq),
             SizedBox(
               height: mq.height * 0.02,
             ),
-            buildMatchHistory(mq),
+            const Text(
+              'PUBLIC QUIZ',
+              style: TextStyle(
+                fontFamily: 'RapierZero',
+                color: kPrimaryLightColor,
+                fontSize: 20,
+              ),
+            ),
             SizedBox(
               height: mq.height * 0.02,
             ),
-            buildWinPercentage(mq, 68),
+            buildStrengthCard(mq),
+            SizedBox(
+              height: mq.height * 0.02,
+            ),
           ],
         ),
       ),
@@ -158,7 +182,6 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-
   Widget buildPerformanceChart(Size mq, BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -186,7 +209,6 @@ class AccountScreen extends StatelessWidget {
 
   Widget buildStrengthCard(Size mq) {
     return Container(
-      height: mq.height * 0.2,
       width: mq.width * 0.74,
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.symmetric(horizontal: 15),
@@ -226,7 +248,7 @@ class AccountScreen extends StatelessWidget {
           const Text(
             'STRENGTH',
             style: TextStyle(
-              fontSize: 21,
+              fontSize: 24,
               color: kPrimaryColor,
               fontFamily: 'DebugFreeTrial',
             ),
@@ -236,6 +258,17 @@ class AccountScreen extends StatelessWidget {
           ),
           buildSubjectStrength('Science', 50),
           buildSubjectStrength('History', 80),
+          const SizedBox(
+            height: 10,
+          ),
+          buildMatchHistory(mq),
+          const SizedBox(
+            height: 15,
+          ),
+          buildWinPercentage(mq,68),
+          const SizedBox(
+            height: 5,
+          ),
         ],
       ),
     );
@@ -265,115 +298,84 @@ class AccountScreen extends StatelessWidget {
   }
 
   Widget buildMatchHistory(Size mq) {
-    return Container(
-      height: mq.height * 0.14,
-      width: mq.width * 0.74,
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        gradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.32),
-            Color.fromRGBO(150, 180, 180, 1)
-          ],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'MATCH HISTORY',
+          style: TextStyle(
+            fontSize: 24,
+            color: kPrimaryColor,
+            fontFamily: 'DebugFreeTrial',
+          ),
         ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            'MATCH HISTORY',
-            style: TextStyle(
-              fontSize: 24,
-              color: kPrimaryColor,
-              fontFamily: 'DebugFreeTrial',
+        const SizedBox(
+          height: 20,
+        ),
+        Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'TOTAL MATCHES PLAYED',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                  ),
+                ),
+                Text(
+                  '35',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 12),
+                ),
+              ],
             ),
-          ),
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'TOTAL MATCHES PLAYED',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11,
-                    ),
+            SizedBox(
+              height: 7,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'TOTAL MATCHES WINNED',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
                   ),
-                  Text(
-                    '35',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 12),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 7,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'TOTAL MATCHES WINNED',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11,
-                    ),
-                  ),
-                  Text(
-                    '20',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 12),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
+                ),
+                Text(
+                  '20',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 12),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
 
   Widget buildWinPercentage(Size mq, int winPercentage) {
-    return Container(
-      height: mq.height * 0.07,
-      width: mq.width * 0.74,
-      padding: const EdgeInsets.all(10),
-      margin: EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        gradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.32),
-            Color.fromRGBO(150, 180, 180, 1)
-          ],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'WINNING PERCENTAGE',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'DebugFreeTrial',
+            fontSize: 20,
+          ),
         ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            'WINNING PERCENTAGE',
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'DebugFreeTrial',
-              fontSize: 20,
-            ),
-          ),
-          Text(
-            '$winPercentage%',
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-          ),
-        ],
-      ),
+        Text(
+          '$winPercentage%',
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+        ),
+      ],
     );
   }
 }
