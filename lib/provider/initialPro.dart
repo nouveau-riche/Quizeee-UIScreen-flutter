@@ -125,6 +125,30 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> editUserProfile(FormData body) async {
+    try {
+      final result =
+          await Dio().post(ApiUrls.baseUrl + ApiUrls.editUser, data: body);
+      if (result.statusCode == 200) {
+        if (result.data['status']) {
+          _userModel.clear();
+          _userModel.add(UserModel.fromJson(result.data['user']));
+          await ConstFun.saveUserId(_userModel[0].userId, storage);
+          return ConstFun.reponseData(true, result.data['message']);
+        } else {
+          return ConstFun.reponseData(false, result.data['message']);
+        }
+      } else {
+        return ConstFun.reponseData(false, result.data['message']);
+      }
+    } on DioError catch (e) {
+      return ConstFun.reponseData(false, e.response.data['message']);
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
   Future<dynamic> checkKeyExist(String key) async {
     await storage.ready;
     return await storage.getItem(key);

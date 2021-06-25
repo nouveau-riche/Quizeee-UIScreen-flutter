@@ -1,17 +1,78 @@
 import 'dart:io';
+import 'package:com.quizeee.quizeee/provider/initialPro.dart';
+import 'package:com.quizeee.quizeee/widgets/toast.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constant.dart';
 
-class EditProfile extends StatelessWidget {
+class EditProfile extends StatefulWidget {
+  @override
+  _EditProfileState createState() => _EditProfileState();
+}
+
+class _EditProfileState extends State<EditProfile> {
   File image;
+
+  final picker = ImagePicker();
+
+  Future pickImageFromGallery() async {
+    try {
+      final imageFile = await picker.getImage(source: ImageSource.gallery);
+      if (mounted) {
+        setState(() {
+          image = File(imageFile.path);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future captureImageFromCamera() async {
+    try {
+      final imageFile = await picker.getImage(source: ImageSource.camera);
+      if (mounted) {
+        setState(() {
+          image = File(imageFile.path);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   TextEditingController _nameController =
       TextEditingController(text: 'Nikunj Sharma');
+
   TextEditingController _locationController = TextEditingController();
+
   TextEditingController _emailController = TextEditingController();
+
   TextEditingController _phoneController = TextEditingController();
+
   TextEditingController _dobController = TextEditingController();
+
+  Future<void> submit(BuildContext context) async {
+    final userEdit = Provider.of<Auth>(context, listen: false);
+    var body = new FormData.fromMap({
+      "username": _nameController.text ?? null,
+      "location": _locationController.text ?? null,
+      "email": _emailController.text ?? null,
+      "phone": "+91" + _phoneController.text ?? null,
+      "dateOfBirth": _dobController.text ?? null,
+      "profilePic": image.path != null
+          ? await MultipartFile.fromFile(image.path, filename: 'upload.png')
+          : null
+    });
+    userEdit.setLoading(true);
+    final response = await userEdit.editUserProfile(body);
+    userEdit.setLoading(false);
+    toast(response['msg'], isError: !response['status']);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +95,17 @@ class EditProfile extends StatelessWidget {
             buildEmailTextFieldField(mq),
             buildPhoneTextFieldField(mq),
             buildDobTextFieldField(mq),
-            buildSaveButton(mq),
+            Selector<Auth, bool>(
+                selector: (con, auth) => auth.isLoading,
+                builder: (context, state, _) {
+                  return state
+                      ? SpinKitPouringHourglass(color: kSecondaryColor)
+                      : GestureDetector(
+                          onTap: () {
+                            submit(context);
+                          },
+                          child: buildSaveButton(mq));
+                }),
           ],
         ),
       ),

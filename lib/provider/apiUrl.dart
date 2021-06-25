@@ -23,6 +23,9 @@ class ApiUrls {
   static String getUserDetails = "get-user-details/";
   static String localStorageKey = "userDetails";
 
+  //Edit user
+  static String editUser = "edit-user-details";
+
   //Dashboard - QUIZ API
   static String dashboardData = "all-assigned-public-quizes";
   static String dashboardBanner = "get-banner-by-name/dashboard";
