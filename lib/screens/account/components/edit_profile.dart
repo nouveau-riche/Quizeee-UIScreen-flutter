@@ -46,7 +46,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   TextEditingController _nameController =
-      TextEditingController(text: 'Nikunj Sharma');
+      TextEditingController();
 
   TextEditingController _locationController = TextEditingController();
 

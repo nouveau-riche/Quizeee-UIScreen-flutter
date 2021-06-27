@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/screens/account/components/view_score.dart';
 import 'package:com.quizeee.quizeee/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -94,6 +95,10 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                         buildPerformanceChart(mq, context),
                         SizedBox(
+                          height: 10,
+                        ),
+                        buildViewScore(mq, context),
+                        SizedBox(
                           height: mq.height * 0.04,
                         ),
                       ],
@@ -146,40 +151,15 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget buildSelectImage() {
-    return GestureDetector(
-      onTap: () {
-        // openDialogBox();
-      },
-      child: Stack(
-        children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundColor: kSecondaryColor,
-            child: CircleAvatar(
-              radius: 46,
-              backgroundColor: Colors.grey,
-              backgroundImage: image == null
-                  ? AssetImage('assets/images/profile.png')
-                  : FileImage(image),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              height: 26,
-              width: 28,
-              decoration: BoxDecoration(
-                color: kSecondaryColor,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.camera_alt,
-                size: 16,
-              ),
-            ),
-          ),
-        ],
+    return CircleAvatar(
+      radius: 50,
+      backgroundColor: kSecondaryColor,
+      child: CircleAvatar(
+        radius: 46,
+        backgroundColor: Colors.grey,
+        backgroundImage: image == null
+            ? AssetImage('assets/images/profile.png')
+            : FileImage(image),
       ),
     );
   }
@@ -232,7 +212,32 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
         child: Center(
           child: const Text(
-            '  PERFORMANCE CHART',
+            'PERFORMANCE CHART',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildViewScore(Size mq, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          CupertinoPageRoute(builder: (ctx) => ViewScoreScreen()),
+        );
+      },
+      child: Container(
+        height: mq.height * 0.065,
+        width: mq.width,
+        margin: EdgeInsets.symmetric(horizontal: mq.width * 0.1),
+        decoration: BoxDecoration(
+          color: kPrimaryLightColor,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Center(
+          child: const Text(
+            'VIEW SCORE',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5),
           ),
         ),
