@@ -3,6 +3,9 @@ import 'dart:convert';
 
 import 'package:com.quizeee.quizeee/models/assignedPerformance.dart';
 import 'package:com.quizeee.quizeee/models/publicPerformace.dart';
+import 'package:com.quizeee.quizeee/models/userPlayedQuizAssigned.dart';
+import 'package:com.quizeee.quizeee/models/userPlayedQuizFree.dart';
+import 'package:com.quizeee.quizeee/models/userPlayedQuizPublic.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:com.quizeee.quizeee/models/assignedModel.dart';
@@ -78,12 +81,35 @@ class MainPro with ChangeNotifier {
     return [..._assignedPerformace];
   }
 
+  List<UserPlayedQuizAssigned> _userPlayedAssigned = [];
+  List<UserPlayedQuizAssigned> get userPlayedAssigned {
+    return [..._userPlayedAssigned];
+  }
+
+  List<UserPlayedQuizPublic> _userPlayedPublic = [];
+  List<UserPlayedQuizPublic> get userPlayedPublic {
+    return [..._userPlayedPublic];
+  }
+
+  List<UserPlayedQuizFree> _userPlayedFree = [];
+  List<UserPlayedQuizFree> get userPlayedFree {
+    return [..._userPlayedFree];
+  }
+
   clearDashBoard() {
     _assignedQuiz.clear();
     _publicQuiz.clear();
     _userRank.clear();
+    _publicPerformace.clear();
+    _assignedPerformace.clear();
     _dashboardBanner.clear();
     changeServeStatus = false;
+  }
+
+  clearPlayedResult() {
+    _userPlayedFree.clear();
+    _userPlayedAssigned.clear();
+    _userPlayedPublic.clear();
   }
 
   Future<Map<String, dynamic>> getDashBoardData() async {
@@ -169,7 +195,8 @@ class MainPro with ChangeNotifier {
 
   // score send count of correct answer
 
-  Future<Map<String, dynamic>> submitQuizResult() async {
+  Future<Map<String, dynamic>> submitQuizResult(
+      [Map<String, Object> bodyJson]) async {
     try {
       // ""questionId"":101, ""userOption"":2},{""questionId"":102, ""userOption"":2}
       final userId = await ConstFun.getKeyValue("userId", _auth.storage);
@@ -193,7 +220,7 @@ class MainPro with ChangeNotifier {
       };
       final result = await http.post(
         ApiUrls.baseUrl + ApiUrls.submitResult,
-        body: json.encode(body),
+        body: json.encode(bodyJson ?? body),
         headers: ApiUrls.headers,
       );
       final response = json.decode(result.body) as Map<String, dynamic>;
@@ -337,22 +364,44 @@ class MainPro with ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> getUsersQuiz(
-      int quizQuestions, String quizCategory) async {
+  int selectedType = 0; // assigned
+  // 1 public
+  // 2 free
+
+  void toggleType(int type) {
+    selectedType = type;
+    notifyListeners();
+  }
+
+  Future<Map<String, dynamic>> getUsersQuiz() async {
     try {
-      var body = {"noOfQuestions": quizQuestions, "quizCategory": quizCategory};
       final result = await http.get(
-        ApiUrls.baseUrl + ApiUrls.getUserQuiz,
+        ApiUrls.baseUrl +
+            ApiUrls.getUserQuiz +
+            _auth.userModel[0].userId.toString(), //250
         headers: ApiUrls.headers,
       );
       final response = json.decode(result.body) as Map<String, dynamic>;
       if (response['status']) {
-        // response['practiceQuestions'].forEach((element) {
-        //   _pracQuiz.add(PracticeQuizModel.fromJson(element));
-        // });
+        _userPlayedAssigned.clear();
+        _userPlayedFree.clear();
+        _userPlayedPublic.clear();
+        response['public'].forEach((element) {
+          _userPlayedPublic.add(UserPlayedQuizPublic.fromJson(element));
+        });
+        response['assigned'].forEach((element) {
+          _userPlayedAssigned.add(UserPlayedQuizAssigned.fromJson(element));
+        });
+        response['free'].forEach((element) {
+          _userPlayedFree.add(UserPlayedQuizFree.fromJson(element));
+        });
+        toggleType(0);
+        return response;
+      } else {
+        return ConstFun.reponseData(
+            false, "Something went wrong please try again!!");
       }
       // print(pracQuiz);
-      return response;
     } catch (e) {
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
@@ -416,6 +465,11 @@ class MainPro with ChangeNotifier {
     } catch (e) {
       // print(e.toString());
     }
+  }
+
+  String formatDateTime(dynamic date) {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
+    return format.format(dateTime);
   }
 
   String isStartOrEnd(dynamic date) {

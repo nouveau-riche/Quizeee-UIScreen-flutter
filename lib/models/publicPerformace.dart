@@ -1,8 +1,8 @@
 class PublicPerformace {
-  String totalMatchesPlayed;
-  String totalMatchesWinned;
-  String winningPercentage;
-  String averagePercentage;
+  int totalMatchesPlayed;
+  int totalMatchesWinned;
+  int winningPercentage;
+  double averagePercentage;
   List<Strengths> strengths;
   List<Strengths> weeknesses;
 
@@ -15,10 +15,10 @@ class PublicPerformace {
       this.weeknesses});
 
   PublicPerformace.fromJson(Map<String, dynamic> json) {
-    totalMatchesPlayed = json['totalMatchesPlayed'].toString();
-    totalMatchesWinned = json['totalMatchesWinned'].toString();
-    winningPercentage = json['winningPercentage'].toString();
-    averagePercentage = json['averagePercentage'].toString();
+    totalMatchesPlayed = json['totalMatchesPlayed'] ?? 0;
+    totalMatchesWinned = json['totalMatchesWinned'] ?? 0;
+    winningPercentage = json['winningPercentage'] ?? 0;
+    averagePercentage = json['averagePercentage'] ?? 0.0;
     if (json['strengths'] != null) {
       strengths = new List<Strengths>();
       json['strengths'].forEach((v) {

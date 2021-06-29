@@ -223,6 +223,8 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget buildViewScore(Size mq, BuildContext context) {
     return GestureDetector(
       onTap: () {
+        final mainPro = Provider.of<MainPro>(context, listen: false);
+        mainPro.clearPlayedResult();
         Navigator.of(context).push(
           CupertinoPageRoute(builder: (ctx) => ViewScoreScreen()),
         );

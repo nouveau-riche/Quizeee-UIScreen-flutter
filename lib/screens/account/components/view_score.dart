@@ -1,29 +1,114 @@
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/screens/homeScreen/component/quiz_result.dart';
+import 'package:com.quizeee.quizeee/widgets/toast.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../../constant.dart';
 
-class ViewScoreScreen extends StatelessWidget {
+class ViewScoreScreen extends StatefulWidget {
+  @override
+  _ViewScoreScreenState createState() => _ViewScoreScreenState();
+}
+
+class _ViewScoreScreenState extends State<ViewScoreScreen> {
+  Future<void> getUserQuize(BuildContext context) async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    if (mainPro.userPlayedAssigned.isEmpty) {
+      final resp = await mainPro.getUsersQuiz();
+      if (!resp['status']) {
+        toast(resp['msg'], isError: true);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: Column(
-        children: [
-          SizedBox(
-            height: mq.height * 0.045,
-          ),
-          buildAppBar(context, mq),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (ctx, index) =>
-                  buildResultListTile(mq, 'Science', '20-12-2021'),
-              itemCount: 3,
-            ),
-          ),
-        ],
-      ),
+      body: Selector<MainPro, int>(
+          selector: (con, mainPro) => mainPro.selectedType,
+          builder: (context, type, _) {
+            return Consumer<MainPro>(builder: (context, quiz, _) {
+              int quizCount;
+              dynamic quizData;
+
+              if (type == 0) {
+                quizCount = quiz.userPlayedAssigned.length;
+                quizData = quiz.userPlayedAssigned;
+              } else if (type == 1) {
+                quizCount = quiz.userPlayedPublic.length;
+                quizData = quiz.userPlayedPublic;
+              } else {
+                quizCount = quiz.userPlayedFree.length;
+                quizData = quiz.userPlayedFree;
+              }
+              return Column(
+                children: [
+                  SizedBox(
+                    height: mq.height * 0.045,
+                  ),
+                  buildAppBar(context, mq),
+                  SizedBox(
+                    height: mq.height * 0.05,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildViewScore(mq, context, onTap: () {
+                        quiz.toggleType(0);
+                      },
+                          type: type == 0 ? kPrimaryLightColor : Colors.grey,
+                          title: "Assigned"),
+                      buildViewScore(mq, context, onTap: () {
+                        quiz.toggleType(1);
+                      },
+                          type: type == 1 ? kPrimaryLightColor : Colors.grey,
+                          title: "Public"),
+                      buildViewScore(mq, context, onTap: () {
+                        quiz.toggleType(2);
+                      },
+                          type: type == 2 ? kPrimaryLightColor : Colors.grey,
+                          title: "Free")
+                    ],
+                  ),
+                  FutureBuilder(
+                      future: quiz.userPlayedAssigned.isEmpty
+                          ? getUserQuize(context)
+                          : null,
+                      builder: (context, snapshot) {
+                        return snapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? Expanded(
+                                child: Center(
+                                  child: SpinKitPouringHourglass(
+                                      color: kSecondaryColor),
+                                ),
+                              )
+                            : Expanded(
+                                child: ListView.builder(
+                                  itemBuilder: (ctx, index) {
+                                    return buildResultListTile(
+                                        mq,
+                                        '${quizData[index].quizCategory}',
+                                        '${quiz.formatDateTime(quizData[index].startDate)}',
+                                        mainPro: quiz,
+                                        quiz: quizData[index],
+                                        isPrac: type == 2);
+                                  },
+                                  itemCount: quizCount,
+                                ),
+                              );
+                      }),
+                ],
+              );
+            });
+          }),
     );
   }
 
@@ -67,7 +152,33 @@ class ViewScoreScreen extends StatelessWidget {
     );
   }
 
-  Widget buildResultListTile(Size mq, String name, String time) {
+  Widget buildViewScore(Size mq, BuildContext context,
+      {Color type, Function onTap, String title}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 400),
+        height: mq.height * 0.065,
+        width: mq.width * 0.25,
+        decoration: BoxDecoration(
+          color: type,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Text(
+              '$title',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildResultListTile(Size mq, String name, String time,
+      {dynamic quiz, MainPro mainPro, bool isPrac}) {
     return Container(
       margin: EdgeInsets.only(top: mq.height * 0.01),
       child: Row(
@@ -111,21 +222,38 @@ class ViewScoreScreen extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            height: mq.height * 0.062,
-            width: mq.width * 0.132,
-            margin: EdgeInsets.only(right: mq.width * 0.02),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: const Color.fromRGBO(52, 94, 103, 1),
-            ),
-            child: Center(
-              child: Text(
-                'View',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 11,
-                    color: kSecondaryColor),
+          GestureDetector(
+            onTap: () {
+              // mainPro.saveDataForQuestions(quiz);
+              // mainPro.submitQuizResult({
+              //    "userId": _auth.userModel[0].userId,
+              //   "quizId": selectedData.quizId.toString(),
+              //    "score": score,
+              //     "responseTime": responseTime,
+              //   "reviewSolutions": reviewSolutions
+              // });
+              Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                builder: (ctx) => QuizResult(
+                  isPracticeQuiz: isPrac,
+                ),
+              ));
+            },
+            child: Container(
+              height: mq.height * 0.062,
+              width: mq.width * 0.132,
+              margin: EdgeInsets.only(right: mq.width * 0.02),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color.fromRGBO(52, 94, 103, 1),
+              ),
+              child: Center(
+                child: Text(
+                  'View',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                      color: kSecondaryColor),
+                ),
               ),
             ),
           ),

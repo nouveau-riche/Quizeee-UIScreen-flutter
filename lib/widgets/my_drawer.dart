@@ -22,7 +22,7 @@ class MyDrawer extends StatelessWidget {
             buildListTile(mq, CupertinoIcons.person_circle_fill, 'About Us'),
             buildListTile(mq, Icons.report_problem, 'Report'),
             buildListTile(mq, Icons.settings, 'Support'),
-            buildLogoutListTile(context,mq),
+            buildLogoutListTile(context, mq),
           ],
         ),
       ),
