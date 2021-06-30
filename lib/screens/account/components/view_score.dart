@@ -17,7 +17,7 @@ class ViewScoreScreen extends StatefulWidget {
 class _ViewScoreScreenState extends State<ViewScoreScreen> {
   Future<void> getUserQuize(BuildContext context) async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
-    if (mainPro.userPlayedAssigned.isEmpty) {
+    if (!mainPro.isLoadedOnce) {
       final resp = await mainPro.getUsersQuiz();
       if (!resp['status']) {
         toast(resp['msg'], isError: true);
@@ -31,84 +31,108 @@ class _ViewScoreScreenState extends State<ViewScoreScreen> {
 
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: Selector<MainPro, int>(
-          selector: (con, mainPro) => mainPro.selectedType,
-          builder: (context, type, _) {
-            return Consumer<MainPro>(builder: (context, quiz, _) {
-              int quizCount;
-              dynamic quizData;
-
-              if (type == 0) {
-                quizCount = quiz.userPlayedAssigned.length;
-                quizData = quiz.userPlayedAssigned;
-              } else if (type == 1) {
-                quizCount = quiz.userPlayedPublic.length;
-                quizData = quiz.userPlayedPublic;
-              } else {
-                quizCount = quiz.userPlayedFree.length;
-                quizData = quiz.userPlayedFree;
-              }
-              return Column(
-                children: [
-                  SizedBox(
-                    height: mq.height * 0.045,
-                  ),
-                  buildAppBar(context, mq),
-                  SizedBox(
-                    height: mq.height * 0.05,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      buildViewScore(mq, context, onTap: () {
-                        quiz.toggleType(0);
-                      },
-                          type: type == 0 ? kPrimaryLightColor : Colors.grey,
-                          title: "Assigned"),
-                      buildViewScore(mq, context, onTap: () {
-                        quiz.toggleType(1);
-                      },
-                          type: type == 1 ? kPrimaryLightColor : Colors.grey,
-                          title: "Public"),
-                      buildViewScore(mq, context, onTap: () {
-                        quiz.toggleType(2);
-                      },
-                          type: type == 2 ? kPrimaryLightColor : Colors.grey,
-                          title: "Free")
-                    ],
-                  ),
-                  FutureBuilder(
-                      future: quiz.userPlayedAssigned.isEmpty
-                          ? getUserQuize(context)
-                          : null,
-                      builder: (context, snapshot) {
-                        return snapshot.connectionState ==
-                                ConnectionState.waiting
-                            ? Expanded(
-                                child: Center(
-                                  child: SpinKitPouringHourglass(
-                                      color: kSecondaryColor),
-                                ),
-                              )
-                            : Expanded(
-                                child: ListView.builder(
-                                  itemBuilder: (ctx, index) {
-                                    return buildResultListTile(
-                                        mq,
-                                        '${quizData[index].quizCategory}',
-                                        '${quiz.formatDateTime(quizData[index].startDate)}',
-                                        mainPro: quiz,
-                                        quiz: quizData[index],
-                                        isPrac: type == 2);
-                                  },
-                                  itemCount: quizCount,
-                                ),
-                              );
-                      }),
-                ],
-              );
-            });
-          }),
+      body: SafeArea(
+        child: Consumer<MainPro>(
+            // selector: (con, mainPro) => mainPro.selectedType,
+            builder: (context, type, _) {
+          return Consumer<MainPro>(builder: (context, quiz, _) {
+            return Column(
+              children: [
+                // SizedBox(
+                //   height: mq.height * 0.045,
+                // ),
+                buildAppBar(context, mq),
+                SizedBox(
+                  height: mq.height * 0.05,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    buildViewScore(mq, context, onTap: () {
+                      quiz.toggleType(0);
+                    },
+                        type: type.selectedType == 0
+                            ? kPrimaryLightColor
+                            : Colors.grey,
+                        title: "Assigned"),
+                    buildViewScore(mq, context, onTap: () {
+                      quiz.toggleType(1);
+                    },
+                        type: type.selectedType == 1
+                            ? kPrimaryLightColor
+                            : Colors.grey,
+                        title: "Public"),
+                    buildViewScore(mq, context, onTap: () {
+                      quiz.toggleType(2);
+                    },
+                        type: type.selectedType == 2
+                            ? kPrimaryLightColor
+                            : Colors.grey,
+                        title: "Free")
+                  ],
+                ),
+                FutureBuilder(
+                    future: quiz.userPlayedAssigned.isEmpty
+                        ? getUserQuize(context)
+                        : null,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Expanded(
+                          child: Center(
+                            child:
+                                SpinKitPouringHourglass(color: kSecondaryColor),
+                          ),
+                        );
+                      } else {
+                        int quizCount;
+                        dynamic quizData;
+                        if (type.selectedType == 0) {
+                          quizCount = quiz.userPlayedAssigned.length;
+                          quizData = quiz.userPlayedAssigned;
+                        } else if (type.selectedType == 1) {
+                          quizCount = quiz.userPlayedPublic.length;
+                          quizData = quiz.userPlayedPublic;
+                        } else {
+                          quizCount = quiz.userPlayedFree.length;
+                          quizData = quiz.userPlayedFree;
+                        }
+                        return Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.only(top: 10),
+                            itemBuilder: (ctx, index) {
+                              if (quizData.isEmpty) {
+                                return Container(
+                                    margin:
+                                        EdgeInsets.only(top: mq.height * 0.30),
+                                    child: Center(
+                                      child: Text(
+                                        'NO DATA AVAILABLE',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontSize: 20),
+                                      ),
+                                    ));
+                              }
+                              return buildResultListTile(
+                                  mq,
+                                  '${quizData[index].quizCategory}',
+                                  '${quiz.formatDateTime(quizData[index].startDate)}',
+                                  mainPro: quiz,
+                                  quiz: quizData[index],
+                                  isAssigned: type.selectedType == 0,
+                                  isPrac: type.selectedType == 2);
+                            },
+                            itemCount: quizData.isEmpty ? 1 : quizCount,
+                          ),
+                        );
+                      }
+                    }),
+              ],
+            );
+          });
+        }),
+      ),
     );
   }
 
@@ -117,7 +141,7 @@ class _ViewScoreScreenState extends State<ViewScoreScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
-          height: 45,
+          // height: 45,
           width: mq.width * 0.12,
           margin: EdgeInsets.only(left: mq.width * 0.02),
           decoration: BoxDecoration(
@@ -178,7 +202,7 @@ class _ViewScoreScreenState extends State<ViewScoreScreen> {
   }
 
   Widget buildResultListTile(Size mq, String name, String time,
-      {dynamic quiz, MainPro mainPro, bool isPrac}) {
+      {dynamic quiz, MainPro mainPro, bool isPrac, bool isAssigned}) {
     return Container(
       margin: EdgeInsets.only(top: mq.height * 0.01),
       child: Row(
@@ -223,20 +247,24 @@ class _ViewScoreScreenState extends State<ViewScoreScreen> {
             ],
           ),
           GestureDetector(
-            onTap: () {
-              // mainPro.saveDataForQuestions(quiz);
-              // mainPro.submitQuizResult({
-              //    "userId": _auth.userModel[0].userId,
-              //   "quizId": selectedData.quizId.toString(),
-              //    "score": score,
-              //     "responseTime": responseTime,
-              //   "reviewSolutions": reviewSolutions
-              // });
-              Navigator.of(context).pushReplacement(CupertinoPageRoute(
-                builder: (ctx) => QuizResult(
-                  isPracticeQuiz: isPrac,
-                ),
-              ));
+            onTap: () async {
+              mainPro.saveDataForQuestions(quiz);
+              toast("Loading.....", isError: false);
+              final resp = await mainPro.getUserRank();
+              if (resp['status']) {
+                if (isPrac) {
+                  mainPro.saveDataForPracQuestions([quiz]);
+                }
+                Navigator.of(context).push(CupertinoPageRoute(
+                  builder: (ctx) => QuizResult(
+                    isPracticeQuiz: isPrac,
+                    isAssigned: isAssigned,
+                    isViewMore: true,
+                  ),
+                ));
+              } else {
+                toast(resp['msg'], isError: true);
+              }
             },
             child: Container(
               height: mq.height * 0.062,

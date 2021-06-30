@@ -23,9 +23,9 @@ class _AccountScreenState extends State<AccountScreen> {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     if (mainPro.assignedPerformace.isEmpty) {
       final resp = await mainPro.getUserPerformance();
-      if (!resp['status']) {
-        toast(resp['msg'], isError: true);
-      }
+      // if (!resp['status']) {
+      //   toast(resp['msg'], isError: true);
+      // }
     }
   }
 
@@ -107,38 +107,52 @@ class _AccountScreenState extends State<AccountScreen> {
                   SizedBox(
                     height: mq.height * 0.02,
                   ),
-                  const Text(
-                    'ASSIGNED QUIZ',
-                    style: TextStyle(
-                      fontFamily: 'RapierZero',
-                      color: kPrimaryLightColor,
-                      fontSize: 20,
-                    ),
-                  ),
-                  SizedBox(
-                    height: mq.height * 0.02,
-                  ),
                   Consumer<MainPro>(builder: (con, mainPro, _) {
+                    if (mainPro.assignedPerformace.isEmpty) {
+                      return Container();
+                    }
                     var data = mainPro.assignedPerformace[0];
-                    return buildStrengthCard(mq, data);
+                    return Column(
+                      children: [
+                        const Text(
+                          'ASSIGNED QUIZ',
+                          style: TextStyle(
+                            fontFamily: 'RapierZero',
+                            color: kPrimaryLightColor,
+                            fontSize: 20,
+                          ),
+                        ),
+                        SizedBox(
+                          height: mq.height * 0.02,
+                        ),
+                        buildStrengthCard(mq, data),
+                      ],
+                    );
                   }),
                   SizedBox(
                     height: mq.height * 0.02,
                   ),
-                  const Text(
-                    'PUBLIC QUIZ',
-                    style: TextStyle(
-                      fontFamily: 'RapierZero',
-                      color: kPrimaryLightColor,
-                      fontSize: 20,
-                    ),
-                  ),
-                  SizedBox(
-                    height: mq.height * 0.02,
-                  ),
                   Consumer<MainPro>(builder: (con, mainPro, _) {
+                    if (mainPro.publicPerformace.isEmpty) {
+                      return Container();
+                    }
                     var data = mainPro.publicPerformace[0];
-                    return buildStrengthCard(mq, data);
+                    return Column(
+                      children: [
+                        const Text(
+                          'PUBLIC QUIZ',
+                          style: TextStyle(
+                            fontFamily: 'RapierZero',
+                            color: kPrimaryLightColor,
+                            fontSize: 20,
+                          ),
+                        ),
+                        SizedBox(
+                          height: mq.height * 0.02,
+                        ),
+                        buildStrengthCard(mq, data),
+                      ],
+                    );
                   }),
                   SizedBox(
                     height: mq.height * 0.02,

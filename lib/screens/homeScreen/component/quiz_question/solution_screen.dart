@@ -71,11 +71,15 @@ class SolutionScreen extends StatelessWidget {
                   color: kPrimaryColor,
                 ),
                 onPressed: () async {
-                  mainPro.showAnswer(false);
-
-                  if (await mainPro.incrementQuestions()) {
+                  if (mainPro.selectedData.questions.length !=
+                      mainPro.currentQuestionIndex + 1) {
+                    if (await mainPro.incrementQuestions()) {
+                      toast("End", isError: true);
+                    }
+                  } else {
                     toast("End", isError: true);
                   }
+
                   // change question
                 },
               ),
@@ -194,10 +198,17 @@ class SolutionScreen extends StatelessWidget {
 
   Widget buildOption(String option, Size mq, int index, MainPro main) {
     // selected answer index
-    int selectedAnswer =
-        main.answerSelections[main.currentQuestionIndex]['answerIndex'] == ""
-            ? null
-            : main.answerSelections[main.currentQuestionIndex]['answerIndex'];
+    int selectedAnswer;
+    if (main.userRank[0].reviewSolutions
+        .asMap()
+        .containsKey(main.currentQuestionIndex)) {
+      selectedAnswer = main.userRank[0]
+              .reviewSolutions[main.currentQuestionIndex].userOption ??
+          null;
+    } else {
+      selectedAnswer = null;
+    }
+
     bool isCorrect =
         main.selectedData.questions[main.currentQuestionIndex].rightOption ==
             index;

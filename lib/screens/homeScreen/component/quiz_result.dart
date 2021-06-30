@@ -14,19 +14,27 @@ import 'quiz_practice/practiceQuestion_screen.dart';
 
 class QuizResult extends StatelessWidget {
   final bool isPracticeQuiz;
+  final bool isAssigned;
+  final bool isViewMore;
 
   // final int pointsScored;
   // final int totalPoints;
 
-  QuizResult({this.isPracticeQuiz});
+  QuizResult({this.isPracticeQuiz, this.isAssigned, this.isViewMore});
 
   Future<bool> willPop(BuildContext context) async {
-    final mainPro = Provider.of<MainPro>(context, listen: false);
-    mainPro.changeLoadingState(true);
-    await mainPro.getDashBoardData();
-    mainPro.changeLoadingState(false);
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (ctx) => TabMainScreen()), (route) => false);
+    if (isViewMore) {
+      Navigator.of(context).pop();
+    } else {
+      final mainPro = Provider.of<MainPro>(context, listen: false);
+      mainPro.changeLoadingState(true);
+      await mainPro.getDashBoardData();
+      mainPro.changeLoadingState(false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (ctx) => TabMainScreen()),
+          (route) => false);
+    }
+
     return true;
   }
 
@@ -156,7 +164,7 @@ class QuizResult extends StatelessWidget {
                                     height: mq.height * 0.01,
                                   ),
                                   Text(
-                                    '${mainPro.score}/${mainPro.selectedPracQuizData.length}',
+                                    '${isViewMore ?? false ? mainPro.userRank[0].score : mainPro.score}/${mainPro.selectedPracQuizData.length}',
                                     style: TextStyle(
                                         color: kResultColor,
                                         fontSize: 20,
@@ -182,7 +190,7 @@ class QuizResult extends StatelessWidget {
                                     height: mq.height * 0.01,
                                   ),
                                   Text(
-                                    '${mainPro.responseTime}sec',
+                                    '${isViewMore ?? false ? mainPro.userRank[0].responseTime : mainPro.responseTime}sec',
                                     style: TextStyle(
                                         color: kResultColor,
                                         fontSize: 20,
@@ -201,7 +209,8 @@ class QuizResult extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               isPracticeQuiz
-                                  ? buildPlayAgain(mq, context, mainPro)
+                                  ? buildPlayAgain(
+                                      mq, context, mainPro, isViewMore)
                                   : buildReviewSolution(mq, context),
                               isPracticeQuiz
                                   ? buildBackToQuiz(mq, context, mainPro)
@@ -362,28 +371,35 @@ class QuizResult extends StatelessWidget {
                             ],
                           ),
                           Spacer(),
-                          Text(
-                            'PRIZE WON',
-                            style: TextStyle(
-                                color: kSecondaryColor,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(
-                            height: mq.height * 0.01,
-                          ),
-                          Text(
-                            '₹ ${rankDetails.prize}/ -',
-                            style: TextStyle(
-                                color: kResultColor,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          Spacer(),
+                          isAssigned
+                              ? Container()
+                              : Text(
+                                  'PRIZE WON',
+                                  style: TextStyle(
+                                      color: kSecondaryColor,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                          isAssigned
+                              ? Container()
+                              : SizedBox(
+                                  height: mq.height * 0.01,
+                                ),
+                          isAssigned
+                              ? Container()
+                              : Text(
+                                  '₹ ${mainPro.selectedData.winningPrize}/ -',
+                                  style: TextStyle(
+                                      color: kResultColor,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                          isAssigned ? Container() : Spacer(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               isPracticeQuiz
-                                  ? buildPlayAgain(mq, context, mainPro)
+                                  ? buildPlayAgain(
+                                      mq, context, mainPro, isViewMore)
                                   : buildReviewSolution(mq, context),
                               isPracticeQuiz
                                   ? buildBackToQuiz(mq, context, mainPro)
@@ -410,7 +426,8 @@ class QuizResult extends StatelessWidget {
     );
   }
 
-  Widget buildPlayAgain(Size mq, BuildContext context, MainPro mainPro) {
+  Widget buildPlayAgain(Size mq, BuildContext context, MainPro mainPro,
+      [bool isViewMore]) {
     return SizedBox(
       height: mq.height * 0.058,
       width: mq.width * 0.45,
@@ -422,16 +439,20 @@ class QuizResult extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Navigator.of(context).pushReplacement(
-            CupertinoPageRoute(
-              builder: (ctx) => RulesScreen(
-                isPracticeQuiz: true,
+          if (isViewMore ?? false) {
+            willPop(context);
+          } else {
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (ctx) => RulesScreen(
+                  isPracticeQuiz: true,
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
         child: Text(
-          'PLAY AGAIN',
+          isViewMore ?? false ? 'VIEW SCORE' : 'PLAY AGAIN',
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',

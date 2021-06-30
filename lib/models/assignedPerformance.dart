@@ -1,8 +1,8 @@
 class AssignedPerformace {
   int totalMatchesPlayed;
   int totalMatchesWinned;
-  int winningPercentage;
-  double averagePercentage;
+  dynamic winningPercentage;
+  dynamic averagePercentage;
   List<Strengths> strengths;
   List<Strengths> weeknesses;
 
@@ -17,7 +17,7 @@ class AssignedPerformace {
   AssignedPerformace.fromJson(Map<String, dynamic> json) {
     totalMatchesPlayed = json['totalMatchesPlayed'] ?? 0;
     totalMatchesWinned = json['totalMatchesWinned'] ?? 0;
-    winningPercentage = json['winningPercentage'] ?? 0;
+    winningPercentage = json['winningPercentage'] ?? "0";
     averagePercentage = json['averagePercentage'] ?? 0.0;
     if (json['strengths'] != null) {
       strengths = new List<Strengths>();

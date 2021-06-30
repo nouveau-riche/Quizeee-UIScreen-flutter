@@ -104,12 +104,14 @@ class MainPro with ChangeNotifier {
     _assignedPerformace.clear();
     _dashboardBanner.clear();
     changeServeStatus = false;
+    isLoadedOnce = false;
   }
 
   clearPlayedResult() {
     _userPlayedFree.clear();
     _userPlayedAssigned.clear();
     _userPlayedPublic.clear();
+    isLoadedOnce = false;
   }
 
   Future<Map<String, dynamic>> getDashBoardData() async {
@@ -264,7 +266,7 @@ class MainPro with ChangeNotifier {
       if (response['status']) {
         _userRank.add(UserRank.fromJson(response['rankData']));
       }
-      return response;
+      return ConstFun.reponseData(response['status'], response['message']);
     } catch (e) {
       // print(e.toString());
       return ConstFun.reponseData(
@@ -373,6 +375,7 @@ class MainPro with ChangeNotifier {
     notifyListeners();
   }
 
+  bool isLoadedOnce = false;
   Future<Map<String, dynamic>> getUsersQuiz() async {
     try {
       final result = await http.get(
@@ -395,7 +398,6 @@ class MainPro with ChangeNotifier {
         response['free'].forEach((element) {
           _userPlayedFree.add(UserPlayedQuizFree.fromJson(element));
         });
-        toggleType(0);
         return response;
       } else {
         return ConstFun.reponseData(
@@ -405,6 +407,9 @@ class MainPro with ChangeNotifier {
     } catch (e) {
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
+    } finally {
+      isLoadedOnce = true;
+      toggleType(0);
     }
   }
 
@@ -421,13 +426,6 @@ class MainPro with ChangeNotifier {
         _publicPerformace.add(PublicPerformace.fromJson(response['public']));
         _assignedPerformace
             .add(AssignedPerformace.fromJson(response['assigned']));
-        // response['public'].forEach((key, val) {
-        //   print(key);
-        //   //
-        // });
-        // response['assigned'].forEach((element) {
-        //   //
-        // });
       }
       print(_assignedPerformace.length);
       print(_publicPerformace.length);
