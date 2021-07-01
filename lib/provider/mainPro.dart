@@ -443,6 +443,7 @@ class MainPro with ChangeNotifier {
   /// LOGICS
   /// ------------------------------
   DateFormat format = DateFormat("dd-MMMM , hh:mm a");
+  DateFormat dobFormat = DateFormat("yyyy-dd-MM");
   DateFormat formatTime = DateFormat("h:mm a");
   String stateEndDate(dynamic date) {
     try {

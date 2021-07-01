@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:com.quizeee.quizeee/provider/initialPro.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
 import 'package:com.quizeee.quizeee/widgets/toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,7 @@ class _EditProfileState extends State<EditProfile> {
       if (mounted) {
         setState(() {
           image = File(imageFile.path);
+          profileUrl = null;
         });
       }
     } catch (e) {
@@ -38,6 +41,7 @@ class _EditProfileState extends State<EditProfile> {
       if (mounted) {
         setState(() {
           image = File(imageFile.path);
+          profileUrl = null;
         });
       }
     } catch (e) {
@@ -45,8 +49,7 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  TextEditingController _nameController =
-      TextEditingController();
+  TextEditingController _nameController = TextEditingController();
 
   TextEditingController _locationController = TextEditingController();
 
@@ -55,23 +58,46 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController _phoneController = TextEditingController();
 
   TextEditingController _dobController = TextEditingController();
+  String profileUrl;
+  @override
+  void initState() {
+    super.initState();
+    initialUserData();
+  }
+
+  initialUserData() {
+    final userEdit = Provider.of<Auth>(context, listen: false);
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    _nameController.text = userEdit.userModel[0].username;
+    _locationController.text = userEdit.userModel[0].location;
+    _emailController.text = userEdit.userModel[0].email;
+    _phoneController.text = userEdit.userModel[0].phone;
+    ;
+    _dobController.text = mainPro.dobFormat
+        .format(DateTime.parse(userEdit.userModel[0].dateOfBirth));
+    profileUrl = userEdit.userModel[0].profilePic;
+  }
 
   Future<void> submit(BuildContext context) async {
     final userEdit = Provider.of<Auth>(context, listen: false);
     var body = new FormData.fromMap({
+      "userId": userEdit.userModel[0].userId,
       "username": _nameController.text ?? null,
       "location": _locationController.text ?? null,
       "email": _emailController.text ?? null,
-      "phone": "+91" + _phoneController.text ?? null,
-      "dateOfBirth": _dobController.text ?? null,
-      "profilePic": image.path != null
-          ? await MultipartFile.fromFile(image.path, filename: 'upload.png')
-          : null
+      "phone": _phoneController.text ?? null,
+      "dateOfBirth": DateTime.parse(_dobController.text ?? DateTime.now()),
+      "profilePic": image != null
+          ? image.path != null
+              ? await MultipartFile.fromFile(image.path, filename: 'upload.png')
+              : null
+          : profileUrl ?? null
     });
     userEdit.setLoading(true);
     final response = await userEdit.editUserProfile(body);
     userEdit.setLoading(false);
-    toast(response['msg'], isError: !response['status']);
+    toast(response['status'] ? "User profile updated" : "Something went wrong",
+        isError: !response['status']);
   }
 
   @override
@@ -79,34 +105,33 @@ class _EditProfileState extends State<EditProfile> {
     final mq = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: mq.height * 0.05,
-            ),
-            buildAppBar(context, mq),
-            buildSelectImage(),
-            SizedBox(
-              height: mq.height * 0.05,
-            ),
-            buildNameTextFieldField(mq),
-            buildLocationTextFieldField(mq),
-            buildEmailTextFieldField(mq),
-            buildPhoneTextFieldField(mq),
-            buildDobTextFieldField(mq),
-            Selector<Auth, bool>(
-                selector: (con, auth) => auth.isLoading,
-                builder: (context, state, _) {
-                  return state
-                      ? SpinKitPouringHourglass(color: kSecondaryColor)
-                      : GestureDetector(
-                          onTap: () {
-                            submit(context);
-                          },
-                          child: buildSaveButton(mq));
-                }),
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              buildAppBar(context, mq),
+              buildSelectImage(),
+              SizedBox(
+                height: mq.height * 0.05,
+              ),
+              buildNameTextFieldField(mq),
+              buildLocationTextFieldField(mq),
+              buildEmailTextFieldField(mq),
+              buildPhoneTextFieldField(mq),
+              buildDobTextFieldField(mq),
+              Selector<Auth, bool>(
+                  selector: (con, auth) => auth.isLoading,
+                  builder: (context, state, _) {
+                    return state
+                        ? SpinKitPouringHourglass(color: kSecondaryColor)
+                        : GestureDetector(
+                            onTap: () {
+                              submit(context);
+                            },
+                            child: buildSaveButton(mq));
+                  }),
+            ],
+          ),
         ),
       ),
     );
@@ -137,10 +162,53 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  openDialogBox() {
+    showDialog(
+        context: context,
+        builder: (ctx) => SimpleDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              backgroundColor: kPrimaryColor,
+              children: <Widget>[
+                SimpleDialogOption(
+                    child: const Text(
+                      "Capture Image with Camera",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      captureImageFromCamera();
+                    }),
+                SimpleDialogOption(
+                    child: const Text(
+                      "Pick Image from Gallery",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      pickImageFromGallery();
+                    }),
+                SimpleDialogOption(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        const Text(
+                          "Cancel",
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+              ],
+            ));
+  }
+
   Widget buildSelectImage() {
     return GestureDetector(
       onTap: () {
-// openDialogBox();
+        openDialogBox();
       },
       child: Stack(
         children: [
@@ -150,9 +218,11 @@ class _EditProfileState extends State<EditProfile> {
             child: CircleAvatar(
               radius: 41,
               backgroundColor: Colors.grey,
-              backgroundImage: image == null
-                  ? AssetImage('assets/images/profile.png')
-                  : FileImage(image),
+              backgroundImage: profileUrl != null
+                  ? NetworkImage(ApiUrls.baseUrl + profileUrl)
+                  : image == null
+                      ? AssetImage('assets/images/profile.png')
+                      : FileImage(image),
             ),
           ),
           Positioned(
@@ -413,7 +483,9 @@ class _EditProfileState extends State<EditProfile> {
 
   Widget buildSaveButton(Size mq) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        submit(context);
+      },
       child: Container(
         height: mq.height * 0.07,
         margin: EdgeInsets.symmetric(

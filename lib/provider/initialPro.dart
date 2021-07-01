@@ -131,10 +131,7 @@ class Auth with ChangeNotifier {
           await Dio().post(ApiUrls.baseUrl + ApiUrls.editUser, data: body);
       if (result.statusCode == 200) {
         if (result.data['status']) {
-          _userModel.clear();
-          _userModel.add(UserModel.fromJson(result.data['user']));
-          await ConstFun.saveUserId(_userModel[0].userId, storage);
-          return ConstFun.reponseData(true, result.data['message']);
+          return await getUserDetails();
         } else {
           return ConstFun.reponseData(false, result.data['message']);
         }

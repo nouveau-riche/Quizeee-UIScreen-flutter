@@ -317,6 +317,34 @@ class _AccountScreenState extends State<AccountScreen> {
                   "${strength.percentage.toString().length >= 4 ? strength.percentage.toString().substring(0, 4) : strength.percentage.toString()}");
             }),
           ),
+          data.weeknesses.isNotEmpty
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                      'WEEKNESSES',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: kPrimaryColor,
+                        fontFamily: 'DebugFreeTrial',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Column(
+                      children: List.generate(data.weeknesses.length, (index) {
+                        var strength = data.weeknesses[index];
+                        return buildSubjectStrength('${strength.category}',
+                            "${strength.percentage.toString().length >= 4 ? strength.percentage.toString().substring(0, 4) : strength.percentage.toString()}");
+                      }),
+                    ),
+                  ],
+                )
+              : Container(),
           const SizedBox(
             height: 10,
           ),
