@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:com.quizeee.quizeee/provider/initialPro.dart';
 import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/screens/account/components/change_phone.dart';
 import 'package:com.quizeee.quizeee/widgets/toast.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +19,13 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  final _formKey = GlobalKey<FormState>();
+
+  String _username;
+  String _location;
+  String _email;
+  String _phoneNumber;
+
   File image;
 
   final picker = ImagePicker();
@@ -49,16 +58,14 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  TextEditingController _nameController = TextEditingController();
+  //
+  // TextEditingController _nameController = TextEditingController();
+  // TextEditingController _locationController = TextEditingController();
+  // TextEditingController _emailController = TextEditingController();
+  // TextEditingController _phoneController = TextEditingController();
 
-  TextEditingController _locationController = TextEditingController();
-
-  TextEditingController _emailController = TextEditingController();
-
-  TextEditingController _phoneController = TextEditingController();
-
-  TextEditingController _dobController = TextEditingController();
   String profileUrl;
+
   @override
   void initState() {
     super.initState();
@@ -68,36 +75,46 @@ class _EditProfileState extends State<EditProfile> {
   initialUserData() {
     final userEdit = Provider.of<Auth>(context, listen: false);
     final mainPro = Provider.of<MainPro>(context, listen: false);
-    _nameController.text = userEdit.userModel[0].username;
-    _locationController.text = userEdit.userModel[0].location;
-    _emailController.text = userEdit.userModel[0].email;
-    _phoneController.text = userEdit.userModel[0].phone;
-    ;
-    _dobController.text = mainPro.dobFormat
-        .format(DateTime.parse(userEdit.userModel[0].dateOfBirth));
+    _username = userEdit.userModel[0].username;
+    _location = userEdit.userModel[0].location;
+    _email = userEdit.userModel[0].email;
+    _phoneNumber = userEdit.userModel[0].phone;
+    // _nameController.text = userEdit.userModel[0].username;
+    // _locationController.text = userEdit.userModel[0].location;
+    // _emailController.text = userEdit.userModel[0].email;
+    // _phoneController.text = userEdit.userModel[0].phone;
     profileUrl = userEdit.userModel[0].profilePic;
   }
 
   Future<void> submit(BuildContext context) async {
-    final userEdit = Provider.of<Auth>(context, listen: false);
-    var body = new FormData.fromMap({
-      "userId": userEdit.userModel[0].userId,
-      "username": _nameController.text ?? null,
-      "location": _locationController.text ?? null,
-      "email": _emailController.text ?? null,
-      "phone": _phoneController.text ?? null,
-      "dateOfBirth": DateTime.parse(_dobController.text ?? DateTime.now()),
-      "profilePic": image != null
-          ? image.path != null
-              ? await MultipartFile.fromFile(image.path, filename: 'upload.png')
-              : null
-          : profileUrl ?? null
-    });
-    userEdit.setLoading(true);
-    final response = await userEdit.editUserProfile(body);
-    userEdit.setLoading(false);
-    toast(response['status'] ? "User profile updated" : "Something went wrong",
-        isError: !response['status']);
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+
+      final userEdit = Provider.of<Auth>(context, listen: false);
+      var body = new FormData.fromMap({
+        "userId": userEdit.userModel[0].userId,
+        // "username": _nameController.text ?? null,
+        // "location": _locationController.text ?? null,
+        // "email": _emailController.text ?? null,
+        // "phone": _phoneController.text ?? null,
+        "username": _username ?? null,
+        "location": _location ?? null,
+        "email": _email ?? null,
+        "phone": _phoneNumber ?? null,
+        "profilePic": image != null
+            ? image.path != null
+                ? await MultipartFile.fromFile(image.path,
+                    filename: 'upload.png')
+                : null
+            : profileUrl ?? null
+      });
+      userEdit.setLoading(true);
+      final response = await userEdit.editUserProfile(body);
+      userEdit.setLoading(false);
+      toast(
+          response['status'] ? "User profile updated" : "Something went wrong",
+          isError: !response['status']);
+    }
   }
 
   @override
@@ -109,16 +126,23 @@ class _EditProfileState extends State<EditProfile> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(height: 10,),
               buildAppBar(context, mq),
               buildSelectImage(),
               SizedBox(
                 height: mq.height * 0.05,
               ),
-              buildNameTextFieldField(mq),
-              buildLocationTextFieldField(mq),
-              buildEmailTextFieldField(mq),
-              buildPhoneTextFieldField(mq),
-              buildDobTextFieldField(mq),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    buildNameTextFieldField(mq),
+                    buildLocationTextFieldField(mq),
+                    buildEmailTextFieldField(mq),
+                    buildPhoneTextFieldField(mq),
+                  ],
+                ),
+              ),
               Selector<Auth, bool>(
                   selector: (con, auth) => auth.isLoading,
                   builder: (context, state, _) {
@@ -213,10 +237,10 @@ class _EditProfileState extends State<EditProfile> {
       child: Stack(
         children: [
           CircleAvatar(
-            radius: 45,
+            radius: 50,
             backgroundColor: kSecondaryColor,
             child: CircleAvatar(
-              radius: 41,
+              radius: 47,
               backgroundColor: Colors.grey,
               backgroundImage: profileUrl != null
                   ? NetworkImage(ApiUrls.baseUrl + profileUrl)
@@ -248,7 +272,7 @@ class _EditProfileState extends State<EditProfile> {
 
   Widget buildNameTextFieldField(Size mq) {
     return Container(
-      height: mq.height * 0.075,
+      // height: mq.height * 0.075,
       margin: EdgeInsets.symmetric(
           horizontal: mq.width * 0.05, vertical: mq.height * 0.015),
       decoration: BoxDecoration(
@@ -270,7 +294,7 @@ class _EditProfileState extends State<EditProfile> {
           ),
           margin: EdgeInsets.all(4),
           padding: EdgeInsets.symmetric(horizontal: 10),
-          child: TextField(
+          child: TextFormField(
             cursorColor: kPrimaryLightColor,
             style: TextStyle(
                 color: kPrimaryLightColor,
@@ -286,7 +310,17 @@ class _EditProfileState extends State<EditProfile> {
                 size: 18,
               ),
             ),
-            controller: _nameController,
+            initialValue: _username,
+            // ignore: missing_return
+            validator: (_value) {
+              if (_value.isEmpty) {
+                return kNameNullError;
+              }
+            },
+            onSaved: (_value) {
+              _username = _value;
+            },
+            // controller: _nameController,
           ),
         ),
       ),
@@ -295,7 +329,7 @@ class _EditProfileState extends State<EditProfile> {
 
   Widget buildLocationTextFieldField(Size mq) {
     return Container(
-      height: mq.height * 0.075,
+      // height: mq.height * 0.075,
       margin: EdgeInsets.symmetric(
           horizontal: mq.width * 0.05, vertical: mq.height * 0.015),
       decoration: BoxDecoration(
@@ -317,7 +351,7 @@ class _EditProfileState extends State<EditProfile> {
           ),
           margin: EdgeInsets.all(4),
           padding: EdgeInsets.symmetric(horizontal: 10),
-          child: TextField(
+          child: TextFormField(
             cursorColor: kPrimaryLightColor,
             style: TextStyle(
                 color: kPrimaryLightColor,
@@ -333,7 +367,17 @@ class _EditProfileState extends State<EditProfile> {
                 size: 18,
               ),
             ),
-            controller: _locationController,
+            initialValue: _location,
+            // ignore: missing_return
+            validator: (_value) {
+              if (_value.isEmpty) {
+                return kLocationNullError;
+              }
+            },
+            onSaved: (_value) {
+              _location = _value;
+            },
+            // controller: _locationController,
           ),
         ),
       ),
@@ -342,7 +386,7 @@ class _EditProfileState extends State<EditProfile> {
 
   Widget buildEmailTextFieldField(Size mq) {
     return Container(
-      height: mq.height * 0.075,
+      // height: mq.height * 0.075,
       margin: EdgeInsets.symmetric(
           horizontal: mq.width * 0.05, vertical: mq.height * 0.015),
       decoration: BoxDecoration(
@@ -364,7 +408,7 @@ class _EditProfileState extends State<EditProfile> {
           ),
           margin: EdgeInsets.all(4),
           padding: EdgeInsets.symmetric(horizontal: 10),
-          child: TextField(
+          child: TextFormField(
             cursorColor: kPrimaryLightColor,
             style: TextStyle(
                 color: kPrimaryLightColor,
@@ -380,7 +424,22 @@ class _EditProfileState extends State<EditProfile> {
                 size: 18,
               ),
             ),
-            controller: _emailController,
+            initialValue: _email,
+            // ignore: missing_return
+            validator: (_value) {
+              if (_value.isEmpty) {
+                return kEmailNullError;
+              }
+              bool emailValid = emailValidatorRegExp.hasMatch(_value);
+              if (!emailValid) {
+                return kInvalidEmailError;
+              }
+            },
+            onSaved: (_value) {
+              _email = _value;
+            },
+
+            // controller: _emailController,
           ),
         ),
       ),
@@ -388,94 +447,82 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget buildPhoneTextFieldField(Size mq) {
-    return Container(
-      height: mq.height * 0.075,
-      margin: EdgeInsets.symmetric(
-          horizontal: mq.width * 0.05, vertical: mq.height * 0.015),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            kSecondaryColor.withOpacity(0.5),
-            kSecondaryColor.withOpacity(0.1)
-          ],
+    return GestureDetector(
+      onTap: () {
+        print('nikunj');
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (ctx) => ChangePhone(phoneNumber: _phoneNumber,),
+          ),
+        );
+      },
+      child: Container(
+        height: mq.height * 0.075,
+        margin: EdgeInsets.symmetric(
+            horizontal: mq.width * 0.05, vertical: mq.height * 0.015),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              kSecondaryColor.withOpacity(0.5),
+              kSecondaryColor.withOpacity(0.1)
+            ],
+          ),
+          borderRadius: BorderRadius.circular(10),
         ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
         child: Container(
+          height: mq.height,
           decoration: BoxDecoration(
             color: kPrimaryColor,
             borderRadius: BorderRadius.circular(10),
           ),
           margin: EdgeInsets.all(4),
           padding: EdgeInsets.symmetric(horizontal: 10),
-          child: TextField(
-            cursorColor: kPrimaryLightColor,
-            style: TextStyle(
-                color: kPrimaryLightColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 12.5),
-            decoration: InputDecoration(
-              hintText: 'PHONE NUMBER',
-              hintStyle: TextStyle(color: kPrimaryLightColor),
-              border: InputBorder.none,
-              suffixIcon: Icon(
-                Icons.edit,
-                color: kSecondaryColor,
-                size: 18,
+          child: Row(
+            children: [
+              Text(
+                _phoneNumber,
+                style: TextStyle(
+                  color: kPrimaryLightColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12.5,
+                ),
               ),
-            ),
-            controller: _phoneController,
+            ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildDobTextFieldField(Size mq) {
-    return Container(
-      height: mq.height * 0.075,
-      margin: EdgeInsets.symmetric(
-          horizontal: mq.width * 0.05, vertical: mq.height * 0.015),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            kSecondaryColor.withOpacity(0.5),
-            kSecondaryColor.withOpacity(0.1)
-          ],
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: kPrimaryColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.all(4),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: TextField(
-            cursorColor: kPrimaryLightColor,
-            style: TextStyle(
-                color: kPrimaryLightColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 12.5),
-            decoration: InputDecoration(
-              hintText: 'DOB',
-              hintStyle: TextStyle(color: kPrimaryLightColor),
-              border: InputBorder.none,
-              suffixIcon: Icon(
-                Icons.edit,
-                color: kSecondaryColor,
-                size: 18,
-              ),
-            ),
-            controller: _dobController,
-          ),
+          // child: TextFormField(
+          //   readOnly: true,
+          //   cursorColor: kPrimaryLightColor,
+          //   style: TextStyle(
+          //       color: kPrimaryLightColor,
+          //       fontWeight: FontWeight.bold,
+          //       fontSize: 12.5),
+          //   decoration: InputDecoration(
+          //     hintText: 'PHONE NUMBER',
+          //     hintStyle: TextStyle(color: kPrimaryLightColor),
+          //     border: InputBorder.none,
+          //     suffixIcon: Icon(
+          //       Icons.edit,
+          //       color: kSecondaryColor,
+          //       size: 18,
+          //     ),
+          //   ),
+          //   initialValue: _phoneNumber,
+          //   // ignore: missing_return
+          //   validator: (_value) {
+          //     if (_value.isEmpty) {
+          //       return kPhoneNumberNullError;
+          //     }
+          //     if (_value.length != 10) {
+          //       return kInvalidPhoneError;
+          //     }
+          //   },
+          //   onSaved: (_value) {
+          //     _phoneNumber = _value;
+          //   },
+          //   // controller: _phoneController,
+          // ),
         ),
       ),
     );

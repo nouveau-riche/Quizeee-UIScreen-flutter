@@ -4,6 +4,7 @@ import 'package:com.quizeee.quizeee/screens/account/components/view_score.dart';
 import 'package:com.quizeee.quizeee/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant.dart';
@@ -51,7 +52,9 @@ class _AccountScreenState extends State<AccountScreen> {
           future: getUserPerformance(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: SpinKitPouringHourglass(color: kSecondaryColor),
+              );
             }
             return SingleChildScrollView(
               child: Column(

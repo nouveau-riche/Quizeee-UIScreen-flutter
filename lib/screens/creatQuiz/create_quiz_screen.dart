@@ -20,7 +20,7 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color.fromRGBO(0, 44, 62, 1),
+        backgroundColor: kPrimaryColor,
         centerTitle: true,
         title: const Text(
           'QUIZEEE',
