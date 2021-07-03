@@ -20,6 +20,12 @@ class Auth with ChangeNotifier {
     return [..._userModel];
   }
 
+  // edit user
+  String editedEmail;
+  String editedPhone;
+  String emailOtp;
+  String phoneOtp;
+
   //Local Storage
   final LocalStorage storage = new LocalStorage(ApiUrls.localStorageKey);
 

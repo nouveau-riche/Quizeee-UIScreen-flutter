@@ -129,7 +129,9 @@ class _EditProfileState extends State<EditProfile> {
       final response = await userEdit.editUserProfile(body);
       userEdit.setLoading(false);
       toast(
-          response['status'] ? "User profile updated" : "Something went wrong",
+          response['status']
+              ? "User profile updated"
+              : response['status'] ?? "Something went wrong",
           isError: !response['status']);
     }
   }
@@ -453,14 +455,16 @@ class _EditProfileState extends State<EditProfile> {
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               children: [
-                Text(
-                  _email,
-                  style: TextStyle(
-                    color: kPrimaryLightColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.5,
-                  ),
-                ),
+                Consumer<Auth>(builder: (context, auth, _) {
+                  return Text(
+                    auth.editedEmail ?? _email,
+                    style: TextStyle(
+                      color: kPrimaryLightColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.5,
+                    ),
+                  );
+                }),
               ],
             ),
             // child: TextFormField(
@@ -538,14 +542,16 @@ class _EditProfileState extends State<EditProfile> {
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             children: [
-              Text(
-                _phoneNumber,
-                style: TextStyle(
-                  color: kPrimaryLightColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12.5,
-                ),
-              ),
+              Consumer<Auth>(builder: (context, auth, _) {
+                return Text(
+                  auth.editedPhone ?? _phoneNumber,
+                  style: TextStyle(
+                    color: kPrimaryLightColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.5,
+                  ),
+                );
+              }),
             ],
           ),
           // child: TextFormField(

@@ -1,6 +1,12 @@
+import 'dart:io';
+
+import 'package:com.quizeee.quizeee/provider/initialPro.dart';
+import 'package:com.quizeee.quizeee/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constant.dart';
 
@@ -14,7 +20,6 @@ class ChangePhone extends StatefulWidget {
 }
 
 class _ChangePhoneState extends State<ChangePhone> {
-
   final _formKey = GlobalKey<FormState>();
   String _phoneNumber;
 
@@ -26,20 +31,52 @@ class _ChangePhoneState extends State<ChangePhone> {
     borderRadius: BorderRadius.circular(10.0),
   );
 
-
-  save(){
-    if(_formKey.currentState.validate()){
+  Future<void> save() async {
+    if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      if (isOtpSent) {
+        saveOtp();
+      } else {
+        sendOtp();
+      }
 
       /// verify for otp
 
     }
   }
 
+  void getBack() async {
+    final intialPro = Provider.of<Auth>(context, listen: false);
+    intialPro.editedPhone = "1234556" ?? widget.phoneNumber;
+    intialPro.notifyListeners();
+    Navigator.pop(context);
+  }
+
+  bool isOtpSent = false;
+
+  Future<void> sendOtp() async {
+    final intialPro = Provider.of<Auth>(context, listen: false);
+    var body = {"phone": "+91" + _phoneNumber};
+
+    final resp = await intialPro.sendVerificationOtp(body, false);
+    toast(resp['msg'], isError: !resp['status']);
+    if (resp['status']) {
+      isOtpSent = true;
+    }
+  }
+
+  Future<void> saveOtp() async {
+    final intialPro = Provider.of<Auth>(context, listen: false);
+    intialPro.phoneOtp = _pinPutController.text;
+    getBack();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
+    final iOS = Platform.isIOS;
     return SafeArea(
+      top: iOS,
       child: Scaffold(
         backgroundColor: kPrimaryColor,
         body: SingleChildScrollView(
@@ -55,8 +92,13 @@ class _ChangePhoneState extends State<ChangePhone> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.phone,color: kPrimaryLightColor,),
-                  SizedBox(width: 10,),
+                  Icon(
+                    Icons.phone,
+                    color: kPrimaryLightColor,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text(
                     'Edit Phone Number',
                     style: TextStyle(
@@ -96,7 +138,9 @@ class _ChangePhoneState extends State<ChangePhone> {
                   },
                 ),
               ),
-              SizedBox(height: mq.height*0.1,),
+              SizedBox(
+                height: mq.height * 0.1,
+              ),
               buildVerifyButton(),
             ],
           ),
@@ -122,7 +166,8 @@ class _ChangePhoneState extends State<ChangePhone> {
               color: kPrimaryColor,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
+              getBack();
             },
           ),
         ),

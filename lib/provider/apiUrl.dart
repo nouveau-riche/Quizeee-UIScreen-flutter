@@ -42,10 +42,13 @@ class ApiUrls {
   static String getUserNotifications = "all-user-notifications/";
   static String deleteNotifications = "del-notification";
 
-  // USER ACCOUNT
-  static String userPerformance = "performance-history";
-
   //WEBVIEWS
   static String createQuiz =
       "https://quizeee-free-quiz.netlify.app/web/add-user-free-quiz/";
+
+  // USER PERFORMANCE
+  static String userPerformance = "performance-history";
+  static String userPerformanceCategory = "user-categoryWise-graph";
+  static String userPerformanceSubCategory = "user-subCategoryWise-graph";
+  static String userPerformanceAreaOfInterest = "user-areaOfInterestWise-graph";
 }

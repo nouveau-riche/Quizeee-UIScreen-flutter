@@ -38,10 +38,11 @@ class UserModel {
     referralCode = json['referralCode'];
     generatedReferralCode = json['generatedReferralCode'];
     profilePic = json['profilePic'];
-    dateOfBirth = json['dateOfBirth'];
+    dateOfBirth = json['dateOfBirth'] ?? "";
     deviceId = json['deviceId'];
     creationTimeStamp = json['creationTimeStamp'];
-    userAge = calculateAge(DateTime.parse(dateOfBirth));
+    userAge =
+        dateOfBirth.isEmpty ? "" : calculateAge(DateTime.parse(dateOfBirth));
   }
 
   Map<String, dynamic> toJson() {

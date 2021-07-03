@@ -439,6 +439,63 @@ class MainPro with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> getUserPerformanceCategory() async {
+    try {
+      final result = await http.post(
+          ApiUrls.baseUrl + ApiUrls.userPerformanceCategory,
+          headers: ApiUrls.headers,
+          body: json.encode({"userId": _auth.userModel[0].userId.toString()}));
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {}
+      print(_assignedPerformace.length);
+      print(_publicPerformace.length);
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserPerformanceSubCategory() async {
+    try {
+      final result = await http.post(
+          ApiUrls.baseUrl + ApiUrls.userPerformanceSubCategory,
+          headers: ApiUrls.headers,
+          body: json.encode({"userId": _auth.userModel[0].userId.toString()}));
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {}
+      print(_assignedPerformace.length);
+      print(_publicPerformace.length);
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserPerformanceAreaOfInterest() async {
+    try {
+      final result = await http.post(
+          ApiUrls.baseUrl + ApiUrls.userPerformanceAreaOfInterest,
+          headers: ApiUrls.headers,
+          body: json.encode({"userId": _auth.userModel[0].userId.toString()}));
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {}
+      print(_assignedPerformace.length);
+      print(_publicPerformace.length);
+      return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    } finally {
+      notifyListeners();
+    }
+  }
+
   /// ------------------------------
   /// LOGICS
   /// ------------------------------
