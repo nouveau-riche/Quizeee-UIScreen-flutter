@@ -4,19 +4,19 @@ import 'package:pinput/pin_put/pin_put.dart';
 
 import '../../../constant.dart';
 
-class ChangePhone extends StatefulWidget {
-  final String phoneNumber;
+class ChangeEmail extends StatefulWidget {
+  final String email;
 
-  ChangePhone({this.phoneNumber});
+  ChangeEmail({this.email});
 
   @override
-  _ChangePhoneState createState() => _ChangePhoneState();
+  _ChangeEmailState createState() => _ChangeEmailState();
 }
 
-class _ChangePhoneState extends State<ChangePhone> {
+class _ChangeEmailState extends State<ChangeEmail> {
 
   final _formKey = GlobalKey<FormState>();
-  String _phoneNumber;
+  String _email;
 
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
@@ -55,10 +55,10 @@ class _ChangePhoneState extends State<ChangePhone> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.phone,color: kPrimaryLightColor,),
+                  Icon(Icons.email,color: kPrimaryLightColor,),
                   SizedBox(width: 10,),
                   Text(
-                    'Edit Phone Number',
+                    'Edit Email',
                     style: TextStyle(
                       fontSize: 32,
                       color: kPrimaryLightColor,
@@ -72,7 +72,7 @@ class _ChangePhoneState extends State<ChangePhone> {
               ),
               Form(
                 key: _formKey,
-                child: buildPhoneTextFieldField(mq),
+                child: buildEmailTextFieldField(mq),
               ),
               Padding(
                 padding: const EdgeInsets.all(30.0),
@@ -130,7 +130,7 @@ class _ChangePhoneState extends State<ChangePhone> {
     );
   }
 
-  Widget buildPhoneTextFieldField(Size mq) {
+  Widget buildEmailTextFieldField(Size mq) {
     return Container(
       margin: EdgeInsets.symmetric(
           horizontal: mq.width * 0.05, vertical: mq.height * 0.015),
@@ -159,11 +159,11 @@ class _ChangePhoneState extends State<ChangePhone> {
               fontWeight: FontWeight.bold,
               fontSize: 12.5),
           decoration: InputDecoration(
-            hintText: 'EDIT PHONE NUMBER',
+            hintText: 'EDIT EMAIL',
             hintStyle: TextStyle(color: kPrimaryLightColor),
             border: InputBorder.none,
           ),
-          initialValue: widget.phoneNumber,
+          initialValue: widget.email,
           // ignore: missing_return
           validator: (_value) {
             if (_value.isEmpty) {
@@ -174,7 +174,7 @@ class _ChangePhoneState extends State<ChangePhone> {
             }
           },
           onSaved: (_value) {
-            _phoneNumber = _value;
+            _email = _value;
           },
         ),
       ),

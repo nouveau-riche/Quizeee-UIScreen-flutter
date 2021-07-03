@@ -14,7 +14,8 @@ class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
 
   String _username;
-  String _location;
+  int _locationIndex = 0;
+  String _location = states[0];
   String _email;
   String _phoneNumber;
   String _referralCode;
@@ -37,32 +38,28 @@ class _SignUpFormState extends State<SignUpForm> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
+      _location = states[_locationIndex];
+
+      print(_location);
+
       bool phoneValidation = _phoneNumber.length == 10;
 
       bool emailValidation = emailValidatorRegExp.hasMatch(_email);
 
       if (phoneValidation == false && emailValidation == false) {
-
-        if(_email.length != 0){
-          toast('Enter valid email',isError: true);
+        if (_email.length != 0) {
+          toast('Enter valid email', isError: true);
           return;
         }
 
-        if(_phoneNumber.length != 10){
-          toast('Enter valid phone',isError: true);
+        if (_phoneNumber.length != 10) {
+          toast('Enter valid phone', isError: true);
           return;
         }
 
-        toast('Enter email or phone',isError: true);
+        toast('Enter email or phone', isError: true);
         return;
       }
-
-      print(_username);
-      print(_location);
-      print(_email);
-      print(_phoneNumber);
-      print(_referralCode);
-
 
       Navigator.of(context).push(
         CupertinoPageRoute(
@@ -86,7 +83,7 @@ class _SignUpFormState extends State<SignUpForm> {
       child: Column(
         children: [
           buildUserNameField(),
-          buildLocationField(),
+          buildLocationField(mq),
           buildEmailField(),
           buildPhoneNumberField(),
           buildReferralCodeField(),
@@ -118,10 +115,6 @@ class _SignUpFormState extends State<SignUpForm> {
               color: Colors.black87),
           border: InputBorder.none,
         ),
-        textInputAction: TextInputAction.next,
-        onFieldSubmitted: (_) {
-          FocusScope.of(context).requestFocus(_focusLocation);
-        },
 
         // ignore: missing_return
         validator: (_value) {
@@ -136,41 +129,54 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  Widget buildLocationField() {
+
+  Widget buildLocationField(Size mq) {
     return Container(
+      width: mq.width,
       padding: const EdgeInsets.only(left: 15, right: 1, bottom: 1, top: 1),
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       decoration: BoxDecoration(
         color: kSecondaryColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: TextFormField(
-        cursorColor: Colors.black,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-        decoration: const InputDecoration(
-          hintText: 'LOCATION',
-          hintStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 12.8,
-              color: Colors.black87),
-          border: InputBorder.none,
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton(
+          value: _locationIndex,
+          items: stateDropDownList,
+          onChanged: (value) {
+            setState(() {
+              _locationIndex = value;
+            });
+          },
         ),
-        textInputAction: TextInputAction.next,
-        focusNode: _focusLocation,
-        onFieldSubmitted: (_) {
-          FocusScope.of(context).requestFocus(_focusEmail);
-        },
-
-        // ignore: missing_return
-        validator: (_value) {
-          if (_value.isEmpty) {
-            return kLocationNullError;
-          }
-        },
-        onSaved: (_value) {
-          _location = _value;
-        },
       ),
+      // child: TextFormField(
+      //   cursorColor: Colors.black,
+      //   style: const TextStyle(fontWeight: FontWeight.bold),
+      //   decoration: const InputDecoration(
+      //     hintText: 'LOCATION',
+      //     hintStyle: const TextStyle(
+      //         fontWeight: FontWeight.bold,
+      //         fontSize: 12.8,
+      //         color: Colors.black87),
+      //     border: InputBorder.none,
+      //   ),
+      //   textInputAction: TextInputAction.next,
+      //   focusNode: _focusLocation,
+      //   onFieldSubmitted: (_) {
+      //     FocusScope.of(context).requestFocus(_focusEmail);
+      //   },
+      //
+      //   // ignore: missing_return
+      //   validator: (_value) {
+      //     if (_value.isEmpty) {
+      //       return kLocationNullError;
+      //     }
+      //   },
+      //   onSaved: (_value) {
+      //     _location = _value;
+      //   },
+      // ),
     );
   }
 

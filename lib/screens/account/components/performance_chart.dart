@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../constant.dart';
 
-class PerformanceChartScreen extends StatelessWidget {
+class PerformanceChartScreen extends StatefulWidget {
+  @override
+  _PerformanceChartScreenState createState() => _PerformanceChartScreenState();
+}
+
+class _PerformanceChartScreenState extends State<PerformanceChartScreen> {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -15,6 +20,52 @@ class PerformanceChartScreen extends StatelessWidget {
               height: mq.height * 0.05,
             ),
             buildAppBar(context, mq),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            const Text(
+              'ASSIGNED QUIZ',
+              style: TextStyle(
+                fontFamily: 'RapierZero',
+                color: kPrimaryLightColor,
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildHeader(mq, context, 'CATEGORY'),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildChart(mq),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildHeader(mq, context, 'SUB-CATEGORY'),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildChart(mq),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildHeader(mq, context, 'AREA OF INTEREST'),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            buildChart(mq),
+            SizedBox(
+              height: mq.height * 0.04,
+            ),
+            const Text(
+              'PUBLIC QUIZ',
+              style: TextStyle(
+                fontFamily: 'RapierZero',
+                color: kPrimaryLightColor,
+                fontSize: 20,
+              ),
+            ),
             SizedBox(
               height: mq.height * 0.025,
             ),
@@ -80,6 +131,8 @@ class PerformanceChartScreen extends StatelessWidget {
     );
   }
 
+  int index = 0;
+
   Widget buildHeader(Size mq, BuildContext context, String type) {
     return Container(
       height: mq.height * 0.065,
@@ -96,15 +149,49 @@ class PerformanceChartScreen extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(30),
       ),
-      child: Center(
-        child: Text(
-          type,
-          style: TextStyle(
-              color: kPrimaryLightColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 12.5),
-        ),
-      ),
+      child: type == 'CATEGORY'
+          ? Center(
+              child: Text(
+                type,
+                style: TextStyle(
+                    color: kPrimaryLightColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.5),
+              ),
+            )
+          : DropdownButtonHideUnderline(
+              child: DropdownButton(
+                value: index,
+                items: [
+                  DropdownMenuItem(
+                    child: const Text(
+                      '                              SUB-CATEGORY',
+                      // don't remove space it's for center align
+                      style: TextStyle(
+                          color: kPrimaryLightColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12.5),
+                    ),
+                    value: 0,
+                  ),
+                  DropdownMenuItem(
+                    child: const Text(
+                      '                               BBBB',
+                      style: TextStyle(
+                          color: kPrimaryLightColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12.5),
+                    ),
+                    value: 1,
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    index = value;
+                  });
+                },
+              ),
+            ),
     );
   }
 

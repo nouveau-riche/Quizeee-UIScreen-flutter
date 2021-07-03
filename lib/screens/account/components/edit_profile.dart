@@ -3,6 +3,7 @@ import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:com.quizeee.quizeee/provider/initialPro.dart';
 import 'package:com.quizeee.quizeee/provider/mainPro.dart';
 import 'package:com.quizeee.quizeee/screens/account/components/change_phone.dart';
+import 'package:com.quizeee.quizeee/screens/account/components/edit_email.dart';
 import 'package:com.quizeee.quizeee/widgets/toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,8 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   final _formKey = GlobalKey<FormState>();
+
+  int _locationIndex = 0;
 
   String _username;
   String _location;
@@ -77,6 +80,18 @@ class _EditProfileState extends State<EditProfile> {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     _username = userEdit.userModel[0].username;
     _location = userEdit.userModel[0].location;
+
+    int inx = states.indexWhere((element) {
+      if (element == _location) {
+        return true;
+      }
+      return false;
+    });
+
+    if (inx != -1) {
+      _locationIndex = inx;
+    }
+
     _email = userEdit.userModel[0].email;
     _phoneNumber = userEdit.userModel[0].phone;
     // _nameController.text = userEdit.userModel[0].username;
@@ -89,6 +104,8 @@ class _EditProfileState extends State<EditProfile> {
   Future<void> submit(BuildContext context) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+
+      print(_location);
 
       final userEdit = Provider.of<Auth>(context, listen: false);
       var body = new FormData.fromMap({
@@ -126,7 +143,9 @@ class _EditProfileState extends State<EditProfile> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               buildAppBar(context, mq),
               buildSelectImage(),
               SizedBox(
@@ -330,6 +349,7 @@ class _EditProfileState extends State<EditProfile> {
   Widget buildLocationTextFieldField(Size mq) {
     return Container(
       // height: mq.height * 0.075,
+      width: mq.width,
       margin: EdgeInsets.symmetric(
           horizontal: mq.width * 0.05, vertical: mq.height * 0.015),
       decoration: BoxDecoration(
@@ -343,103 +363,139 @@ class _EditProfileState extends State<EditProfile> {
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: kPrimaryColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.all(4),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: TextFormField(
-            cursorColor: kPrimaryLightColor,
-            style: TextStyle(
-                color: kPrimaryLightColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 12.5),
-            decoration: InputDecoration(
-              hintText: 'LOCATION',
-              hintStyle: TextStyle(color: kPrimaryLightColor),
-              border: InputBorder.none,
-              suffixIcon: Icon(
-                Icons.edit,
-                color: kSecondaryColor,
-                size: 18,
-              ),
-            ),
-            initialValue: _location,
-            // ignore: missing_return
-            validator: (_value) {
-              if (_value.isEmpty) {
-                return kLocationNullError;
-              }
+
+      child: Container(
+        width: mq.width,
+        decoration: BoxDecoration(
+          color: kPrimaryColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        margin: EdgeInsets.all(4),
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton(
+            value: _locationIndex,
+            items: stateDropDownListForEditProfile,
+            onChanged: (value) {
+              setState(() {
+                _locationIndex = value;
+                _location = states[_locationIndex];
+              });
             },
-            onSaved: (_value) {
-              _location = _value;
-            },
-            // controller: _locationController,
           ),
         ),
+        // child: TextFormField(
+        //   cursorColor: kPrimaryLightColor,
+        //   style: TextStyle(
+        //       color: kPrimaryLightColor,
+        //       fontWeight: FontWeight.bold,
+        //       fontSize: 12.5),
+        //   decoration: InputDecoration(
+        //     hintText: 'LOCATION',
+        //     hintStyle: TextStyle(color: kPrimaryLightColor),
+        //     border: InputBorder.none,
+        //     suffixIcon: Icon(
+        //       Icons.edit,
+        //       color: kSecondaryColor,
+        //       size: 18,
+        //     ),
+        //   ),
+        //   initialValue: _location,
+        //   // ignore: missing_return
+        //   validator: (_value) {
+        //     if (_value.isEmpty) {
+        //       return kLocationNullError;
+        //     }
+        //   },
+        //   onSaved: (_value) {
+        //     _location = _value;
+        //   },
+        //   // controller: _locationController,
+        // ),
       ),
     );
   }
 
   Widget buildEmailTextFieldField(Size mq) {
-    return Container(
-      // height: mq.height * 0.075,
-      margin: EdgeInsets.symmetric(
-          horizontal: mq.width * 0.05, vertical: mq.height * 0.015),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            kSecondaryColor.withOpacity(0.5),
-            kSecondaryColor.withOpacity(0.1)
-          ],
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: kPrimaryColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.all(4),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: TextFormField(
-            cursorColor: kPrimaryLightColor,
-            style: TextStyle(
-                color: kPrimaryLightColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 12.5),
-            decoration: InputDecoration(
-              hintText: 'EMAIL',
-              hintStyle: TextStyle(color: kPrimaryLightColor),
-              border: InputBorder.none,
-              suffixIcon: Icon(
-                Icons.edit,
-                color: kSecondaryColor,
-                size: 18,
-              ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (ctx) => ChangeEmail(
+              email: _email,
             ),
-            initialValue: _email,
-            // ignore: missing_return
-            validator: (_value) {
-              if (_value.isEmpty) {
-                return kEmailNullError;
-              }
-              bool emailValid = emailValidatorRegExp.hasMatch(_value);
-              if (!emailValid) {
-                return kInvalidEmailError;
-              }
-            },
-            onSaved: (_value) {
-              _email = _value;
-            },
-
-            // controller: _emailController,
+          ),
+        );
+      },
+      child: Container(
+        height: mq.height * 0.075,
+        margin: EdgeInsets.symmetric(
+            horizontal: mq.width * 0.05, vertical: mq.height * 0.015),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              kSecondaryColor.withOpacity(0.5),
+              kSecondaryColor.withOpacity(0.1)
+            ],
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Center(
+          child: Container(
+            height: mq.height,
+            decoration: BoxDecoration(
+              color: kPrimaryColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            margin: EdgeInsets.all(4),
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: [
+                Text(
+                  _email,
+                  style: TextStyle(
+                    color: kPrimaryLightColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.5,
+                  ),
+                ),
+              ],
+            ),
+            // child: TextFormField(
+            //   cursorColor: kPrimaryLightColor,
+            //   style: TextStyle(
+            //       color: kPrimaryLightColor,
+            //       fontWeight: FontWeight.bold,
+            //       fontSize: 12.5),
+            //   decoration: InputDecoration(
+            //     hintText: 'EMAIL',
+            //     hintStyle: TextStyle(color: kPrimaryLightColor),
+            //     border: InputBorder.none,
+            //     suffixIcon: Icon(
+            //       Icons.edit,
+            //       color: kSecondaryColor,
+            //       size: 18,
+            //     ),
+            //   ),
+            //   initialValue: _email,
+            //   // ignore: missing_return
+            //   validator: (_value) {
+            //     if (_value.isEmpty) {
+            //       return kEmailNullError;
+            //     }
+            //     bool emailValid = emailValidatorRegExp.hasMatch(_value);
+            //     if (!emailValid) {
+            //       return kInvalidEmailError;
+            //     }
+            //   },
+            //   onSaved: (_value) {
+            //     _email = _value;
+            //   },
+            //
+            //   // controller: _emailController,
+            // ),
           ),
         ),
       ),
@@ -449,10 +505,11 @@ class _EditProfileState extends State<EditProfile> {
   Widget buildPhoneTextFieldField(Size mq) {
     return GestureDetector(
       onTap: () {
-        print('nikunj');
         Navigator.of(context).push(
           CupertinoPageRoute(
-            builder: (ctx) => ChangePhone(phoneNumber: _phoneNumber,),
+            builder: (ctx) => ChangePhone(
+              phoneNumber: _phoneNumber,
+            ),
           ),
         );
       },
