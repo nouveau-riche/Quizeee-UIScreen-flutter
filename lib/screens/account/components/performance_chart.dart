@@ -44,6 +44,10 @@ class _PerformanceChartScreenState extends State<PerformanceChartScreen> {
             ),
             buildHeader(mq, context, 'SUB-CATEGORY'),
             SizedBox(
+              height: mq.height * 0.01,
+            ),
+            buildDropDownField(mq),
+            SizedBox(
               height: mq.height * 0.025,
             ),
             buildChart(mq),
@@ -51,6 +55,10 @@ class _PerformanceChartScreenState extends State<PerformanceChartScreen> {
               height: mq.height * 0.025,
             ),
             buildHeader(mq, context, 'AREA OF INTEREST'),
+            SizedBox(
+              height: mq.height * 0.01,
+            ),
+            buildDropDownField(mq),
             SizedBox(
               height: mq.height * 0.025,
             ),
@@ -79,6 +87,10 @@ class _PerformanceChartScreenState extends State<PerformanceChartScreen> {
             ),
             buildHeader(mq, context, 'SUB-CATEGORY'),
             SizedBox(
+              height: mq.height * 0.01,
+            ),
+            buildDropDownField(mq),
+            SizedBox(
               height: mq.height * 0.025,
             ),
             buildChart(mq),
@@ -86,6 +98,10 @@ class _PerformanceChartScreenState extends State<PerformanceChartScreen> {
               height: mq.height * 0.025,
             ),
             buildHeader(mq, context, 'AREA OF INTEREST'),
+            SizedBox(
+              height: mq.height * 0.01,
+            ),
+            buildDropDownField(mq),
             SizedBox(
               height: mq.height * 0.025,
             ),
@@ -149,49 +165,75 @@ class _PerformanceChartScreenState extends State<PerformanceChartScreen> {
         ),
         borderRadius: BorderRadius.circular(30),
       ),
-      child: type == 'CATEGORY'
-          ? Center(
-              child: Text(
-                type,
-                style: TextStyle(
-                    color: kPrimaryLightColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.5),
+      child: Center(
+        child: Text(
+          type,
+          style: TextStyle(
+              color: kPrimaryLightColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 12.5),
+        ),
+      ),
+    );
+  }
+
+  Widget buildDropDownField(Size mq) {
+    return Container(
+      width: mq.width,
+      margin: EdgeInsets.symmetric(
+          horizontal: mq.width * 0.1, vertical: mq.height * 0.015),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            kSecondaryColor.withOpacity(0.5),
+            kSecondaryColor.withOpacity(0.1)
+          ],
+        ),
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Container(
+        width: mq.width,
+        decoration: BoxDecoration(
+          color: kPrimaryColor,
+          borderRadius: BorderRadius.circular(25),
+        ),
+        margin: EdgeInsets.all(4),
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton(
+            value: index,
+            items: [
+              DropdownMenuItem(
+                child: const Text(
+                  'xxxxxxx',
+                  style: TextStyle(
+                      color: kPrimaryLightColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.5),
+                ),
+                value: 0,
               ),
-            )
-          : DropdownButtonHideUnderline(
-              child: DropdownButton(
-                value: index,
-                items: [
-                  DropdownMenuItem(
-                    child: const Text(
-                      '                              SUB-CATEGORY',
-                      // don't remove space it's for center align
-                      style: TextStyle(
-                          color: kPrimaryLightColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.5),
-                    ),
-                    value: 0,
-                  ),
-                  DropdownMenuItem(
-                    child: const Text(
-                      '                               BBBB',
-                      style: TextStyle(
-                          color: kPrimaryLightColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.5),
-                    ),
-                    value: 1,
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    index = value;
-                  });
-                },
+              DropdownMenuItem(
+                child: const Text(
+                  'BBBB',
+                  style: TextStyle(
+                      color: kPrimaryLightColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.5),
+                ),
+                value: 1,
               ),
-            ),
+            ],
+            onChanged: (value) {
+              setState(() {
+                index = value;
+              });
+            },
+          ),
+        ),
+      ),
     );
   }
 
