@@ -1,5 +1,8 @@
+import 'package:com.quizeee.quizeee/provider/initialPro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 import './dob_image.dart';
 import '../../widgets/toast.dart';
@@ -34,44 +37,58 @@ class _SignUpFormState extends State<SignUpForm> {
     super.dispose();
   }
 
-  void _save() {
+  Future<void> referalCodeVerify() async {
+    if (_referralCode.isNotEmpty) {
+      final initialPro = Provider.of<Auth>(context, listen: false);
+      initialPro.setLoading(true);
+      final resp = await initialPro.getReferalCodeVerify(_referralCode);
+      initialPro.setLoading(false);
+
+      toast(resp['msg'], isError: !resp['status']);
+    }
+  }
+
+  Future<void> _save() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      _location = states[_locationIndex];
+      await referalCodeVerify();
+      Future.delayed(Duration(seconds: 1), () {
+        _location = states[_locationIndex];
 
-      print(_location);
+        print(_location);
 
-      bool phoneValidation = _phoneNumber.length == 10;
+        bool phoneValidation = _phoneNumber.length == 10;
 
-      bool emailValidation = emailValidatorRegExp.hasMatch(_email);
+        bool emailValidation = emailValidatorRegExp.hasMatch(_email);
 
-      if (phoneValidation == false && emailValidation == false) {
-        if (_email.length != 0) {
-          toast('Enter valid email', isError: true);
+        if (phoneValidation == false && emailValidation == false) {
+          if (_email.length != 0) {
+            toast('Enter valid email', isError: true);
+            return;
+          }
+
+          if (_phoneNumber.length != 10) {
+            toast('Enter valid phone', isError: true);
+            return;
+          }
+
+          toast('Enter email or phone', isError: true);
           return;
         }
 
-        if (_phoneNumber.length != 10) {
-          toast('Enter valid phone', isError: true);
-          return;
-        }
-
-        toast('Enter email or phone', isError: true);
-        return;
-      }
-
-      Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (ctx) => DOBImage(
-            username: _username,
-            location: _location,
-            email: _email,
-            phoneNumber: _phoneNumber,
-            referralCode: _referralCode,
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (ctx) => DOBImage(
+              username: _username,
+              location: _location,
+              email: _email,
+              phoneNumber: _phoneNumber,
+              referralCode: _referralCode,
+            ),
           ),
-        ),
-      );
+        );
+      });
     }
   }
 
@@ -90,7 +107,11 @@ class _SignUpFormState extends State<SignUpForm> {
           SizedBox(
             height: mq.height * 0.05,
           ),
-          buildNextButton(),
+          Selector<Auth, bool>(
+              selector: (con, auth) => auth.isLoading,
+              builder: (context, snapshot, _) => snapshot
+                  ? SpinKitPouringHourglass(color: kSecondaryColor)
+                  : buildNextButton()),
         ],
       ),
     );
@@ -128,7 +149,6 @@ class _SignUpFormState extends State<SignUpForm> {
       ),
     );
   }
-
 
   Widget buildLocationField(Size mq) {
     return Container(

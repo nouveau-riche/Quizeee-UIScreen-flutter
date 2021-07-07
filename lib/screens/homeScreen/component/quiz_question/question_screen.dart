@@ -104,7 +104,7 @@ class _QuizQuestionState extends State<QuizQuestion>
             ),
           ));
         } else {
-          buildAlertBox(context, response['message'], main);
+          buildAlertBox(context, response['msg'], main);
         }
         // Navigate to next Screen
 

@@ -141,6 +141,29 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> getReferalCodeVerify(String referalCode) async {
+    try {
+      final result = await http.get(
+        ApiUrls.baseUrl + ApiUrls.userReferalCodeVerify + referalCode,
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (ConstFun.checkStatus(result)) {
+        print(response);
+        if (response['status']) {
+          return ConstFun.reponseData(response['status'], response['message']);
+        } else {
+          return ConstFun.reponseData(true, response['message']);
+        }
+      } else {
+        return ConstFun.reponseData(false, response['message']);
+      }
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
   Future<Map<String, dynamic>> editUserProfile(FormData body) async {
     try {
       final result =

@@ -22,6 +22,7 @@ class ApiUrls {
   static String signUpUser = "users-signup";
   static String getUserDetails = "get-user-details/";
   static String localStorageKey = "userDetails";
+  static String userReferalCodeVerify = "get-user-by-referralCode/";
 
   //Edit user
   static String editUser = "edit-user-details";

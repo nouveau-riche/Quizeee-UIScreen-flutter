@@ -111,7 +111,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     height: mq.height * 0.02,
                   ),
                   Consumer<MainPro>(builder: (con, mainPro, _) {
-                    if (mainPro.assignedPerformace.isEmpty) {
+                    if (mainPro.assignedPerformace.isEmpty ||
+                        mainPro.assignedPerformace[0].strengths.isEmpty &&
+                            mainPro.assignedPerformace[0].weeknesses.isEmpty) {
                       return Container();
                     }
                     var data = mainPro.assignedPerformace[0];
@@ -136,7 +138,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     height: mq.height * 0.02,
                   ),
                   Consumer<MainPro>(builder: (con, mainPro, _) {
-                    if (mainPro.publicPerformace.isEmpty) {
+                    if (mainPro.publicPerformace.isEmpty ||
+                        mainPro.publicPerformace[0].strengths.isEmpty &&
+                            mainPro.publicPerformace[0].weeknesses.isEmpty) {
                       return Container();
                     }
                     var data = mainPro.publicPerformace[0];
