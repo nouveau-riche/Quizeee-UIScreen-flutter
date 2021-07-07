@@ -1,10 +1,10 @@
 class UserRank {
-  int resultId;
-  int userId;
-  int score;
-  int responseTime;
+  dynamic resultId;
+  dynamic userId;
+  dynamic score;
+  dynamic responseTime;
   List<ReviewSolutions> reviewSolutions;
-  int rank;
+  dynamic rank;
 
   UserRank(
       {this.resultId,
@@ -44,8 +44,8 @@ class UserRank {
 }
 
 class ReviewSolutions {
-  int questionId;
-  int userOption;
+  dynamic questionId;
+  dynamic userOption;
 
   ReviewSolutions({this.questionId, this.userOption});
 

@@ -23,7 +23,7 @@ class QuizResult extends StatelessWidget {
   QuizResult({this.isPracticeQuiz, this.isAssigned, this.isViewMore});
 
   Future<bool> willPop(BuildContext context) async {
-    if (isViewMore) {
+    if (isViewMore ?? false) {
       Navigator.of(context).pop();
     } else {
       final mainPro = Provider.of<MainPro>(context, listen: false);
@@ -210,7 +210,7 @@ class QuizResult extends StatelessWidget {
                             children: [
                               isPracticeQuiz
                                   ? buildPlayAgain(
-                                      mq, context, mainPro, isViewMore)
+                                      mq, context, mainPro, isViewMore ?? false)
                                   : buildReviewSolution(mq, context),
                               isPracticeQuiz
                                   ? buildBackToQuiz(mq, context, mainPro)
@@ -371,7 +371,7 @@ class QuizResult extends StatelessWidget {
                             ],
                           ),
                           Spacer(),
-                          isAssigned
+                          isAssigned ?? false
                               ? Container()
                               : Text(
                                   'PRIZE WON',
@@ -379,12 +379,12 @@ class QuizResult extends StatelessWidget {
                                       color: kSecondaryColor,
                                       fontWeight: FontWeight.w600),
                                 ),
-                          isAssigned
+                          isAssigned ?? false
                               ? Container()
                               : SizedBox(
                                   height: mq.height * 0.01,
                                 ),
-                          isAssigned
+                          isAssigned ?? false
                               ? Container()
                               : Text(
                                   '₹ ${mainPro.selectedData.winningPrize}/ -',
@@ -393,13 +393,13 @@ class QuizResult extends StatelessWidget {
                                       fontSize: 24,
                                       fontWeight: FontWeight.w600),
                                 ),
-                          isAssigned ? Container() : Spacer(),
+                          isAssigned ?? false ? Container() : Spacer(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               isPracticeQuiz
                                   ? buildPlayAgain(
-                                      mq, context, mainPro, isViewMore)
+                                      mq, context, mainPro, isViewMore ?? false)
                                   : buildReviewSolution(mq, context),
                               isPracticeQuiz
                                   ? buildBackToQuiz(mq, context, mainPro)

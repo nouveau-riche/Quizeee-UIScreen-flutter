@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:com.quizeee.quizeee/models/assignedPerformance.dart';
+import 'package:com.quizeee.quizeee/models/performaceAreaOfInterest.dart';
+import 'package:com.quizeee.quizeee/models/performaceCategory.dart';
+import 'package:com.quizeee.quizeee/models/performanceSubCatetory.dart';
 import 'package:com.quizeee.quizeee/models/publicPerformace.dart';
 import 'package:com.quizeee.quizeee/models/userPlayedQuizAssigned.dart';
 import 'package:com.quizeee.quizeee/models/userPlayedQuizFree.dart';
@@ -94,6 +97,21 @@ class MainPro with ChangeNotifier {
   List<UserPlayedQuizFree> _userPlayedFree = [];
   List<UserPlayedQuizFree> get userPlayedFree {
     return [..._userPlayedFree];
+  }
+
+  List<PerformanceCategory> _performaceCategory = [];
+  List<PerformanceCategory> get performaceCategory {
+    return [..._performaceCategory];
+  }
+
+  List<PerformanceSubCategory> _performaceSubCategory = [];
+  List<PerformanceSubCategory> get performaceSubCategory {
+    return [..._performaceSubCategory];
+  }
+
+  List<PerformanceAreaOfInterest> _performaceAreaOfInterest = [];
+  List<PerformanceAreaOfInterest> get performaceAreaOfInterest {
+    return [..._performaceAreaOfInterest];
   }
 
   clearDashBoard() {
@@ -208,11 +226,10 @@ class MainPro with ChangeNotifier {
         if (element['questionId'] != "") {
           reviewSolutions.add({
             "questionId": element['quesId'],
-            "userOption": element['answer']
+            "userOption": element['answerIndex']
           });
         }
       });
-
       var body = {
         "userId": _auth.userModel[0].userId,
         "quizId": selectedData.quizId.toString(),
@@ -446,59 +463,96 @@ class MainPro with ChangeNotifier {
           headers: ApiUrls.headers,
           body: json.encode({"userId": _auth.userModel[0].userId.toString()}));
       final response = json.decode(result.body) as Map<String, dynamic>;
-      if (response['status']) {}
-      print(_assignedPerformace.length);
-      print(_publicPerformace.length);
+      if (response['status']) {
+        _performaceCategory.clear();
+        _performaceCategory.add(PerformanceCategory.fromJson(response));
+      }
       return response;
     } catch (e) {
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
-    } finally {
-      notifyListeners();
     }
   }
 
-  Future<Map<String, dynamic>> getUserPerformanceSubCategory() async {
+  Future<Map<String, dynamic>> getUserPerformanceSubCategory(
+      String cate) async {
     try {
       final result = await http.post(
           ApiUrls.baseUrl + ApiUrls.userPerformanceSubCategory,
           headers: ApiUrls.headers,
-          body: json.encode({"userId": _auth.userModel[0].userId.toString()}));
+          body: json.encode({
+            "userId": _auth.userModel[0].userId.toString(),
+            "categoryName": cate
+          }));
       final response = json.decode(result.body) as Map<String, dynamic>;
-      if (response['status']) {}
-      print(_assignedPerformace.length);
-      print(_publicPerformace.length);
+      if (response['status']) {
+        _performaceSubCategory.clear();
+        _performaceSubCategory.add(PerformanceSubCategory.fromJson(response));
+      }
       return response;
     } catch (e) {
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
-    } finally {
-      notifyListeners();
     }
   }
 
-  Future<Map<String, dynamic>> getUserPerformanceAreaOfInterest() async {
+  Future<Map<String, dynamic>> getUserPerformanceAreaOfInterest(
+      String cate, String subCate) async {
     try {
       final result = await http.post(
           ApiUrls.baseUrl + ApiUrls.userPerformanceAreaOfInterest,
           headers: ApiUrls.headers,
-          body: json.encode({"userId": _auth.userModel[0].userId.toString()}));
+          body: json.encode({
+            "userId": _auth.userModel[0].userId.toString(),
+            "categoryName": cate,
+            "subCategoryName": subCate
+          }));
       final response = json.decode(result.body) as Map<String, dynamic>;
-      if (response['status']) {}
-      print(_assignedPerformace.length);
-      print(_publicPerformace.length);
+      if (response['status']) {
+        _performaceAreaOfInterest.clear();
+        _performaceAreaOfInterest
+            .add(PerformanceAreaOfInterest.fromJson(response));
+      }
       return response;
     } catch (e) {
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
-    } finally {
-      notifyListeners();
     }
   }
 
   /// ------------------------------
   /// LOGICS
   /// ------------------------------
+
+  // PERFORMANCES //
+
+  // Assigned dropdown
+  String selectedAssCategory;
+  void initialAssCate(String selectedAssCategory) {
+    this.selectedAssCategory = selectedAssCategory;
+    notifyListeners();
+  }
+
+  String selectedAssSubCategory;
+  void initialAssSubCate(String selectedAssSubCategory) {
+    this.selectedAssSubCategory = selectedAssSubCategory;
+    notifyListeners();
+  }
+
+  // Public dropdown
+  String selectedPubCategory;
+  void initialPubCate(String selectedPubCategory) {
+    this.selectedPubCategory = selectedPubCategory;
+    notifyListeners();
+  }
+
+  String selectedPubSubCategory;
+  void initialPubSubCate(String selectedPubSubCategory) {
+    this.selectedPubSubCategory = selectedPubSubCategory;
+    notifyListeners();
+  }
+
+  //- PERFORMANCES -//
   DateFormat format = DateFormat("dd-MMMM , hh:mm a");
   DateFormat dobFormat = DateFormat("yyyy-dd-MM");
   DateFormat formatTime = DateFormat("h:mm a");

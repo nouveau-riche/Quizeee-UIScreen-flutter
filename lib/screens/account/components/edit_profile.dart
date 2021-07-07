@@ -116,8 +116,8 @@ class _EditProfileState extends State<EditProfile> {
         // "phone": _phoneController.text ?? null,
         "username": _username ?? null,
         "location": _location ?? null,
-        "email": _email ?? null,
-        "phone": _phoneNumber ?? null,
+        "email": userEdit.editedEmail ?? _email ?? null,
+        "phone": userEdit.editedPhone ?? _phoneNumber ?? null,
         "profilePic": image != null
             ? image.path != null
                 ? await MultipartFile.fromFile(image.path,
@@ -419,12 +419,13 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget buildEmailTextFieldField(Size mq) {
+    final initialPro = Provider.of<Auth>(context, listen: false);
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (ctx) => ChangeEmail(
-              email: _email,
+              email: initialPro.editedEmail ?? _email,
             ),
           ),
         );
@@ -465,6 +466,15 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   );
                 }),
+                Spacer(),
+                Icon(
+                  Icons.edit,
+                  color: kSecondaryColor,
+                  size: 18,
+                ),
+                SizedBox(
+                  width: mq.width * 0.04,
+                )
               ],
             ),
             // child: TextFormField(
@@ -507,12 +517,14 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget buildPhoneTextFieldField(Size mq) {
+    final initialPro = Provider.of<Auth>(context, listen: false);
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (ctx) => ChangePhone(
-              phoneNumber: _phoneNumber,
+              phoneNumber: initialPro.editedPhone ?? _phoneNumber,
             ),
           ),
         );
@@ -552,6 +564,15 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 );
               }),
+              Spacer(),
+              Icon(
+                Icons.edit,
+                color: kSecondaryColor,
+                size: 18,
+              ),
+              SizedBox(
+                width: mq.width * 0.04,
+              )
             ],
           ),
           // child: TextFormField(

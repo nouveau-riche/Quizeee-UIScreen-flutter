@@ -25,6 +25,7 @@ class ApiUrls {
 
   //Edit user
   static String editUser = "edit-user-details";
+  static String verifyAuths = "verify-edit-phone";
 
   //Dashboard - QUIZ API
   static String dashboardData = "all-assigned-public-quizes";

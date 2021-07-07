@@ -2,6 +2,7 @@ import 'package:com.quizeee.quizeee/provider/initialPro.dart';
 import 'package:com.quizeee.quizeee/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,7 @@ class ChangeEmail extends StatefulWidget {
 class _ChangeEmailState extends State<ChangeEmail> {
   final _formKey = GlobalKey<FormState>();
   String _email;
-
+  bool isLoading = false;
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
 
@@ -47,22 +48,39 @@ class _ChangeEmailState extends State<ChangeEmail> {
   }
 
   bool isOtpSent = false;
-
+  var resp;
+  String verifySub = "Verify";
   Future<void> sendOtp() async {
     final intialPro = Provider.of<Auth>(context, listen: false);
     var body = {"email": _email};
+    setLoading(true);
+    resp = await intialPro.sendVerificationOtp(body, false, true);
+    setLoading(false);
 
-    final resp = await intialPro.sendVerificationOtp(body, false);
-    toast(resp['msg'], isError: !resp['status']);
+    toast(resp['message'], isError: !resp['status']);
     if (resp['status']) {
       isOtpSent = true;
+      setState(() {
+        verifySub = "Submit";
+      });
     }
   }
 
   Future<void> saveOtp() async {
     final intialPro = Provider.of<Auth>(context, listen: false);
-    intialPro.emailOtp = _pinPutController.text;
-    getBack();
+    if (resp['otp'] == _pinPutController.text) {
+      intialPro.emailOtp = _pinPutController.text;
+      toast("Email Verified!", isError: false);
+      Future.delayed(Duration(milliseconds: 400), () {
+        getBack();
+      });
+    } else {
+      toast("Invalid Otp!", isError: true);
+    }
+  }
+
+  void setLoading(bool val) {
+    setState(() => isLoading = val);
   }
 
   @override
@@ -133,7 +151,9 @@ class _ChangeEmailState extends State<ChangeEmail> {
               SizedBox(
                 height: mq.height * 0.1,
               ),
-              buildVerifyButton(),
+              isLoading
+                  ? SpinKitPouringHourglass(color: kSecondaryColor)
+                  : buildVerifyButton(mq),
             ],
           ),
         ),
@@ -205,9 +225,6 @@ class _ChangeEmailState extends State<ChangeEmail> {
             if (_value.isEmpty) {
               return kPhoneNumberNullError;
             }
-            if (_value.length != 10) {
-              return kInvalidPhoneError;
-            }
           },
           onSaved: (_value) {
             _email = _value;
@@ -217,9 +234,10 @@ class _ChangeEmailState extends State<ChangeEmail> {
     );
   }
 
-  Widget buildVerifyButton() {
+  Widget buildVerifyButton(Size mq) {
     return ConstrainedBox(
-      constraints: BoxConstraints.tightFor(width: 68, height: 55),
+      constraints: BoxConstraints.tightFor(
+          width: mq.width * 0.20, height: mq.height * 0.20),
       child: ElevatedButton(
         onPressed: () {
           save();
@@ -228,10 +246,10 @@ class _ChangeEmailState extends State<ChangeEmail> {
           shape: const CircleBorder(),
           primary: kPrimaryLightColor,
         ),
-        child: const Text(
-          'Verify',
+        child: Text(
+          '$verifySub',
           style: TextStyle(
-              fontSize: 12.8, fontWeight: FontWeight.w600, color: Colors.black),
+              fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black),
         ),
       ),
     );

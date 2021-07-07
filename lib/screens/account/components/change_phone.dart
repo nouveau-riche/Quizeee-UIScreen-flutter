@@ -47,7 +47,7 @@ class _ChangePhoneState extends State<ChangePhone> {
 
   void getBack() async {
     final intialPro = Provider.of<Auth>(context, listen: false);
-    intialPro.editedPhone = "1234556" ?? widget.phoneNumber;
+    intialPro.editedPhone = _phoneNumber ?? widget.phoneNumber;
     intialPro.notifyListeners();
     Navigator.pop(context);
   }
@@ -57,18 +57,38 @@ class _ChangePhoneState extends State<ChangePhone> {
   Future<void> sendOtp() async {
     final intialPro = Provider.of<Auth>(context, listen: false);
     var body = {"phone": "+91" + _phoneNumber};
-
+    setLoading(true);
     final resp = await intialPro.sendVerificationOtp(body, false);
+    setLoading(false);
+
     toast(resp['msg'], isError: !resp['status']);
     if (resp['status']) {
       isOtpSent = true;
+      setState(() => verifySub = "Submit");
     }
+  }
+
+  bool isLoading = false;
+  String verifySub = "Verify";
+  void setLoading(bool val) {
+    setState(() => isLoading = val);
   }
 
   Future<void> saveOtp() async {
     final intialPro = Provider.of<Auth>(context, listen: false);
-    intialPro.phoneOtp = _pinPutController.text;
-    getBack();
+    var body = {"phone": _phoneNumber, "otpCode": _pinPutController.text};
+    setLoading(true);
+    final resp = await intialPro.verifyUserPhone(body);
+    setLoading(false);
+    if (resp['status']) {
+      toast("Phone number verified!", isError: false);
+      Future.delayed(Duration(milliseconds: 400), () {
+        intialPro.phoneOtp = _pinPutController.text;
+        getBack();
+      });
+    } else {
+      toast(resp['msg'], isError: true);
+    }
   }
 
   @override
@@ -141,7 +161,9 @@ class _ChangePhoneState extends State<ChangePhone> {
               SizedBox(
                 height: mq.height * 0.1,
               ),
-              buildVerifyButton(),
+              isLoading
+                  ? SpinKitPouringHourglass(color: kSecondaryColor)
+                  : buildVerifyButton(mq),
             ],
           ),
         ),
@@ -226,9 +248,10 @@ class _ChangePhoneState extends State<ChangePhone> {
     );
   }
 
-  Widget buildVerifyButton() {
+  Widget buildVerifyButton(Size mq) {
     return ConstrainedBox(
-      constraints: BoxConstraints.tightFor(width: 68, height: 55),
+      constraints: BoxConstraints.tightFor(
+          width: mq.width * 0.20, height: mq.height * 0.20),
       child: ElevatedButton(
         onPressed: () {
           save();
@@ -237,10 +260,10 @@ class _ChangePhoneState extends State<ChangePhone> {
           shape: const CircleBorder(),
           primary: kPrimaryLightColor,
         ),
-        child: const Text(
-          'Verify',
+        child: Text(
+          '$verifySub',
           style: TextStyle(
-              fontSize: 12.8, fontWeight: FontWeight.w600, color: Colors.black),
+              fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black),
         ),
       ),
     );

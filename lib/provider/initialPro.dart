@@ -30,7 +30,8 @@ class Auth with ChangeNotifier {
   final LocalStorage storage = new LocalStorage(ApiUrls.localStorageKey);
 
   Future<Map<String, dynamic>> sendVerificationOtp(
-      Map<String, dynamic> body, bool isLogin) async {
+      Map<String, dynamic> body, bool isLogin,
+      [bool isEdit]) async {
     try {
       String actionurl = isLogin
           ? ApiUrls.sendVerificationOtp
@@ -40,7 +41,8 @@ class Auth with ChangeNotifier {
       final response = json.decode(result.body);
       if (ConstFun.checkStatus(result)) {
         print(response);
-        if (actionurl == ApiUrls.sendVerificationRegistration) {
+        if (actionurl == ApiUrls.sendVerificationRegistration &&
+            isEdit == null) {
           return ConstFun.reponseData(true, response['message']);
         }
         return response as Map<String, dynamic>;
@@ -55,6 +57,10 @@ class Auth with ChangeNotifier {
 
   Future<Map<String, dynamic>> loginUser(Map<String, dynamic> body) async {
     try {
+      editedEmail = null;
+      editedPhone = null;
+      emailOtp = null;
+      phoneOtp = null;
       final result = await http.post(ApiUrls.baseUrl + ApiUrls.loginUser,
           headers: ApiUrls.headers, body: json.encode(body));
       final response = json.decode(result.body) as Map<String, dynamic>;
@@ -79,6 +85,10 @@ class Auth with ChangeNotifier {
 
   Future<Map<String, dynamic>> signupUser(FormData body) async {
     try {
+      editedEmail = null;
+      editedPhone = null;
+      emailOtp = null;
+      phoneOtp = null;
       final result =
           await Dio().post(ApiUrls.baseUrl + ApiUrls.signUpUser, data: body);
       // final response = json.decode(result.data) as Map<String, dynamic>;
@@ -138,6 +148,28 @@ class Auth with ChangeNotifier {
       if (result.statusCode == 200) {
         if (result.data['status']) {
           return await getUserDetails();
+        } else {
+          return ConstFun.reponseData(false, result.data['message']);
+        }
+      } else {
+        return ConstFun.reponseData(false, result.data['message']);
+      }
+    } on DioError catch (e) {
+      return ConstFun.reponseData(false, e.response.data['message']);
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> verifyUserPhone(
+      Map<String, dynamic> body) async {
+    try {
+      final result =
+          await Dio().post(ApiUrls.baseUrl + ApiUrls.verifyAuths, data: body);
+      if (result.statusCode == 200) {
+        if (result.data['status']) {
+          return ConstFun.reponseData(true, result.data['message']);
         } else {
           return ConstFun.reponseData(false, result.data['message']);
         }
