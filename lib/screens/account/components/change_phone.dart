@@ -103,7 +103,7 @@ class _ChangePhoneState extends State<ChangePhone> {
           child: Column(
             children: [
               SizedBox(
-                height: 10,
+                height: 16,
               ),
               buildAppBar(context, mq),
               SizedBox(

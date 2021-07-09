@@ -210,6 +210,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: TextFormField(
           cursorColor: kPrimaryLightColor,
+          keyboardType: TextInputType.emailAddress,
           style: TextStyle(
               color: kPrimaryLightColor,
               fontWeight: FontWeight.bold,
@@ -223,8 +224,13 @@ class _ChangeEmailState extends State<ChangeEmail> {
           // ignore: missing_return
           validator: (_value) {
             if (_value.isEmpty) {
-              return kPhoneNumberNullError;
+              return kEmailNullError;
             }
+
+            if(!emailValidatorRegExp.hasMatch(_value)){
+              return kInvalidEmailError;
+            }
+
           },
           onSaved: (_value) {
             _email = _value;

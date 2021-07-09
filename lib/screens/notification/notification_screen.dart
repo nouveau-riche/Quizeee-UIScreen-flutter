@@ -174,7 +174,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
             children: [
               Container(
                 width: mq.width * 0.75,
-                height: mq.height * 0.06,
+                constraints: BoxConstraints(
+                  minHeight: mq.height * 0.06,
+                ),
+                // height: mq.height * 0.06,
                 decoration: BoxDecoration(
                   color: const Color.fromRGBO(71, 112, 118, 1),
                   borderRadius: BorderRadius.circular(25),
@@ -184,12 +187,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     SizedBox(
                       width: mq.width * 0.05,
                     ),
-                    Text(
-                      message,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Text(
+                        message,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
