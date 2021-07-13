@@ -1,3 +1,5 @@
+import 'package:com.quizeee.quizeee/screens/report.dart';
+import 'package:com.quizeee.quizeee/screens/support.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +22,8 @@ class MyDrawer extends StatelessWidget {
             buildDrawerHead(mq),
             buildListTile(mq, Icons.notifications, 'Notification Settings'),
             buildListTile(mq, CupertinoIcons.person_circle_fill, 'About Us'),
-            buildListTile(mq, Icons.report_problem, 'Report'),
-            buildListTile(mq, Icons.settings, 'Support'),
+            buildReportListTile(context, mq),
+            buildSupportListTile(context,mq),
             buildLogoutListTile(context, mq),
           ],
         ),
@@ -68,6 +70,58 @@ class MyDrawer extends StatelessWidget {
       ),
       title: Text(
         title,
+        style: const TextStyle(
+            color: kSecondaryColor, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget buildReportListTile(BuildContext context, Size mq) {
+    return ListTile(
+      onTap: () {
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (ctx) => Report(),
+          ),
+        );
+      },
+      dense: true,
+      leading: Container(
+        margin: EdgeInsets.only(left: mq.width * 0.04),
+        child: Icon(
+          Icons.report_problem,
+          size: 21,
+          color: kSecondaryColor,
+        ),
+      ),
+      title: Text(
+        'Report',
+        style: const TextStyle(
+            color: kSecondaryColor, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget buildSupportListTile(BuildContext context, Size mq) {
+    return ListTile(
+      onTap: () {
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (ctx) => Support(),
+          ),
+        );
+      },
+      dense: true,
+      leading: Container(
+        margin: EdgeInsets.only(left: mq.width * 0.04),
+        child: Icon(
+          Icons.settings,
+          size: 21,
+          color: kSecondaryColor,
+        ),
+      ),
+      title: Text(
+        'Contact us',
         style: const TextStyle(
             color: kSecondaryColor, fontWeight: FontWeight.bold),
       ),

@@ -192,7 +192,7 @@ class QuizBox extends StatelessWidget {
         Text(
           '$category QUIZ',
           style: TextStyle(
-              fontSize: 18,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
               color: kSecondaryColor),
         ),
