@@ -7,8 +7,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../constant.dart';
 
 class WebViewGlobal extends StatefulWidget {
-  WebViewGlobal({Key key, this.url}) : super(key: key);
+  WebViewGlobal({Key key, this.url, @required this.title}) : super(key: key);
   final String url;
+  final String title;
   @override
   _WebViewGlobalState createState() => _WebViewGlobalState();
 }
@@ -30,8 +31,8 @@ class _WebViewGlobalState extends State<WebViewGlobal> {
         elevation: 0,
         backgroundColor: Color.fromRGBO(0, 44, 62, 1),
         centerTitle: true,
-        title: const Text(
-          'CREATE QUIZ',
+        title: Text(
+          widget.title,
           style: TextStyle(
             color: kSecondaryColor,
             fontSize: 40,
@@ -42,15 +43,12 @@ class _WebViewGlobalState extends State<WebViewGlobal> {
       body: WebView(
         initialUrl: widget.url,
         javascriptMode: JavascriptMode.unrestricted,
+        initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
         onWebViewCreated: (WebViewController webViewController) {
           _controller.complete(webViewController);
         },
+        debuggingEnabled: true,
         navigationDelegate: (NavigationRequest request) {
-          if (request.url.startsWith('https://www.youtube.com/')) {
-            print('blocking navigation to $request}');
-            return NavigationDecision.prevent;
-          }
-          print('allowing navigation to $request');
           return NavigationDecision.navigate;
         },
         onPageStarted: (String url) {

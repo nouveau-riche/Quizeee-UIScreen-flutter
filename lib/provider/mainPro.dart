@@ -9,6 +9,8 @@ import 'package:com.quizeee.quizeee/models/publicPerformace.dart';
 import 'package:com.quizeee.quizeee/models/userPlayedQuizAssigned.dart';
 import 'package:com.quizeee.quizeee/models/userPlayedQuizFree.dart';
 import 'package:com.quizeee.quizeee/models/userPlayedQuizPublic.dart';
+import 'package:com.quizeee.quizeee/models/userWalletModel.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:com.quizeee.quizeee/models/assignedModel.dart';
@@ -112,6 +114,11 @@ class MainPro with ChangeNotifier {
   List<PerformanceAreaOfInterest> _performaceAreaOfInterest = [];
   List<PerformanceAreaOfInterest> get performaceAreaOfInterest {
     return [..._performaceAreaOfInterest];
+  }
+
+  List<UserWalletModel> _userWallet = [];
+  List<UserWalletModel> get getUserWallet {
+    return [..._userWallet];
   }
 
   clearDashBoard() {
@@ -514,6 +521,36 @@ class MainPro with ChangeNotifier {
             .add(PerformanceAreaOfInterest.fromJson(response));
       }
       return response;
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserWalletData() async {
+    try {
+      final result = await http.get(
+        ApiUrls.baseUrl + ApiUrls.getWalletDetails + getUserID,
+        headers: ApiUrls.headers,
+      );
+      final response = json.decode(result.body) as Map<String, dynamic>;
+      if (response['status']) {
+        _userWallet.clear();
+        _userWallet.add(UserWalletModel.fromJson(response['wallet']));
+      }
+      return ConstFun.reponseData(response['status'], response['message']);
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> uploadWalletDocs(dynamic body) async {
+    try {
+      final result = await Dio()
+          .post(ApiUrls.baseUrl + ApiUrls.uploadWalletDocs, data: body);
+      return ConstFun.reponseData(
+          result.data['status'], result.data['message']);
     } catch (e) {
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");

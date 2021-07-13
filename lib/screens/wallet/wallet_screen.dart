@@ -1,10 +1,140 @@
+import 'dart:io';
+
+import 'package:com.quizeee.quizeee/models/userWalletModel.dart';
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/screens/creatQuiz/webview.dart';
+import 'package:com.quizeee.quizeee/widgets/toast.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant.dart';
 
-class WalletScreen extends StatelessWidget {
+class WalletScreen extends StatefulWidget {
+  @override
+  _WalletScreenState createState() => _WalletScreenState();
+}
+
+class _WalletScreenState extends State<WalletScreen> {
+  Future<void> getUserWallet() async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    final resp = await mainPro.getUserWalletData();
+    if (!resp['status']) {
+      toast(resp['msg'], isError: true);
+    }
+  }
+
+  File image;
+  final picker = ImagePicker();
+  String profileUrl;
+  Future pickImageFromGallery() async {
+    try {
+      final imageFile = await picker.getImage(source: ImageSource.gallery);
+      if (mounted) {
+        image = File(imageFile.path);
+        if (image.path != null) {
+          uploadDocs();
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future captureImageFromCamera() async {
+    try {
+      final imageFile = await picker.getImage(source: ImageSource.camera);
+      if (mounted) {
+        image = File(imageFile.path);
+        profileUrl = null;
+        if (image.path != null) {
+          uploadDocs();
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> uploadDocs() async {
+    final mainPro = Provider.of<MainPro>(context, listen: false);
+    var body = new FormData.fromMap({
+      "userId": mainPro.getUserID,
+      "documentImg": image != null
+          ? image.path != null
+              ? await MultipartFile.fromFile(image.path, filename: 'upload.png')
+              : null
+          : null
+    });
+    mainPro.changeLoadingState(true);
+    final resp = await mainPro.uploadWalletDocs(body);
+    mainPro.changeLoadingState(false);
+    toast(resp['msg'], isError: !resp['status']);
+  }
+
+  openDialogBox() {
+    showDialog(
+        context: context,
+        builder: (ctx) => SimpleDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              backgroundColor: kPrimaryColor,
+              children: <Widget>[
+                SimpleDialogOption(
+                    child: const Text(
+                      "Capture Image with Camera",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      captureImageFromCamera();
+                    }),
+                SimpleDialogOption(
+                    child: const Text(
+                      "Pick Image from Gallery",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      pickImageFromGallery();
+                    }),
+                SimpleDialogOption(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        const Text(
+                          "Cancel",
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+              ],
+            ));
+  }
+
+  Future<void> launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        enableJavaScript: true,
+        enableDomStorage: true,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -24,32 +154,64 @@ class WalletScreen extends StatelessWidget {
               decoration: TextDecoration.underline),
         ),
       ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: mq.height * 0.02,
-              ),
-              buildRefillWithdrawAndBalance(mq),
-              SizedBox(
-                height: mq.height * 0.035,
-              ),
-              buildDocumentVerification(mq),
-            ],
-          ),
-          Positioned(
-            child: bottomSheet(mq),
-            bottom: 0,
-            left: 0,
-            right: 0,
-          ),
-        ],
-      ),
+      body: FutureBuilder(
+          future: getUserWallet(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: SpinKitPouringHourglass(color: kSecondaryColor),
+              );
+            }
+            return Consumer<MainPro>(builder: (context, mainPro, _) {
+              final data = mainPro.getUserWallet;
+              return Stack(
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: mq.height * 0.02,
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            final mainPro =
+                                Provider.of<MainPro>(context, listen: false);
+                            // launchInBrowser(
+                            //     ApiUrls.walletRefill + mainPro.getUserID);
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                  builder: (ctx) => WebViewGlobal(
+                                        url: ApiUrls.walletRefill +
+                                            mainPro.getUserID,
+                                        title: "REFILL WALLET",
+                                      )),
+                            );
+                          },
+                          child: buildRefillWithdrawAndBalance(
+                              mq,
+                              (data[0].winningbalance +
+                                      data[0].referralBalance +
+                                      data[0].refillBalance)
+                                  .toString())),
+                      SizedBox(
+                        height: mq.height * 0.035,
+                      ),
+                      buildDocumentVerification(mq),
+                    ],
+                  ),
+                  Positioned(
+                    child: bottomSheet(mq, data, mainPro),
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                  ),
+                ],
+              );
+            });
+          }),
     );
   }
 
-  Widget buildRefillWithdrawAndBalance(Size mq) {
+  Widget buildRefillWithdrawAndBalance(Size mq, String amt) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -70,7 +232,7 @@ class WalletScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontFamily: 'DebugFreeTrial'),
               ),
               Text(
-                'Rs. 200',
+                'Rs. $amt',
                 style: TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
               ),
             ],
@@ -78,21 +240,18 @@ class WalletScreen extends StatelessWidget {
         ),
         Column(
           children: [
-            GestureDetector(
-              onTap: (){},
-              child: Container(
-                margin: EdgeInsets.only(right: 5),
-                width: mq.width * 0.44,
-                height: mq.height * 0.055,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                ),
-                child: Center(
-                  child: const Text(
-                    'REFILL',
-                    style: TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
-                  ),
+            Container(
+              margin: EdgeInsets.only(right: 5),
+              width: mq.width * 0.44,
+              height: mq.height * 0.055,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: Center(
+                child: const Text(
+                  'REFILL',
+                  style: TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
                 ),
               ),
             ),
@@ -100,7 +259,7 @@ class WalletScreen extends StatelessWidget {
               height: mq.height * 0.006,
             ),
             GestureDetector(
-              onTap: (){},
+              onTap: () {},
               child: Container(
                 margin: EdgeInsets.only(right: 5),
                 width: mq.width * 0.44,
@@ -161,7 +320,9 @@ class WalletScreen extends StatelessWidget {
             height: mq.height * 0.065,
             width: mq.width * 0.7,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                openDialogBox();
+              },
               child: const Text(
                 'UPLOAD DOCUMENTS',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
@@ -178,10 +339,11 @@ class WalletScreen extends StatelessWidget {
     );
   }
 
-  Widget bottomSheet(Size mq) {
+  Widget bottomSheet(Size mq, List<UserWalletModel> data, MainPro mainPro) {
     return Container(
       padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
       width: mq.width,
+      height: mq.height * 0.30,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -206,34 +368,47 @@ class WalletScreen extends StatelessWidget {
           SizedBox(
             height: mq.height * 0.05,
           ),
-          buildRecentTransactionGradientBar(mq, 60),
-          buildRecentTransactionGradientBar(mq, 35),
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              'VIEW MORE',
-              style: TextStyle(
-                  color: kSecondaryColor.withOpacity(0.5), fontSize: 10),
-            ),
-          ),
-          SizedBox(height: 4),
+          data[0].transactions.length >= 2
+              ? Expanded(
+                  child: ListView(
+                    children:
+                        List.generate(data[0].transactions.length, (index) {
+                      return buildRecentTransactionGradientBar(
+                          mq,
+                          data[0].transactions[index].amount,
+                          mainPro.format.format(DateTime.parse(data[0]
+                              .transactions[index]
+                              .transactionDateTimestamp)));
+                    }),
+                  ),
+                )
+              : Container(),
+          // TextButton(
+          //   onPressed: () {},
+          //   child: Text(
+          //     'VIEW MORE',
+          //     style: TextStyle(
+          //         color: kSecondaryColor.withOpacity(0.5), fontSize: 10),
+          //   ),
+          // ),
+          // SizedBox(height: 4),
         ],
       ),
     );
   }
 
-  Widget buildRecentTransactionGradientBar(Size mq, double money) {
+  Widget buildRecentTransactionGradientBar(Size mq, int money, String date) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: mq.width * 0.025),
       child: Column(
         children: [
-          LinearPercentIndicator(
-            padding: EdgeInsets.all(4),
-            lineHeight: 8.0,
-            percent: money / 100,
-            backgroundColor: kSecondaryColor.withOpacity(0.4),
-            progressColor: kPrimaryLightColor,
-          ),
+          // LinearPercentIndicator(
+          //   padding: EdgeInsets.all(4),
+          //   lineHeight: 8.0,
+          //   percent: (money / 160000) * 100,
+          //   backgroundColor: kSecondaryColor.withOpacity(0.4),
+          //   progressColor: kPrimaryLightColor,
+          // ),
           SizedBox(
             height: 6,
           ),
@@ -241,7 +416,7 @@ class WalletScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Monday',
+                '$date',
                 style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -256,6 +431,8 @@ class WalletScreen extends StatelessWidget {
               ),
             ],
           ),
+
+          Divider()
         ],
       ),
     );

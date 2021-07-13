@@ -53,4 +53,10 @@ class ApiUrls {
   static String userPerformanceCategory = "user-categoryWise-graph";
   static String userPerformanceSubCategory = "user-subCategoryWise-graph";
   static String userPerformanceAreaOfInterest = "user-areaOfInterestWise-graph";
+
+  // WALLET
+  static String walletRefill =
+      "https://quizeee-free-quiz.netlify.app/webPayment/make-payment?userId=";
+  static String getWalletDetails = "get-single-wallet-details/";
+  static String uploadWalletDocs = "add-wallet-document/";
 }

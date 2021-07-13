@@ -105,8 +105,10 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
           final mainPro = Provider.of<MainPro>(context, listen: false);
           Navigator.of(context).push(
             CupertinoPageRoute(
-                builder: (ctx) =>
-                    WebViewGlobal(url: ApiUrls.createQuiz + mainPro.getUserID)),
+                builder: (ctx) => WebViewGlobal(
+                      url: ApiUrls.createQuiz + mainPro.getUserID,
+                      title: "CREATE QUIZ",
+                    )),
           );
         },
         child: Text(
