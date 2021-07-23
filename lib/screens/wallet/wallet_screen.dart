@@ -4,6 +4,7 @@ import 'package:com.quizeee.quizeee/models/userWalletModel.dart';
 import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:com.quizeee.quizeee/provider/mainPro.dart';
 import 'package:com.quizeee.quizeee/screens/creatQuiz/webview.dart';
+import 'package:com.quizeee.quizeee/screens/wallet/wallet_details.dart';
 import 'package:com.quizeee.quizeee/widgets/toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,6 +34,7 @@ class _WalletScreenState extends State<WalletScreen> {
   File image;
   final picker = ImagePicker();
   String profileUrl;
+
   Future pickImageFromGallery() async {
     try {
       final imageFile = await picker.getImage(source: ImageSource.gallery);
@@ -215,27 +217,36 @@ class _WalletScreenState extends State<WalletScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Container(
-          margin: EdgeInsets.only(left: 5),
-          width: mq.width * 0.44,
-          height: mq.height * 0.12,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: kPrimaryLightColor,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'BALANCE',
-                style: TextStyle(fontSize: 18, fontFamily: 'DebugFreeTrial'),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (ctx) => WalletDetails(),
               ),
-              Text(
-                'Rs. $amt',
-                style: TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
-              ),
-            ],
+            );
+          },
+          child: Container(
+            margin: EdgeInsets.only(left: 5),
+            width: mq.width * 0.44,
+            height: mq.height * 0.12,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: kPrimaryLightColor,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'BALANCE',
+                  style: TextStyle(fontSize: 18, fontFamily: 'DebugFreeTrial'),
+                ),
+                Text(
+                  'Rs. $amt',
+                  style: TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
+                ),
+              ],
+            ),
           ),
         ),
         Column(

@@ -63,7 +63,7 @@ class LoginScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  buildCountryCode(mq.width * 0.17),
+                  buildCountryCode(mq.width * 0.15),
                   buildPhoneNumberField(mq.width * 0.74),
                 ],
               ),
@@ -159,13 +159,9 @@ class LoginScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            height: 20,
-            width: 20,
+            height: 24,
+            width: 24,
             child: Image.asset('assets/images/flag.png'),
-          ),
-          const Text(
-            '+91',
-            style: TextStyle(fontSize: 13.1, fontWeight: FontWeight.w700),
           ),
         ],
       ),
