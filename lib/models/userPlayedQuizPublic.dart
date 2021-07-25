@@ -21,11 +21,12 @@ class UserPlayedQuizPublic {
   List<Questions> questions;
   Age age;
   String creationTimeStamp;
-
+  dynamic startDateNew;
   UserPlayedQuizPublic(
       {this.sId,
       this.quizId,
       this.quizMasterId,
+      this.startDateNew,
       this.quizTitle,
       this.quizCategory,
       this.quizSubCategory,
@@ -49,6 +50,7 @@ class UserPlayedQuizPublic {
   UserPlayedQuizPublic.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     quizId = json['quizId'];
+    startDateNew = json['startDate_new'];
     quizMasterId = json['quizMasterId'];
     quizTitle = json['quizTitle'];
     quizCategory = json['quizCategory'];

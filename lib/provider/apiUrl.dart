@@ -57,6 +57,11 @@ class ApiUrls {
   // WALLET
   static String walletRefill =
       "https://quizeee-free-quiz.netlify.app/webPayment/make-payment?userId=";
+  static String walletWithdrawAmt =
+      "https://quizeee-free-quiz.netlify.app/webPayment-withdrawal/make-transfer?userId=";
   static String getWalletDetails = "get-single-wallet-details/";
   static String uploadWalletDocs = "add-wallet-document/";
+
+  // REPORT
+  static String reportIssue = "post-report";
 }

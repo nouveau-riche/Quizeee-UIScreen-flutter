@@ -21,7 +21,10 @@ class WalletScreen extends StatefulWidget {
   _WalletScreenState createState() => _WalletScreenState();
 }
 
-class _WalletScreenState extends State<WalletScreen> {
+class _WalletScreenState extends State<WalletScreen>
+    with WidgetsBindingObserver {
+  AppLifecycleState state;
+
   Future<void> getUserWallet() async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     final resp = await mainPro.getUserWalletData();
@@ -30,6 +33,21 @@ class _WalletScreenState extends State<WalletScreen> {
     }
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState appLifecycleState) {
+    super.didChangeAppLifecycleState(state);
+    state = appLifecycleState;
+    if (state == AppLifecycleState.resumed) {
+      if (isWebViewLoaded) {
+        getUserWallet();
+        setState(() {});
+        isWebViewLoaded = false;
+      }
+    }
+  }
+
+  bool isLoading = false;
+  bool isWebViewLoaded = false;
   File image;
   final picker = ImagePicker();
   String profileUrl;
@@ -122,6 +140,7 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   Future<void> launchInBrowser(String url) async {
+    isWebViewLoaded = true;
     if (await canLaunch(url)) {
       await launch(
         url,
@@ -129,10 +148,19 @@ class _WalletScreenState extends State<WalletScreen> {
         forceWebView: false,
         enableJavaScript: true,
         enableDomStorage: true,
-      );
+      ).whenComplete(() {
+        print("DONE");
+      });
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+
+    super.initState();
   }
 
   @override
@@ -157,7 +185,8 @@ class _WalletScreenState extends State<WalletScreen> {
       body: FutureBuilder(
           future: getUserWallet(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                isLoading) {
               return Center(
                 child: SpinKitPouringHourglass(color: kSecondaryColor),
               );
@@ -175,16 +204,8 @@ class _WalletScreenState extends State<WalletScreen> {
                           onTap: () {
                             final mainPro =
                                 Provider.of<MainPro>(context, listen: false);
-                            // launchInBrowser(
-                            //     ApiUrls.walletRefill + mainPro.getUserID);
-                            Navigator.of(context).push(
-                              CupertinoPageRoute(
-                                  builder: (ctx) => WebViewGlobal(
-                                        url: ApiUrls.walletRefill +
-                                            mainPro.getUserID,
-                                        title: "REFILL WALLET",
-                                      )),
-                            );
+                            launchInBrowser(
+                                ApiUrls.walletRefill + mainPro.getUserID);
                           },
                           child: buildRefillWithdrawAndBalance(
                               mq,
@@ -240,18 +261,25 @@ class _WalletScreenState extends State<WalletScreen> {
         ),
         Column(
           children: [
-            Container(
-              margin: EdgeInsets.only(right: 5),
-              width: mq.width * 0.44,
-              height: mq.height * 0.055,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              child: Center(
-                child: const Text(
-                  'REFILL',
-                  style: TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
+            GestureDetector(
+              onTap: () {
+                final mainPro = Provider.of<MainPro>(context, listen: false);
+                launchInBrowser(ApiUrls.walletRefill + mainPro.getUserID);
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 5),
+                width: mq.width * 0.44,
+                height: mq.height * 0.055,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                child: Center(
+                  child: const Text(
+                    'REFILL',
+                    style:
+                        TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
+                  ),
                 ),
               ),
             ),
@@ -259,7 +287,10 @@ class _WalletScreenState extends State<WalletScreen> {
               height: mq.height * 0.006,
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                final mainPro = Provider.of<MainPro>(context, listen: false);
+                launchInBrowser(ApiUrls.walletWithdrawAmt + mainPro.getUserID);
+              },
               child: Container(
                 margin: EdgeInsets.only(right: 5),
                 width: mq.width * 0.44,

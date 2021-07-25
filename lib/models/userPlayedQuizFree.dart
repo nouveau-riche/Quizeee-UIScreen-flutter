@@ -21,6 +21,7 @@ class UserPlayedQuizFree {
   List<Questions> questions;
   Age age;
   String creationTimeStamp;
+  dynamic startDateNew;
 
   UserPlayedQuizFree(
       {this.sId,
@@ -44,7 +45,8 @@ class UserPlayedQuizFree {
       this.prizePool,
       this.questions,
       this.age,
-      this.creationTimeStamp});
+      this.creationTimeStamp,
+      this.startDateNew});
 
   UserPlayedQuizFree.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -54,6 +56,7 @@ class UserPlayedQuizFree {
     quizCategory = json['quizCategory'];
     quizSubCategory = json['quizSubCategory'];
     areaOfInterest = json['areaOfInterest'];
+    startDateNew = json['startDate_new'];
     startDate = json['startDate'].toString();
     startTime = json['startTime'];
     endDate = json['endDate'].toString();

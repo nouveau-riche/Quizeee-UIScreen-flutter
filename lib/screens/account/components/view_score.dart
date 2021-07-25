@@ -117,7 +117,7 @@ class _ViewScoreScreenState extends State<ViewScoreScreen> {
                               return buildResultListTile(
                                   mq,
                                   '${quizData[index].quizCategory}',
-                                  '${quiz.formatDateTime(quizData[index].startDate)}',
+                                  '${quiz.formatDate(quizData[index].startDateNew.toString())}',
                                   mainPro: quiz,
                                   quiz: quizData[index],
                                   isAssigned: type.selectedType == 0,

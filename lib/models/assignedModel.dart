@@ -1,6 +1,6 @@
 class AssignedQuiz {
   String sId;
-  int quizId;
+  dynamic quizId;
   int quizMasterId;
   String quizTitle;
   String quizCategory;
@@ -52,7 +52,7 @@ class AssignedQuiz {
     sId = json['_id'];
     quizId = json['quizId'];
     slot = json['slot'].toString();
-    bookingStatus = json['bookingStatus'];
+    bookingStatus = json['bookingStatus'] ?? -1;
     availableSlots = json['availableSlots'].toString();
     quizMasterId = json['quizMasterId'];
     quizTitle = json['quizTitle'];
@@ -135,12 +135,12 @@ class PrizePool {
 }
 
 class Questions {
-  int questionId;
+  dynamic questionId;
   String quesText;
   List<String> options;
   String quesImgUrl;
   String solution;
-  int rightOption;
+  dynamic rightOption;
   String quizCategory;
   String quizSubCategory;
   String areaOfInterest;

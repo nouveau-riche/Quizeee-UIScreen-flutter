@@ -1,7 +1,12 @@
 import 'dart:io';
 
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
+import 'package:com.quizeee.quizeee/widgets/toast.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import '../constant.dart';
 
@@ -12,6 +17,37 @@ class Report extends StatefulWidget {
 
 class _ReportState extends State<Report> {
   File image;
+  bool isLoading = false;
+  Future<void> reportIssue() async {
+    if (reportDescp.text.isEmpty) {
+      toast("Please provide some information", isError: true);
+    } else {
+      final mainPro = Provider.of<MainPro>(context, listen: false);
+      var body = new FormData.fromMap({
+        "userId": mainPro.getUserID,
+        "name": mainPro.getUserDetail.username,
+        "email": mainPro.getUserDetail.email,
+        "phone": mainPro.getUserDetail.phone,
+        "description": reportDescp.text,
+        "reportImg": image != null
+            ? image.path != null
+                ? await MultipartFile.fromFile(image.path,
+                    filename: 'upload.png')
+                : null
+            : null
+      });
+      changeLoadingState(true);
+      final resp = await mainPro.uploadReport(body);
+      changeLoadingState(false);
+      toast(resp['msg'], isError: !resp['status']);
+    }
+  }
+
+  changeLoadingState(bool val) {
+    setState(() => isLoading = val);
+  }
+
+  final reportDescp = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +133,7 @@ class _ReportState extends State<Report> {
                 border: Border.all(color: kPrimaryLightColor),
               ),
               child: TextFormField(
+                controller: reportDescp,
                 cursorColor: kSecondaryColor,
                 style: TextStyle(color: kSecondaryColor),
                 maxLines: 5,
@@ -111,7 +148,9 @@ class _ReportState extends State<Report> {
             SizedBox(
               height: mq.height * 0.15,
             ),
-            buildSubmitButton(mq, context),
+            isLoading
+                ? SpinKitPouringHourglass(color: kSecondaryColor)
+                : buildSubmitButton(mq, context),
             const SizedBox(
               height: 10,
             ),
@@ -132,7 +171,9 @@ class _ReportState extends State<Report> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          reportIssue();
+        },
         child: Text(
           'Submit',
           style: TextStyle(

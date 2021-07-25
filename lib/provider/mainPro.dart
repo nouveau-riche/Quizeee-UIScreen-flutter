@@ -6,6 +6,7 @@ import 'package:com.quizeee.quizeee/models/performaceAreaOfInterest.dart';
 import 'package:com.quizeee.quizeee/models/performaceCategory.dart';
 import 'package:com.quizeee.quizeee/models/performanceSubCatetory.dart';
 import 'package:com.quizeee.quizeee/models/publicPerformace.dart';
+import 'package:com.quizeee.quizeee/models/userModel.dart';
 import 'package:com.quizeee.quizeee/models/userPlayedQuizAssigned.dart';
 import 'package:com.quizeee.quizeee/models/userPlayedQuizFree.dart';
 import 'package:com.quizeee.quizeee/models/userPlayedQuizPublic.dart';
@@ -43,6 +44,10 @@ class MainPro with ChangeNotifier {
 
   String get getUserID {
     return _auth.userModel[0].userId.toString();
+  }
+
+  UserModel get getUserDetail {
+    return _auth.userModel[0];
   }
 
   // Model References
@@ -130,6 +135,9 @@ class MainPro with ChangeNotifier {
     _dashboardBanner.clear();
     changeServeStatus = false;
     isLoadedOnce = false;
+    _performaceAreaOfInterest.clear();
+    _performaceCategory.clear();
+    _performaceSubCategory.clear();
   }
 
   clearPlayedResult() {
@@ -549,6 +557,18 @@ class MainPro with ChangeNotifier {
     try {
       final result = await Dio()
           .post(ApiUrls.baseUrl + ApiUrls.uploadWalletDocs, data: body);
+      return ConstFun.reponseData(
+          result.data['status'], result.data['message']);
+    } catch (e) {
+      return ConstFun.reponseData(
+          false, "Something went wrong please try again!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> uploadReport(dynamic body) async {
+    try {
+      final result =
+          await Dio().post(ApiUrls.baseUrl + ApiUrls.reportIssue, data: body);
       return ConstFun.reponseData(
           result.data['status'], result.data['message']);
     } catch (e) {

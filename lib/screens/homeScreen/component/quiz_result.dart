@@ -133,7 +133,7 @@ class QuizResult extends StatelessWidget {
                                 height: mq.height * 0.01,
                               ),
                               Text(
-                                'You Have Passed The Practice Test',
+                                'You have passed the ${selectedQuiz[0].quizCategory} Quiz',
                                 style: TextStyle(
                                     color: kSecondaryColor, fontSize: 15),
                               ),
@@ -283,7 +283,7 @@ class QuizResult extends StatelessWidget {
                                       height: mq.height * 0.01,
                                     ),
                                     Text(
-                                      'You Have Passed The Practice Test',
+                                      'You have passed the ${selectedQuiz.quizCategory} Quiz',
                                       style: TextStyle(
                                           color: kSecondaryColor, fontSize: 15),
                                     ),

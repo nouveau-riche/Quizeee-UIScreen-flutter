@@ -13,30 +13,33 @@ class PerformanceChartScreen extends StatefulWidget {
 class _PerformanceChartScreenState extends State<PerformanceChartScreen> {
   bool isLoading = false;
   Future<void> getCategory() async {
-    final mainPro = Provider.of<MainPro>(context, listen: false);
-    changeLoadingState(true);
-    final resp = await mainPro.getUserPerformanceCategory();
-    if (mainPro.performaceCategory[0].assignedGraph.isNotEmpty) {
-      await mainPro.getUserPerformanceSubCategory(
-          mainPro.performaceCategory[0].assignedGraph[0].category);
-      await reCall();
-      mainPro.initialAssCate(
-          mainPro.performaceCategory[0].assignedGraph[0].category);
-      mainPro.initialPubCate(
-          mainPro.performaceCategory[0].publicGraph[0].category);
+    try {
+      final mainPro = Provider.of<MainPro>(context, listen: false);
+      changeLoadingState(true);
+      final resp = await mainPro.getUserPerformanceCategory();
+      if (mainPro.performaceCategory[0].assignedGraph.isNotEmpty) {
+        await mainPro.getUserPerformanceSubCategory(
+            mainPro.performaceCategory[0].assignedGraph[0].category);
+        await reCall();
+        mainPro.initialAssCate(
+            mainPro.performaceCategory[0].assignedGraph[0].category);
+        mainPro.initialPubCate(
+            mainPro.performaceCategory[0].publicGraph[0].category);
+      }
+
+      // await mainPro.getUserPerformanceAreaOfInterest(
+      //     mainPro.performaceCategory[0].assignedGraph[0].category,
+      //     mainPro.performaceSubCategory[0].assignedGraph[0].category);
+      // if (mainPro.performaceAreaOfInterest.isNotEmpty) {
+      //   mainPro.initialAssSubCate(
+      //       mainPro.performaceSubCategory[0].assignedGraph[0].category);
+      //   mainPro.initialPubSubCate(
+      //       mainPro.performaceSubCategory[0].publicGraph[0].category);
+      // }
+
+    } catch (e) {} finally {
+      changeLoadingState(false);
     }
-
-    // await mainPro.getUserPerformanceAreaOfInterest(
-    //     mainPro.performaceCategory[0].assignedGraph[0].category,
-    //     mainPro.performaceSubCategory[0].assignedGraph[0].category);
-    // if (mainPro.performaceAreaOfInterest.isNotEmpty) {
-    //   mainPro.initialAssSubCate(
-    //       mainPro.performaceSubCategory[0].assignedGraph[0].category);
-    //   mainPro.initialPubSubCate(
-    //       mainPro.performaceSubCategory[0].publicGraph[0].category);
-    // }
-
-    changeLoadingState(false);
   }
 
   changeLoadingState(bool val) {
@@ -44,17 +47,21 @@ class _PerformanceChartScreenState extends State<PerformanceChartScreen> {
   }
 
   Future<void> reCall() async {
-    final mainPro = Provider.of<MainPro>(context, listen: false);
-    if (mainPro.performaceSubCategory.isNotEmpty) {
-      await mainPro.getUserPerformanceAreaOfInterest(
-          mainPro.performaceCategory[0].assignedGraph[0].category,
-          mainPro.performaceSubCategory[0].assignedGraph[0].category);
-      if (mainPro.performaceAreaOfInterest.isNotEmpty) {
-        mainPro.initialAssSubCate(
+    try {
+      final mainPro = Provider.of<MainPro>(context, listen: false);
+      if (mainPro.performaceSubCategory.isNotEmpty) {
+        await mainPro.getUserPerformanceAreaOfInterest(
+            mainPro.performaceCategory[0].assignedGraph[0].category,
             mainPro.performaceSubCategory[0].assignedGraph[0].category);
-        mainPro.initialPubSubCate(
-            mainPro.performaceSubCategory[0].publicGraph[0].category);
+        if (mainPro.performaceAreaOfInterest.isNotEmpty) {
+          mainPro.initialAssSubCate(
+              mainPro.performaceSubCategory[0].assignedGraph[0].category);
+          mainPro.initialPubSubCate(
+              mainPro.performaceSubCategory[0].publicGraph[0].category);
+        }
       }
+    } catch (e) {} finally {
+      changeLoadingState(false);
     }
   }
 

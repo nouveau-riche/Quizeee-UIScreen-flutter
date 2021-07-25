@@ -21,7 +21,7 @@ class UserPlayedQuizAssigned {
   List<Questions> questions;
   Age age;
   String creationTimeStamp;
-
+  dynamic startDateNew;
   UserPlayedQuizAssigned(
       {this.sId,
       this.quizId,
@@ -44,13 +44,15 @@ class UserPlayedQuizAssigned {
       this.prizePool,
       this.questions,
       this.age,
-      this.creationTimeStamp});
+      this.creationTimeStamp,
+      this.startDateNew});
 
   UserPlayedQuizAssigned.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     quizId = json['quizId'];
     quizMasterId = json['quizMasterId'];
     quizTitle = json['quizTitle'];
+    startDateNew = json['startDate_new'];
     quizCategory = json['quizCategory'];
     quizSubCategory = json['quizSubCategory'];
     areaOfInterest = json['areaOfInterest'];
