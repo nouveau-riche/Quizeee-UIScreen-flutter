@@ -1,4 +1,6 @@
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constant.dart';
 
@@ -15,13 +17,34 @@ class TransactionHistoryScreen extends StatelessWidget {
             height: mq.height * 0.045,
           ),
           buildAppBar(context, mq),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (ctx, index) =>
-                  buildNotificationMessage(mq, 'New game starts in 2 minutes'),
-              itemCount: 3,
-            ),
-          ),
+          Consumer<MainPro>(builder: (context, mainPro, _) {
+            final data = mainPro.getUserWallet[0].transactions;
+            if (data.length == 0) {
+              return Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(top: 30),
+                  child: Center(
+                    child: Text(
+                      'No Transactions Done Yet!',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              return Expanded(
+                child: ListView.builder(
+                  itemBuilder: (ctx, index) => buildNotificationMessage(
+                      mq,
+                      mainPro.format.format(
+                          DateTime.parse(data[index].transactionDateTimestamp)),
+                      "${data[index].amount}"),
+                  itemCount: 3,
+                ),
+              );
+            }
+          }),
         ],
       ),
     );
@@ -74,7 +97,7 @@ class TransactionHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget buildNotificationMessage(Size mq, String message) {
+  Widget buildNotificationMessage(Size mq, String message, String amt) {
     return Container(
       margin: EdgeInsets.only(top: mq.height * 0.01),
       child: Row(
@@ -109,7 +132,7 @@ class TransactionHistoryScreen extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                'Rs. 20',
+                'Rs. $amt',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 11,

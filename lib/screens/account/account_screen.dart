@@ -24,6 +24,7 @@ class _AccountScreenState extends State<AccountScreen> {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     if (mainPro.assignedPerformace.isEmpty) {
       final resp = await mainPro.getUserPerformance();
+      await mainPro.getUserWalletData();
       // if (!resp['status']) {
       //   toast(resp['msg'], isError: true);
       // }

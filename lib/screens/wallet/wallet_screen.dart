@@ -34,18 +34,18 @@ class _WalletScreenState extends State<WalletScreen>
     }
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState appLifecycleState) {
-    super.didChangeAppLifecycleState(state);
-    state = appLifecycleState;
-    if (state == AppLifecycleState.resumed) {
-      if (isWebViewLoaded) {
-        getUserWallet();
-        setState(() {});
-        isWebViewLoaded = false;
-      }
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState appLifecycleState) {
+  //   super.didChangeAppLifecycleState(state);
+  //   state = appLifecycleState;
+  //   if (state == AppLifecycleState.resumed) {
+  //     if (isWebViewLoaded) {
+  //       getUserWallet();
+  //       setState(() {});
+  //       isWebViewLoaded = false;
+  //     }
+  //   }
+  // }
 
   bool isLoading = false;
   bool isWebViewLoaded = false;
@@ -204,10 +204,24 @@ class _WalletScreenState extends State<WalletScreen>
                       ),
                       GestureDetector(
                           onTap: () {
-                            final mainPro =
-                                Provider.of<MainPro>(context, listen: false);
-                            launchInBrowser(
-                                ApiUrls.walletRefill + mainPro.getUserID);
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                builder: (ctx) => WalletDetails(
+                                  refertotal: data[0].winningbalance.toString(),
+                                  refilltotal: data[0].refillBalance.toString(),
+                                  total: (data[0].winningbalance +
+                                          data[0].referralBalance +
+                                          data[0].refillBalance)
+                                      .toString(),
+                                  winningtotal:
+                                      data[0].winningbalance.toString(),
+                                ),
+                              ),
+                            );
+                            // final mainPro =
+                            //     Provider.of<MainPro>(context, listen: false);
+                            // launchInBrowser(
+                            //     ApiUrls.walletRefill + mainPro.getUserID);
                           },
                           child: buildRefillWithdrawAndBalance(
                               mq,
@@ -238,36 +252,27 @@ class _WalletScreenState extends State<WalletScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              CupertinoPageRoute(
-                builder: (ctx) => WalletDetails(),
+        Container(
+          margin: EdgeInsets.only(left: 5),
+          width: mq.width * 0.44,
+          height: mq.height * 0.12,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: kPrimaryLightColor,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'BALANCE',
+                style: TextStyle(fontSize: 18, fontFamily: 'DebugFreeTrial'),
               ),
-            );
-          },
-          child: Container(
-            margin: EdgeInsets.only(left: 5),
-            width: mq.width * 0.44,
-            height: mq.height * 0.12,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: kPrimaryLightColor,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'BALANCE',
-                  style: TextStyle(fontSize: 18, fontFamily: 'DebugFreeTrial'),
-                ),
-                Text(
-                  'Rs. $amt',
-                  style: TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
-                ),
-              ],
-            ),
+              Text(
+                'Rs. $amt',
+                style: TextStyle(fontSize: 24, fontFamily: 'DebugFreeTrial'),
+              ),
+            ],
           ),
         ),
         Column(
@@ -410,7 +415,7 @@ class _WalletScreenState extends State<WalletScreen>
           SizedBox(
             height: mq.height * 0.05,
           ),
-          data[0].transactions.length >= 2
+          data[0].transactions.length >= 1
               ? Expanded(
                   child: ListView(
                     children:
@@ -424,7 +429,16 @@ class _WalletScreenState extends State<WalletScreen>
                     }),
                   ),
                 )
-              : Container(),
+              : Container(
+                  padding: EdgeInsets.only(top: 30),
+                  child: Center(
+                    child: Text(
+                      'No Transactions Done Yet!',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                ),
           // TextButton(
           //   onPressed: () {},
           //   child: Text(

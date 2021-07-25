@@ -33,6 +33,10 @@ class _TabMainScreenState extends State<TabMainScreen>
     if (state == AppLifecycleState.paused) {
       getDashboardData();
     }
+
+    if (state == AppLifecycleState.resumed) {
+      getDashboardData();
+    }
   }
 
   Future<void> getDashboardData() async {

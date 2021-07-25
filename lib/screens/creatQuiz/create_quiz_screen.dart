@@ -4,6 +4,7 @@ import 'package:com.quizeee.quizeee/screens/creatQuiz/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant.dart';
 
@@ -12,7 +13,33 @@ class CreateQuizScreen extends StatefulWidget {
   _CreateQuizScreenState createState() => _CreateQuizScreenState();
 }
 
-class _CreateQuizScreenState extends State<CreateQuizScreen> {
+class _CreateQuizScreenState extends State<CreateQuizScreen>
+    with WidgetsBindingObserver {
+  Future<void> launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        enableJavaScript: true,
+        enableDomStorage: true,
+      ).whenComplete(() {
+        print("DONE");
+      });
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  AppLifecycleState state;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState appLifecycleState) {
+    super.didChangeAppLifecycleState(state);
+    state = appLifecycleState;
+    if (state == AppLifecycleState.resumed) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -103,13 +130,15 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
         ),
         onPressed: () {
           final mainPro = Provider.of<MainPro>(context, listen: false);
-          Navigator.of(context).push(
-            CupertinoPageRoute(
-                builder: (ctx) => WebViewGlobal(
-                      url: ApiUrls.createQuiz + mainPro.getUserID,
-                      title: "CREATE QUIZ",
-                    )),
-          );
+          // Navigator.of(context).push(
+          //   CupertinoPageRoute(
+          //       builder: (ctx) => WebViewGlobal(
+          //             url: ApiUrls.createQuiz + mainPro.getUserID,
+          //             title: "CREATE QUIZ",
+          //           )),
+          // );
+
+          launch(ApiUrls.createQuiz + mainPro.getUserID);
         },
         child: Text(
           'Create Now',

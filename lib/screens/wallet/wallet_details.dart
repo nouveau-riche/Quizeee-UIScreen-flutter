@@ -3,6 +3,18 @@ import 'package:flutter/material.dart';
 import '../../constant.dart';
 
 class WalletDetails extends StatelessWidget {
+  final String total;
+  final String refilltotal;
+  final String refertotal;
+  final String winningtotal;
+
+  const WalletDetails(
+      {Key key,
+      this.total,
+      this.refilltotal,
+      this.refertotal,
+      this.winningtotal})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -18,10 +30,10 @@ class WalletDetails extends StatelessWidget {
           SizedBox(
             height: mq.height * 0.025,
           ),
-          buildNotificationMessage(mq, 'Total Balance', 20),
-          buildNotificationMessage(mq, 'Refill Balance', 20),
-          buildNotificationMessage(mq, 'Referral Balance', 20),
-          buildNotificationMessage(mq, 'Winning Balance', 20),
+          buildNotificationMessage(mq, 'Total Balance', total),
+          buildNotificationMessage(mq, 'Refill Balance', refilltotal),
+          buildNotificationMessage(mq, 'Referral Balance', refertotal),
+          buildNotificationMessage(mq, 'Winning Balance', winningtotal),
           Spacer(),
           buildSubmitButton(mq, context),
           SizedBox(
@@ -79,7 +91,7 @@ class WalletDetails extends StatelessWidget {
     );
   }
 
-  Widget buildNotificationMessage(Size mq, String message, int amount) {
+  Widget buildNotificationMessage(Size mq, String message, String amount) {
     return Container(
       margin: EdgeInsets.only(top: mq.height * 0.01),
       child: Row(
