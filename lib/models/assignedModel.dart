@@ -52,7 +52,7 @@ class AssignedQuiz {
     sId = json['_id'];
     quizId = json['quizId'];
     slot = json['slot'].toString();
-    bookingStatus = json['bookingStatus'] ?? -1;
+    bookingStatus = json['bookingStatus'];
     availableSlots = json['availableSlots'].toString();
     quizMasterId = json['quizMasterId'];
     quizTitle = json['quizTitle'];

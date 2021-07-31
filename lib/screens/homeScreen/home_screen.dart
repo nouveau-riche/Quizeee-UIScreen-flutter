@@ -138,106 +138,150 @@ class _HomeScreenState extends State<HomeScreen> {
                               mq, mainPro.dashboardBanner[0].bannerImg)
                           : Container(),
                       SizedBox(
-                        height: mq.height * 0.015,
+                        height: mq.height * 0.010,
                       ),
                       buildPlayPractiseQuiz(mq, context),
                       SizedBox(
-                        height: mq.height * 0.015,
+                        height: mq.height * 0.020,
                       ),
-                      Consumer<MainPro>(
-                        builder: (context, mainPro, _) => mainPro
-                                .assignedQuiz.isEmpty
-                            ? Container()
-                            : Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        'ASSIGNED QUIZ',
-                                        style: TextStyle(
-                                          fontFamily: 'RapierZero',
-                                          color: kPrimaryLightColor,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: mq.height * 0.018,
-                                  ),
-                                  Column(
-                                      children: List.generate(
-                                          mainPro.assignedQuiz.length, (index) {
-                                    var data = mainPro.assignedQuiz[index];
-                                    return QuizBox(
-                                      reverseSlot: checkBookingStatus,
-                                      image: 'assets/images/pos2.png',
-                                      category: data.quizCategory.toUpperCase(),
-                                      time: mainPro.stateEndDate(data),
-                                      entryPrize: data.entryAmount.toString(),
-                                      slots: null,
-                                      prize: data.winningPrize.toString(),
-                                      isSlotBooked: false,
-                                      quizId: data.quizId.toString(),
-                                      totalSlots: data.availableSlots != "null"
-                                          ? data.availableSlots.toString()
-                                          : "0",
-                                      data: data,
-                                      quizIndex: index,
-                                      isAssignedQuiz: true,
-                                    );
-                                  }))
-                                ],
-                              ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: buildViewScore(mq, context, onTap: () {
+                                mainPro.toggleHomeType(0);
+                              },
+                                  type: mainPro.selectedHomeType == 0
+                                      ? kPrimaryLightColor
+                                      : Colors.grey,
+                                  title: "Assigned Quiz"),
+                            ),
+                            SizedBox(
+                              width: mq.width * 0.035,
+                            ),
+                            Expanded(
+                              child: buildViewScore(mq, context, onTap: () {
+                                mainPro.toggleHomeType(1);
+                              },
+                                  type: mainPro.selectedHomeType == 1
+                                      ? kPrimaryLightColor
+                                      : Colors.grey,
+                                  title: "Public Quiz"),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(
-                        height: mq.height * 0.018,
+                        height: mq.height * 0.010,
                       ),
-                      Consumer<MainPro>(
-                        builder: (context, mainPro, _) => mainPro
-                                .publicQuiz.isEmpty
-                            ? Container()
-                            : Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        'PLAY ANY QUIZ',
-                                        style: TextStyle(
-                                          fontFamily: 'RapierZero',
-                                          color: kPrimaryLightColor,
-                                          fontSize: 20,
+                      mainPro.selectedHomeType == 0
+                          ? Consumer<MainPro>(
+                              builder: (context, mainPro, _) => mainPro
+                                      .assignedQuiz.isEmpty
+                                  ? Container()
+                                  : Column(
+                                      children: [
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //       MainAxisAlignment.center,
+                                        //   children: [
+                                        //     const Text(
+                                        //       'ASSIGNED QUIZ',
+                                        //       style: TextStyle(
+                                        //         fontFamily: 'RapierZero',
+                                        //         color: kPrimaryLightColor,
+                                        //         fontSize: 20,
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
+                                        SizedBox(
+                                          height: mq.height * 0.014,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: mq.height * 0.018,
-                                  ),
-                                  Column(
-                                      children: List.generate(
-                                          mainPro.publicQuiz.length, (index) {
-                                    var data = mainPro.publicQuiz[index];
-                                    return QuizBox(
-                                      reverseSlot: checkBookingStatus,
-                                      image: 'assets/images/pos2.png',
-                                      category: data.quizCategory.toUpperCase(),
-                                      time: mainPro.stateEndDate(data),
-                                      entryPrize: data.entryAmount.toString(),
-                                      slots: data.availableSlots.toString(),
-                                      prize: data.winningPrize.toString(),
-                                      isSlotBooked: data.slots == 0,
-                                      quizId: data.quizId.toString(),
-                                      totalSlots: data.slots.toString(),
-                                      data: data,
-                                      quizIndex: index,
-                                      isAssignedQuiz: false,
-                                    );
-                                  }))
-                                ],
-                              ),
+                                        Column(
+                                            children: List.generate(
+                                                mainPro.assignedQuiz.length,
+                                                (index) {
+                                          var data =
+                                              mainPro.assignedQuiz[index];
+                                          return QuizBox(
+                                            reverseSlot: checkBookingStatus,
+                                            image: 'assets/images/pos2.png',
+                                            category:
+                                                data.quizTitle.toUpperCase(),
+                                            time: mainPro.stateEndDate(data),
+                                            entryPrize:
+                                                data.entryAmount.toString(),
+                                            slots: null,
+                                            prize: data.winningPrize.toString(),
+                                            isSlotBooked: false,
+                                            quizId: data.quizId.toString(),
+                                            totalSlots: data.availableSlots !=
+                                                    "null"
+                                                ? data.availableSlots.toString()
+                                                : "0",
+                                            data: data,
+                                            quizIndex: index,
+                                            isAssignedQuiz: true,
+                                          );
+                                        }))
+                                      ],
+                                    ),
+                            )
+                          : Consumer<MainPro>(
+                              builder: (context, mainPro, _) => mainPro
+                                      .publicQuiz.isEmpty
+                                  ? Container()
+                                  : Column(
+                                      children: [
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //       MainAxisAlignment.center,
+                                        //   children: [
+                                        //     const Text(
+                                        //       'PLAY ANY QUIZ',
+                                        //       style: TextStyle(
+                                        //         fontFamily: 'RapierZero',
+                                        //         color: kPrimaryLightColor,
+                                        //         fontSize: 20,
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
+                                        SizedBox(
+                                          height: mq.height * 0.014,
+                                        ),
+                                        Column(
+                                            children: List.generate(
+                                                mainPro.publicQuiz.length,
+                                                (index) {
+                                          var data = mainPro.publicQuiz[index];
+
+                                          return QuizBox(
+                                            reverseSlot: checkBookingStatus,
+                                            image: 'assets/images/pos2.png',
+                                            category:
+                                                data.quizTitle.toUpperCase(),
+                                            time: mainPro.stateEndDate(data),
+                                            entryPrize:
+                                                data.entryAmount.toString(),
+                                            slots:
+                                                data.availableSlots.toString(),
+                                            prize: data.winningPrize.toString(),
+                                            isSlotBooked: data.slots == 0,
+                                            quizId: data.quizId.toString(),
+                                            totalSlots: data.slots.toString(),
+                                            data: data,
+                                            quizIndex: index,
+                                            isAssignedQuiz: false,
+                                          );
+                                        }))
+                                      ],
+                                    ),
+                            ),
+                      SizedBox(
+                        height: mq.height * 0.018,
                       ),
                     ],
                   ),
@@ -288,6 +332,35 @@ Future<void> playPracticeQuiz(BuildContext context) async {
               )));
     });
   }
+}
+
+Widget buildViewScore(Size mq, BuildContext context,
+    {Color type, Function onTap, String title}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: AnimatedContainer(
+      duration: Duration(milliseconds: 400),
+      height: mq.height * 0.055,
+      width: mq.width * 0.25,
+      decoration: BoxDecoration(
+        color: type,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Text(
+            '$title',
+            style: TextStyle(
+                fontFamily: 'RapierZero',
+                color: Colors.black,
+                fontSize: 15,
+                letterSpacing: 1.2),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 Widget buildPlayPractiseQuiz(Size mq, BuildContext context) {

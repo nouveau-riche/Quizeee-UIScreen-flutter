@@ -40,7 +40,7 @@ class TransactionHistoryScreen extends StatelessWidget {
                       mainPro.format.format(
                           DateTime.parse(data[index].transactionDateTimestamp)),
                       "${data[index].amount}"),
-                  itemCount: 3,
+                  itemCount: data.length,
                 ),
               );
             }

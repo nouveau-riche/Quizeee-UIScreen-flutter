@@ -398,9 +398,17 @@ class MainPro with ChangeNotifier {
     }
   }
 
+  int selectedHomeType = 0; // assigned
+  // 1 public
+  // 2 free
   int selectedType = 0; // assigned
   // 1 public
   // 2 free
+
+  void toggleHomeType(int type) {
+    selectedHomeType = type;
+    notifyListeners();
+  }
 
   void toggleType(int type) {
     selectedType = type;

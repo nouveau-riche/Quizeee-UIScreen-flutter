@@ -1,4 +1,8 @@
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
+import 'package:com.quizeee.quizeee/provider/mainPro.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant.dart';
 
@@ -7,6 +11,22 @@ class WalletDetails extends StatelessWidget {
   final String refilltotal;
   final String refertotal;
   final String winningtotal;
+
+  Future<void> launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        enableJavaScript: true,
+        enableDomStorage: true,
+      ).whenComplete(() {
+        print("DONE");
+      });
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   const WalletDetails(
       {Key key,
@@ -150,7 +170,10 @@ class WalletDetails extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          final mainPro = Provider.of<MainPro>(context, listen: false);
+          launchInBrowser(ApiUrls.walletWithdrawAmt + mainPro.getUserID);
+        },
         child: Text(
           'Withdraw Winning',
           style: TextStyle(

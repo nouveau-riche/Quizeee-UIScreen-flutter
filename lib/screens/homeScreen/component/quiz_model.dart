@@ -83,7 +83,8 @@ class QuizBox extends StatelessWidget {
                 child: GestureDetector(
                     onTap: () async {
                       if (isAssignedQuiz) {
-                        if (data.bookingStatus == -1) {
+                        if (data.bookingStatus != null &&
+                            data.bookingStatus == -1) {
                           final mainPro =
                               Provider.of<MainPro>(context, listen: false);
                           mainPro.saveDataForQuestions(data);
@@ -99,7 +100,18 @@ class QuizBox extends StatelessWidget {
                           //   ),
                           // );
                         } else {
-                          // 2 played
+                          if (data.bookingStatus == null) {
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                builder: (ctx) => LetsStartOrPlayPracticeQuiz(
+                                  data: data,
+                                ),
+                              ),
+                            );
+                          } else {
+                            // 2 played
+
+                          }
                         }
                       } else {
                         // bool booked = await reverseSlot(quizId, quizIndex);
@@ -148,7 +160,11 @@ class QuizBox extends StatelessWidget {
                             context,
                             mq.height * 0.055,
                             mq.width * 0.28,
-                            data.bookingStatus == 2 ? "PLAYED" : "PLAY\nNOW")
+                            data.bookingStatus == 2
+                                ? "PLAYED"
+                                : data.bookingStatus == null
+                                    ? "AWAITED"
+                                    : "PLAY\nNOW")
                         : data.bookingStatus != 1 && slots == "0"
                             ? Container()
                             : data.bookingStatus == 2
@@ -162,11 +178,13 @@ class QuizBox extends StatelessWidget {
                                         ? "PLAY\nNOW"
                                         : "RESERVE\nSLOT")),
               ),
-        Positioned(
-          top: mq.height * 0.027,
-          right: mq.width * 0.08,
-          child: buildPrizeMoney(),
-        ),
+        prize != "null"
+            ? Positioned(
+                top: mq.height * 0.027,
+                right: mq.width * 0.08,
+                child: buildPrizeMoney(),
+              )
+            : Container(),
       ],
     );
   }
@@ -190,7 +208,7 @@ class QuizBox extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '$category QUIZ',
+          '$category',
           style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
@@ -318,6 +336,13 @@ class QuizBox extends StatelessWidget {
                   fontSize: 15),
             )
           ],
+        ),
+        Text(
+          '${data.quizCategory} QUIZ',
+          style: TextStyle(
+              color: kPrimaryLightColor,
+              fontFamily: 'DebugFreeTrial',
+              fontSize: 15),
         ),
       ],
     );

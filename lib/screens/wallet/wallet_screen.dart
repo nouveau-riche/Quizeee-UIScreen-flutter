@@ -207,7 +207,8 @@ class _WalletScreenState extends State<WalletScreen>
                             Navigator.of(context).push(
                               CupertinoPageRoute(
                                 builder: (ctx) => WalletDetails(
-                                  refertotal: data[0].winningbalance.toString(),
+                                  refertotal:
+                                      data[0].referralBalance.toString(),
                                   refilltotal: data[0].refillBalance.toString(),
                                   total: (data[0].winningbalance +
                                           data[0].referralBalance +
