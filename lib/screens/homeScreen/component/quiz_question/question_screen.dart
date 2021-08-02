@@ -147,7 +147,8 @@ class _QuizQuestionState extends State<QuizQuestion>
                       height: 6,
                     ),
                     Text(
-                      '${mainPro.score ?? 0}/${mainPro.selectedData.questions.length ?? 0}', // add correctAns and Total Question
+                      '${mainPro.score ?? 0}/${mainPro.selectedData.questions.length ?? 0}',
+                      // add correctAns and Total Question
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
                     )
@@ -282,63 +283,83 @@ class _QuizQuestionState extends State<QuizQuestion>
 
           return Stack(
             children: [
-              Column(
-                children: [
-                  Selector<MainPro, int>(
-                      selector: (context, mainSelector) =>
-                          mainSelector.currentQuestionIndex,
-                      builder: (context, index, _) {
-                        return Column(
-                          children: [
-                            SizedBox(
-                              height: mq.height * 0.01,
-                            ),
-                            buildQuestionNumberIndicator(mq, index + 1,
-                                main.selectedData.questions.length),
-                            SizedBox(
-                              height: mq.height * 0.1,
-                            ),
-                            Column(
-                              children: List.generate(
-                                  main.selectedData.questions[index].options
-                                      .length, (i) {
-                                //initializations
-                                var questions =
-                                    main.selectedData.questions[index];
-                                var options = main
-                                    .selectedData.questions[index].options[i];
-                                //--
-                                return Column(
-                                  children: [
-                                    i == 0
-                                        ? questionsContainer(
-                                            mq, index, questions)
-                                        : Container(),
-                                    GestureDetector(
-                                      onTap: () {
-                                        main.setSelectedOption(i);
-                                        main.makeSelections(i);
-                                      },
-                                      child: optionsContainer(
-                                          mq, main, i, options),
-                                    )
-                                  ],
-                                );
-                              }),
-                            ),
-                            SizedBox(
-                              height: mq.height * 0.04,
-                            ),
-                          ],
-                        );
-                      }),
-                  Selector<MainPro, int>(
-                      selector: (context, mainSelector) =>
-                          mainSelector.gettime_remain_provider(),
-                      builder: (context, second, _) {
-                        return secondsContainer(mq, second);
-                      }),
-                ],
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Selector<MainPro, int>(
+                        selector: (context, mainSelector) =>
+                            mainSelector.currentQuestionIndex,
+                        builder: (context, index, _) {
+                          return Column(
+                            children: [
+                              SizedBox(
+                                height: mq.height * 0.01,
+                              ),
+                              buildQuestionNumberIndicator(mq, index + 1,
+                                  main.selectedData.questions.length),
+                              SizedBox(
+                                height: mq.height * 0.1,
+                              ),
+                              Column(
+                                children: List.generate(
+                                    main.selectedData.questions[index].options
+                                        .length, (i) {
+                                  //initializations
+                                  var questions =
+                                      main.selectedData.questions[index];
+                                  var options = main
+                                      .selectedData.questions[index].options[i];
+                                  //--
+                                  return Column(
+                                    children: [
+                                      i == 0
+                                          ? questionsContainer(
+                                              mq, index, questions)
+                                          : Container(),
+                                      i == 0
+                                          ? ClipRRect(
+                                              child: Container(
+                                                child: Image.asset(
+                                                  'assets/images/pos2.png',
+                                                  fit: BoxFit.fill,
+                                                ),
+                                                width: mq.width * 0.8,
+                                                height: mq.height * 0.15,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            )
+                                          : Container(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          main.setSelectedOption(i);
+                                          main.makeSelections(i);
+                                        },
+                                        child: optionsContainer(
+                                            mq, main, i, options),
+                                      )
+                                    ],
+                                  );
+                                }),
+                              ),
+                              SizedBox(
+                                height: mq.height * 0.04,
+                              ),
+                            ],
+                          );
+                        }),
+                    Selector<MainPro, int>(
+                        selector: (context, mainSelector) =>
+                            mainSelector.gettime_remain_provider(),
+                        builder: (context, second, _) {
+                          return secondsContainer(mq, second);
+                        }),
+                  ],
+                ),
               ),
               main.isLoading
                   ? CenterLoader(
