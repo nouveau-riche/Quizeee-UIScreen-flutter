@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -123,6 +125,46 @@ class SolutionScreen extends StatelessWidget {
                             ),
                           )
                         : Container(),
+                    i == 0
+                        ? mainPro
+                                .selectedData
+                                .questions[mainPro.currentQuestionIndex]
+                                .quesImgUrl
+                                .isNotEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: ClipRRect(
+                                  child: Container(
+                                    child: CachedNetworkImage(
+                                      fit: BoxFit.cover,
+                                      imageUrl: ApiUrls.baseUrlImage +
+                                          mainPro
+                                              .selectedData
+                                              .questions[
+                                                  mainPro.currentQuestionIndex]
+                                              .quesImgUrl,
+                                      placeholder: (context, url) =>
+                                          Image.asset(
+                                        "assets/images/poster.png",
+                                        fit: BoxFit.cover,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                        "assets/images/poster.png",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    width: mq.width * 0.8,
+                                    height: mq.height * 0.10,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              )
+                            : Container()
+                        : Container(),
                     buildOption(
                       '$options',
                       mq,
@@ -198,7 +240,7 @@ class SolutionScreen extends StatelessWidget {
 
   Widget buildOption(String option, Size mq, int index, MainPro main) {
     // selected answer index
-    int selectedAnswer;
+    dynamic selectedAnswer;
     if (main.userRank[0].reviewSolutions
         .asMap()
         .containsKey(main.currentQuestionIndex)) {
@@ -209,9 +251,10 @@ class SolutionScreen extends StatelessWidget {
       selectedAnswer = null;
     }
 
-    bool isCorrect =
-        main.selectedData.questions[main.currentQuestionIndex].rightOption ==
-            index;
+    bool isCorrect = main
+            .selectedData.questions[main.currentQuestionIndex].rightOption
+            .toString() ==
+        index.toString();
 
     return Container(
       height: mq.height * 0.07,
@@ -224,7 +267,7 @@ class SolutionScreen extends StatelessWidget {
                 ? Border.all(width: 1.5, color: Colors.green)
                 : Border.all(
                     width: 1.5,
-                    color: selectedAnswer != null
+                    color: selectedAnswer != null && selectedAnswer.isNotEmpty
                         ? selectedAnswer == index
                             ? kPrimaryLightColor
                             : Colors.transparent

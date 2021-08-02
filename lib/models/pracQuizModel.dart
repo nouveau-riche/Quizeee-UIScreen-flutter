@@ -5,7 +5,7 @@ class PracticeQuizModel {
   List<String> options;
   String quesImgUrl;
   String solution;
-  int rightOption;
+  dynamic rightOption;
   String quizCategory;
   String quizSubCategory;
   String areaOfInterest;
@@ -31,7 +31,7 @@ class PracticeQuizModel {
     options = json['options'].cast<String>();
     quesImgUrl = json['quesImgUrl'];
     solution = json['solution'];
-    rightOption = json['rightOption'];
+    rightOption = json['rightOption'].toString();
     quizCategory = json['quizCategory'];
     quizSubCategory = json['quizSubCategory'];
     areaOfInterest = json['areaOfInterest'];
@@ -46,7 +46,7 @@ class PracticeQuizModel {
     data['options'] = this.options;
     data['quesImgUrl'] = this.quesImgUrl;
     data['solution'] = this.solution;
-    data['rightOption'] = this.rightOption;
+    data['rightOption'] = this.rightOption.toString();
     data['quizCategory'] = this.quizCategory;
     data['quizSubCategory'] = this.quizSubCategory;
     data['areaOfInterest'] = this.areaOfInterest;

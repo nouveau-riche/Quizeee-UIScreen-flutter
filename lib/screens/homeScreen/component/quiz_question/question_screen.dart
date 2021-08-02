@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -317,22 +319,50 @@ class _QuizQuestionState extends State<QuizQuestion>
                                               mq, index, questions)
                                           : Container(),
                                       i == 0
-                                          ? ClipRRect(
-                                              child: Container(
-                                                child: Image.asset(
-                                                  'assets/images/pos2.png',
-                                                  fit: BoxFit.fill,
-                                                ),
-                                                width: mq.width * 0.8,
-                                                height: mq.height * 0.15,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            )
+                                          ? main.selectedData.questions[index]
+                                                  .quesImgUrl.isNotEmpty
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 20),
+                                                  child: ClipRRect(
+                                                    child: Container(
+                                                      child: CachedNetworkImage(
+                                                        fit: BoxFit.cover,
+                                                        imageUrl: ApiUrls
+                                                                .baseUrlImage +
+                                                            main
+                                                                .selectedData
+                                                                .questions[
+                                                                    index]
+                                                                .quesImgUrl,
+                                                        placeholder:
+                                                            (context, url) =>
+                                                                Image.asset(
+                                                          "assets/images/poster.png",
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            Image.asset(
+                                                          "assets/images/poster.png",
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                      width: mq.width * 0.8,
+                                                      height: mq.height * 0.10,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                )
+                                              : Container()
                                           : Container(),
                                       GestureDetector(
                                         onTap: () {
@@ -377,7 +407,7 @@ class _QuizQuestionState extends State<QuizQuestion>
 
   Container questionsContainer(Size mq, int index, questions) {
     return Container(
-      padding: EdgeInsets.only(bottom: mq.height * 0.04),
+      padding: EdgeInsets.only(bottom: mq.height * 0.02),
       width: mq.width * 0.7,
       child: Center(
         child: Text(

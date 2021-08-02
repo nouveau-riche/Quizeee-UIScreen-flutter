@@ -186,6 +186,28 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
                                         ? questionsContainer(
                                             mq, index, questions)
                                         : Container(),
+                                    i == 0
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 20),
+                                            child: ClipRRect(
+                                              child: Container(
+                                                child: Image.asset(
+                                                  'assets/images/pos2.png',
+                                                  fit: BoxFit.fill,
+                                                ),
+                                                width: mq.width * 0.8,
+                                                height: mq.height * 0.10,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          )
+                                        : Container(),
                                     GestureDetector(
                                       onTap: () {
                                         main.setSelectedOptionPrac(i);
@@ -223,7 +245,7 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
 
   Container questionsContainer(Size mq, int index, questions) {
     return Container(
-      padding: EdgeInsets.only(bottom: mq.height * 0.04),
+      padding: EdgeInsets.only(bottom: mq.height * 0.02),
       width: mq.width * 0.7,
       child: Center(
         child: Text(

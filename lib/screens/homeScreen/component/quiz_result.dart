@@ -452,7 +452,7 @@ class QuizResult extends StatelessWidget {
           }
         },
         child: Text(
-          isViewMore ?? false ? 'REVIEW SOLUTION' : 'PLAY AGAIN',
+          isViewMore ?? false ? 'BACK TO VIEW SCORE' : 'PLAY AGAIN',
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',
