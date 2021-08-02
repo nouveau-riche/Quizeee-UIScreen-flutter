@@ -86,76 +86,74 @@ class _ChangeEmailState extends State<ChangeEmail> {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: kPrimaryColor,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              buildAppBar(context, mq),
-              SizedBox(
-                height: mq.height * 0.05,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.email,
-                    color: kPrimaryLightColor,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Edit Email',
-                    style: TextStyle(
-                      fontSize: 32,
-                      color: kPrimaryLightColor,
-                      fontFamily: 'DebugFreeTrial',
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: mq.height * 0.05,
-              ),
-              Form(
-                key: _formKey,
-                child: buildEmailTextFieldField(mq),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: PinPut(
-                  fieldsCount: 6,
-                  textStyle: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: kPrimaryColor,
-                  ),
-                  eachFieldWidth: 40.0,
-                  eachFieldHeight: 48.0,
-                  focusNode: _pinPutFocusNode,
-                  controller: _pinPutController,
-                  submittedFieldDecoration: pinPutDecoration,
-                  selectedFieldDecoration: pinPutDecoration,
-                  followingFieldDecoration: pinPutDecoration,
-                  pinAnimationType: PinAnimationType.fade,
-                  onSubmit: (pin) {
-                    /// build logic for checking otp
-                  },
+    return Scaffold(
+      backgroundColor: kPrimaryColor,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            SafeArea(child: buildAppBar(context, mq)),
+            SizedBox(
+              height: mq.height * 0.05,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.email,
+                  color: kPrimaryLightColor,
                 ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  'Edit Email',
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: kPrimaryLightColor,
+                    fontFamily: 'DebugFreeTrial',
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: mq.height * 0.05,
+            ),
+            Form(
+              key: _formKey,
+              child: buildEmailTextFieldField(mq),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: PinPut(
+                fieldsCount: 6,
+                textStyle: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: kPrimaryColor,
+                ),
+                eachFieldWidth: 40.0,
+                eachFieldHeight: 48.0,
+                focusNode: _pinPutFocusNode,
+                controller: _pinPutController,
+                submittedFieldDecoration: pinPutDecoration,
+                selectedFieldDecoration: pinPutDecoration,
+                followingFieldDecoration: pinPutDecoration,
+                pinAnimationType: PinAnimationType.fade,
+                onSubmit: (pin) {
+                  /// build logic for checking otp
+                },
               ),
-              SizedBox(
-                height: mq.height * 0.1,
-              ),
-              isLoading
-                  ? SpinKitPouringHourglass(color: kSecondaryColor)
-                  : buildVerifyButton(mq),
-            ],
-          ),
+            ),
+            SizedBox(
+              height: mq.height * 0.1,
+            ),
+            isLoading
+                ? SpinKitPouringHourglass(color: kSecondaryColor)
+                : buildVerifyButton(mq),
+          ],
         ),
       ),
     );
@@ -227,10 +225,9 @@ class _ChangeEmailState extends State<ChangeEmail> {
               return kEmailNullError;
             }
 
-            if(!emailValidatorRegExp.hasMatch(_value)){
+            if (!emailValidatorRegExp.hasMatch(_value)) {
               return kInvalidEmailError;
             }
-
           },
           onSaved: (_value) {
             _email = _value;

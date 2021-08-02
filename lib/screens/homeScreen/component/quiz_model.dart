@@ -178,13 +178,11 @@ class QuizBox extends StatelessWidget {
                                         ? "PLAY\nNOW"
                                         : "RESERVE\nSLOT")),
               ),
-        prize != "null"
-            ? Positioned(
-                top: mq.height * 0.027,
-                right: mq.width * 0.08,
-                child: buildPrizeMoney(),
-              )
-            : Container(),
+        Positioned(
+          top: mq.height * 0.027,
+          right: mq.width * 0.08,
+          child: buildPrizeMoney(),
+        )
       ],
     );
   }
@@ -311,32 +309,38 @@ class QuizBox extends StatelessWidget {
   Widget buildPrizeMoney() {
     return Column(
       children: [
-        Text(
-          'WINNING PRIZE',
-          style: TextStyle(
-              color: kPrimaryLightColor,
-              fontFamily: 'DebugFreeTrial',
-              fontSize: 18),
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'RS. $prize',
-              style: TextStyle(
-                  color: kPrimaryLightColor,
-                  fontFamily: 'DebugFreeTrial',
-                  fontSize: 15),
-            ),
-            Text(
-              '/ -',
-              style: TextStyle(
-                  color: kPrimaryLightColor,
-                  fontFamily: 'Bungee',
-                  fontSize: 15),
-            )
-          ],
-        ),
+        prize != "null"
+            ? Column(
+                children: [
+                  Text(
+                    'WINNING PRIZE',
+                    style: TextStyle(
+                        color: kPrimaryLightColor,
+                        fontFamily: 'DebugFreeTrial',
+                        fontSize: 18),
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'RS. $prize',
+                        style: TextStyle(
+                            color: kPrimaryLightColor,
+                            fontFamily: 'DebugFreeTrial',
+                            fontSize: 15),
+                      ),
+                      Text(
+                        '/ -',
+                        style: TextStyle(
+                            color: kPrimaryLightColor,
+                            fontFamily: 'Bungee',
+                            fontSize: 15),
+                      )
+                    ],
+                  ),
+                ],
+              )
+            : Container(),
         Text(
           '${data.quizCategory} QUIZ',
           style: TextStyle(

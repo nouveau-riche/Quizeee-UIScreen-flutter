@@ -92,8 +92,12 @@ class _EditProfileState extends State<EditProfile> {
       _locationIndex = inx;
     }
 
-    _email = userEdit.userModel[0].email;
-    _phoneNumber = userEdit.userModel[0].phone;
+    _email = userEdit.userModel[0].email == "null"
+        ? null
+        : userEdit.userModel[0].email;
+    _phoneNumber = userEdit.userModel[0].phone == "null"
+        ? null
+        : userEdit.userModel[0].phone;
     // _nameController.text = userEdit.userModel[0].username;
     // _locationController.text = userEdit.userModel[0].location;
     // _emailController.text = userEdit.userModel[0].email;
@@ -331,7 +335,7 @@ class _EditProfileState extends State<EditProfile> {
                 size: 18,
               ),
             ),
-            initialValue: _username,
+            initialValue: _username ?? "",
             // ignore: missing_return
             validator: (_value) {
               if (_value.isEmpty) {
@@ -425,7 +429,7 @@ class _EditProfileState extends State<EditProfile> {
         Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (ctx) => ChangeEmail(
-              email: initialPro.editedEmail ?? _email,
+              email: initialPro.editedEmail ?? _email ?? "",
             ),
           ),
         );
@@ -458,7 +462,7 @@ class _EditProfileState extends State<EditProfile> {
               children: [
                 Consumer<Auth>(builder: (context, auth, _) {
                   return Text(
-                    auth.editedEmail ?? _email,
+                    auth.editedEmail ?? _email ?? "Enter valid email id",
                     style: TextStyle(
                       color: kPrimaryLightColor,
                       fontWeight: FontWeight.bold,
@@ -524,7 +528,7 @@ class _EditProfileState extends State<EditProfile> {
         Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (ctx) => ChangePhone(
-              phoneNumber: initialPro.editedPhone ?? _phoneNumber,
+              phoneNumber: initialPro.editedPhone ?? _phoneNumber ?? "",
             ),
           ),
         );
@@ -556,7 +560,7 @@ class _EditProfileState extends State<EditProfile> {
             children: [
               Consumer<Auth>(builder: (context, auth, _) {
                 return Text(
-                  auth.editedPhone ?? _phoneNumber,
+                  auth.editedPhone ?? _phoneNumber ?? "",
                   style: TextStyle(
                     color: kPrimaryLightColor,
                     fontWeight: FontWeight.bold,

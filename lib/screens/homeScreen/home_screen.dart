@@ -179,7 +179,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? Consumer<MainPro>(
                               builder: (context, mainPro, _) => mainPro
                                       .assignedQuiz.isEmpty
-                                  ? Container()
+                                  ? Container(
+                                      margin: EdgeInsets.only(
+                                          top: mq.height * 0.10),
+                                      child: Text(
+                                        'Assigned Quiz Not Available',
+                                        style: TextStyle(
+                                            fontFamily: 'DebugFreeTrial',
+                                            color: kPrimaryLightColor,
+                                            fontSize: 18,
+                                            letterSpacing: 1.2),
+                                      ),
+                                    )
                                   : Column(
                                       children: [
                                         // Row(
@@ -232,7 +243,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           : Consumer<MainPro>(
                               builder: (context, mainPro, _) => mainPro
                                       .publicQuiz.isEmpty
-                                  ? Container()
+                                  ? Container(
+                                      margin: EdgeInsets.only(
+                                          top: mq.height * 0.10),
+                                      child: Text(
+                                        'Public Quiz Not Available',
+                                        style: TextStyle(
+                                            fontFamily: 'DebugFreeTrial',
+                                            color: kPrimaryLightColor,
+                                            fontSize: 18,
+                                            letterSpacing: 1.2),
+                                      ),
+                                    )
                                   : Column(
                                       children: [
                                         // Row(

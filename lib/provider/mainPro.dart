@@ -776,15 +776,19 @@ class MainPro with ChangeNotifier {
   int responseTime = 0;
   Future<void> calculateTotalScore() async {
     // print(answerSelections);
-    answerSelections.forEach((element) {
-      if (element['rightAnswer']) {
-        score += 1;
-        responseTime = element['second'] + responseTime;
-      }
-    });
+    try {
+      answerSelections.forEach((element) {
+        if (element['rightAnswer']) {
+          score += 1;
+          responseTime = element['second'] + responseTime;
+        }
+      });
+    } catch (e) {
+      print(e.toString());
+    }
 
     // print("SCORE : $score");
-    // print("RESPONSE TIME : $responseTime");
+    print("RESPONSE TIME : $responseTime");
   }
 
   Future<void> intializeAnswersList() async {
@@ -813,7 +817,8 @@ class MainPro with ChangeNotifier {
         _perQuestionAnswerSeconds;
     answerSelections[_currentQuestionIndex]['answerIndex'] = index;
     answerSelections[_currentQuestionIndex]['rightAnswer'] =
-        selectedData.questions[_currentQuestionIndex].rightOption == index;
+        selectedData.questions[_currentQuestionIndex].rightOption.toString() ==
+            index.toString();
 
     notifyListeners();
   }

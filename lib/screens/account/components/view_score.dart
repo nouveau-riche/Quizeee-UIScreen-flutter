@@ -116,7 +116,7 @@ class _ViewScoreScreenState extends State<ViewScoreScreen> {
                               }
                               return buildResultListTile(
                                   mq,
-                                  '${quizData[index].quizCategory}',
+                                  '${quizData[index].quizTitle}',
                                   '${quiz.formatDate(quizData[index].startDateNew.toString())}',
                                   mainPro: quiz,
                                   quiz: quizData[index],
@@ -225,7 +225,7 @@ class _ViewScoreScreenState extends State<ViewScoreScreen> {
                       width: mq.width * 0.05,
                     ),
                     Text(
-                      '$name Quiz',
+                      '$name',
                       style: const TextStyle(
                           color: kSecondaryColor,
                           fontSize: 12,
