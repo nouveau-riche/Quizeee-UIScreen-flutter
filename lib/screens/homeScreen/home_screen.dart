@@ -374,9 +374,9 @@ Widget buildViewScore(Size mq, BuildContext context,
           child: Text(
             '$title',
             style: TextStyle(
-                fontFamily: 'DebugFreeTrial',
+                fontFamily: 'RapierZero',
                 color: Colors.black,
-                fontSize: 21,
+                fontSize: 15,
                 letterSpacing: 1.2),
           ),
         ),
