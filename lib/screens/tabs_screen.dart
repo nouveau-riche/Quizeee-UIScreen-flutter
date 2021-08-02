@@ -118,7 +118,7 @@ class _TabsScreenState extends State<TabsScreen> {
                         fit: BoxFit.cover,
                       ),
               ),
-              label: 'DASHBOARD'),
+              label: 'HOME'),
           BottomNavigationBarItem(
               icon: Container(
                 height: 36,

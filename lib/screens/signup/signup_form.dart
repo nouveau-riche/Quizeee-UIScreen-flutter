@@ -58,6 +58,10 @@ class _SignUpFormState extends State<SignUpForm> {
 
         print(_location);
 
+        if(_phoneNumber.length == 0 && _email.length == 0){
+          toast('Either Phone or Email is mandatory', isError: true);
+        }
+
         bool phoneValidation = _phoneNumber.length == 10;
 
         bool emailValidation = emailValidatorRegExp.hasMatch(_email);
@@ -74,6 +78,15 @@ class _SignUpFormState extends State<SignUpForm> {
           }
 
           toast('Enter email or phone', isError: true);
+        }
+
+        if(emailValidation == true && _phoneNumber.length != 0 && _phoneNumber.length != 10){
+          toast('Enter valid phone', isError: true);
+          return ;
+        }
+
+        if(emailValidation == false && phoneValidation == true){
+          toast('Enter valid email', isError: true);
           return;
         }
 
@@ -129,7 +142,7 @@ class _SignUpFormState extends State<SignUpForm> {
         cursorColor: Colors.black,
         style: const TextStyle(fontWeight: FontWeight.bold),
         decoration: const InputDecoration(
-          hintText: 'USER NAME',
+          hintText: 'FULL NAME',
           hintStyle: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 12.8,
