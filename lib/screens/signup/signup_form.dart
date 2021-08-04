@@ -85,7 +85,7 @@ class _SignUpFormState extends State<SignUpForm> {
           return ;
         }
 
-        if(emailValidation == false && phoneValidation == true){
+        if(_email.length != 0  && emailValidation == false && phoneValidation == true){
           toast('Enter valid email', isError: true);
           return;
         }
@@ -119,6 +119,32 @@ class _SignUpFormState extends State<SignUpForm> {
           buildReferralCodeField(),
           SizedBox(
             height: mq.height * 0.05,
+          ),
+          RichText(
+            text: const TextSpan(
+              text: "By registering, you accept the ",
+              children: [
+                const TextSpan(
+                  text: "PRIVACY POLICY & TERMS AND CONDITIONS",
+                  style: TextStyle(
+                    color: kTextColor,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+              style: TextStyle(color: kSecondaryColor, fontSize: 10),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const Text(
+            'OF QUIZEEE',
+            style: TextStyle(
+              fontSize: 10,
+              color: kSecondaryColor,
+            ),
+          ),
+          SizedBox(
+            height: mq.height * 0.035,
           ),
           Selector<Auth, bool>(
               selector: (con, auth) => auth.isLoading,

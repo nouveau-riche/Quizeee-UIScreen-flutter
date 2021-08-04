@@ -23,7 +23,8 @@ class MyDrawer extends StatelessWidget {
             buildListTile(mq, Icons.notifications, 'Notification Settings'),
             buildListTile(mq, CupertinoIcons.person_circle_fill, 'About Us'),
             buildReportListTile(context, mq),
-            buildSupportListTile(context,mq),
+            buildSupportListTile(context, mq),
+            buildPrivacyPolicyListTile(context,mq),
             buildLogoutListTile(context, mq),
           ],
         ),
@@ -122,6 +123,26 @@ class MyDrawer extends StatelessWidget {
       ),
       title: Text(
         'Contact us',
+        style: const TextStyle(
+            color: kSecondaryColor, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget buildPrivacyPolicyListTile(BuildContext context, Size mq) {
+    return ListTile(
+      onTap: () {},
+      dense: true,
+      leading: Container(
+        margin: EdgeInsets.only(left: mq.width * 0.04),
+        child: Icon(
+          Icons.privacy_tip_outlined,
+          size: 21,
+          color: kSecondaryColor,
+        ),
+      ),
+      title: Text(
+        'Privacy Policy',
         style: const TextStyle(
             color: kSecondaryColor, fontWeight: FontWeight.bold),
       ),
