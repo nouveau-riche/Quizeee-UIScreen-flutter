@@ -53,7 +53,7 @@ class LoginScreen extends StatelessWidget {
                 style: TextStyle(
                   color: kTextColor,
                   fontFamily: 'DebugFreeTrial',
-                  fontSize: 22,
+                  fontSize: 27,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -99,45 +99,7 @@ class LoginScreen extends StatelessWidget {
                 },
               ),
               SizedBox(
-                height: mq.height * 0.1,
-              ),
-              Container(
-                height: 15,
-                width: 15,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(2.5),
-                  color: kSecondaryColor,
-                  border: Border.all(color: kTextColor),
-                ),
-              ),
-              SizedBox(
-                height: mq.height * 0.015,
-              ),
-              RichText(
-                text: const TextSpan(
-                  text: "By registering, you accept the ",
-                  children: [
-                    const TextSpan(
-                      text: "PRIVACY POLICY & TERMS AND CONDITIONS",
-                      style: TextStyle(
-                        color: kTextColor,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                  style: TextStyle(color: kSecondaryColor, fontSize: 10),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const Text(
-                'OF QUIZEEE',
-                style: TextStyle(
-                  fontSize: 10,
-                  color: kSecondaryColor,
-                ),
-              ),
-              SizedBox(
-                height: mq.height * 0.035,
+                height: mq.height * 0.18,
               ),
               buildNextButton(context),
             ],
