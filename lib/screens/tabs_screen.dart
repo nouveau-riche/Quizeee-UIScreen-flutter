@@ -41,6 +41,7 @@ class _TabMainScreenState extends State<TabMainScreen>
 
   Future<void> getDashboardData() async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
+    mainPro.clearHome();
     await mainPro.getDashBoardData();
     await mainPro.getDashBoardBanner();
     mainPro.notifyListeners();
@@ -85,6 +86,10 @@ class _TabsScreenState extends State<TabsScreen> {
   void selectPage(int index) {
     setState(() {
       pageIndex = index;
+      if (index == 0) {
+        final mainPro = Provider.of<MainPro>(context, listen: false);
+        mainPro.clearHome();
+      }
     });
   }
 

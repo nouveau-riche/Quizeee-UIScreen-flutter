@@ -112,7 +112,7 @@ class SolutionScreen extends StatelessWidget {
                   children: [
                     i == 0
                         ? Container(
-                            padding: EdgeInsets.only(bottom: mq.height * 0.04),
+                            padding: EdgeInsets.only(bottom: mq.height * 0.02),
                             width: mq.width * 0.7,
                             child: Center(
                               child: Text(
@@ -267,7 +267,8 @@ class SolutionScreen extends StatelessWidget {
                 ? Border.all(width: 1.5, color: Colors.green)
                 : Border.all(
                     width: 1.5,
-                    color: selectedAnswer != null && selectedAnswer.isNotEmpty
+                    color: selectedAnswer != null &&
+                            selectedAnswer.toString().isNotEmpty
                         ? selectedAnswer == index
                             ? kPrimaryLightColor
                             : Colors.transparent

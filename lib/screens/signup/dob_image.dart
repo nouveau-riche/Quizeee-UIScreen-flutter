@@ -66,7 +66,6 @@ class _DOBImageState extends State<DOBImage> {
   File image;
   final picker = ImagePicker();
 
-
   Future pickImageFromGallery() async {
     try {
       final imageFile = await picker.getImage(source: ImageSource.gallery);
@@ -98,10 +97,17 @@ class _DOBImageState extends State<DOBImage> {
       toast("Please select a valid date of birth", isError: true);
       return;
     }
+    var body;
+    if (widget.phoneNumber.isEmpty) {
+      body = {
+        "email": widget.email,
+      };
+    } else {
+      body = {
+        "phone": "+91" + widget.phoneNumber,
+      };
+    }
 
-    var body = {
-      "phone": "+91" + widget.phoneNumber,
-    };
     final authPro = Provider.of<Auth>(context, listen: false);
     authPro.setLoading(true);
 

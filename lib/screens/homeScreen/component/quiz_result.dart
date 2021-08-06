@@ -20,7 +20,7 @@ class QuizResult extends StatelessWidget {
   // final int pointsScored;
   // final int totalPoints;
 
-  QuizResult({this.isPracticeQuiz, this.isAssigned, this.isViewMore});
+  QuizResult({this.isPracticeQuiz, this.isAssigned = false, this.isViewMore});
 
   Future<bool> willPop(BuildContext context) async {
     if (isViewMore ?? false) {
@@ -371,7 +371,10 @@ class QuizResult extends StatelessWidget {
                             ],
                           ),
                           Spacer(),
-                          isAssigned ?? false
+                          mainPro.selectedData.winningPrize.toString() ==
+                                          "null" ||
+                                      isAssigned ??
+                                  false
                               ? Container()
                               : Text(
                                   'PRIZE WON',
@@ -379,12 +382,18 @@ class QuizResult extends StatelessWidget {
                                       color: kSecondaryColor,
                                       fontWeight: FontWeight.w600),
                                 ),
-                          isAssigned ?? false
+                          mainPro.selectedData.winningPrize.toString() ==
+                                          "null" ||
+                                      isAssigned ??
+                                  false
                               ? Container()
                               : SizedBox(
                                   height: mq.height * 0.01,
                                 ),
-                          isAssigned ?? false
+                          mainPro.selectedData.winningPrize.toString() ==
+                                          "null" ||
+                                      isAssigned ??
+                                  false
                               ? Container()
                               : Text(
                                   '₹ ${mainPro.selectedData.winningPrize}/ -',
@@ -452,7 +461,7 @@ class QuizResult extends StatelessWidget {
           }
         },
         child: Text(
-          isViewMore ?? false ? 'BACK TO VIEW SCORE' : 'PLAY AGAIN',
+          isViewMore ?? false ? 'REVIEW SOLUTION' : 'PLAY AGAIN',
           style: TextStyle(
             color: kPrimaryColor,
             fontFamily: 'DebugFreeTrial',

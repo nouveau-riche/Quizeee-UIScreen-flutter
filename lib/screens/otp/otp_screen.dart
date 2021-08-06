@@ -248,7 +248,15 @@ class _OTPScreenState extends State<OTPScreen> {
         body = {"phone": "+91" + widget.phone};
       }
     } else {
-      body = {"phone": "+91" + widget.phone};
+      if (widget.phone.isEmpty) {
+        body = {
+          "email": widget.email,
+        };
+      } else {
+        body = {
+          "phone": "+91" + widget.phone,
+        };
+      }
     }
     final authPro = Provider.of<Auth>(context, listen: false);
     final response = await authPro.sendVerificationOtp(body, false);
@@ -302,7 +310,7 @@ class _OTPScreenState extends State<OTPScreen> {
           "username": widget.username,
           "location": widget.location,
           "email": widget.email,
-          "phone": "+91" + widget.phone,
+          "phone": widget.phone.isEmpty ? null : "+91" + widget.phone,
           "referralCode": widget.referralCode,
           "dateOfBirth": widget.dob.toIso8601String(),
           "deviceId": status.subscriptionStatus.userId.toString(),
@@ -315,7 +323,7 @@ class _OTPScreenState extends State<OTPScreen> {
           "username": widget.username,
           "location": widget.location,
           "email": widget.email,
-          "phone": "+91" + widget.phone,
+          "phone": widget.phone.isEmpty ? null : "+91" + widget.phone,
           "referralCode": widget.referralCode,
           "dateOfBirth": widget.dob.toIso8601String(),
           "deviceId": status.subscriptionStatus.userId.toString(),

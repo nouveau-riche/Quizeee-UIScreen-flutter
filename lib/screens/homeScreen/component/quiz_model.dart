@@ -82,77 +82,89 @@ class QuizBox extends StatelessWidget {
                 bottom: mq.height * 0.1,
                 child: GestureDetector(
                     onTap: () async {
-                      if (isAssignedQuiz) {
-                        if (data.bookingStatus != null &&
-                            data.bookingStatus == -1) {
-                          final mainPro =
-                              Provider.of<MainPro>(context, listen: false);
-                          mainPro.saveDataForQuestions(data);
-                          Navigator.of(context).push(CupertinoPageRoute(
-                              builder: (ctx) => RulesScreen(
-                                    isPracticeQuiz: false,
-                                  )));
-                          // Navigator.of(context).push(
-                          //   CupertinoPageRoute(
-                          //     builder: (ctx) => LetsStartOrPlayPracticeQuiz(
-                          //       data: data,
-                          //     ),
-                          //   ),
-                          // );
+                      final mainPro =
+                          Provider.of<MainPro>(context, listen: false);
+                      String date;
+                      if (data.endDate == "" ||
+                          data.endDate == null ||
+                          data.endDate == "null") {
+                        date = data.startDate;
+                      } else {
+                        date = data.endDate;
+                      }
+                      if (!mainPro.isQuizEnded(date)) {
+                        if (isAssignedQuiz) {
+                          if (data.bookingStatus != null &&
+                              data.bookingStatus == -1) {
+                            mainPro.saveDataForQuestions(data);
+                            Navigator.of(context).push(CupertinoPageRoute(
+                                builder: (ctx) => RulesScreen(
+                                      isPracticeQuiz: false,
+                                    )));
+                            // Navigator.of(context).push(
+                            //   CupertinoPageRoute(
+                            //     builder: (ctx) => LetsStartOrPlayPracticeQuiz(
+                            //       data: data,
+                            //     ),
+                            //   ),
+                            // );
+                          } else {
+                            if (data.bookingStatus == null) {
+                              Navigator.of(context).push(
+                                CupertinoPageRoute(
+                                  builder: (ctx) => LetsStartOrPlayPracticeQuiz(
+                                    data: data,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              // 2 played
+
+                            }
+                          }
                         } else {
-                          if (data.bookingStatus == null) {
-                            Navigator.of(context).push(
-                              CupertinoPageRoute(
-                                builder: (ctx) => LetsStartOrPlayPracticeQuiz(
+                          // bool booked = await reverseSlot(quizId, quizIndex);
+                          Future.delayed(Duration(milliseconds: 500), () async {
+                            if (data.bookingStatus == 1) {
+                              Navigator.of(context).push(
+                                CupertinoPageRoute(
+                                  builder: (ctx) => LetsStartOrPlayPracticeQuiz(
+                                    data: data,
+                                  ),
+                                ),
+                              );
+                            } else if (data.bookingStatus == 2) {
+                              toast("Already Played..", isError: false);
+                            } else {
+                              // bool booked = await reverseSlot(quizId, quizIndex);
+
+                              Provider.of<MainPro>(context, listen: false)
+                                  .saveCurrentQuizId(
+                                      quizId: quizId, quizIndex: quizIndex);
+                              Provider.of<MainPro>(context, listen: false)
+                                  .changeServeStatus = false;
+                              Provider.of<MainPro>(context, listen: false)
+                                  .notifyListeners();
+                              Navigator.of(context).push(FadeNavigation(
+                                widget: ReserveSlotScreen(
+                                  isSlotBooked: false,
+                                  category: category,
+                                  image: image,
+                                  prize: prize,
+                                  time: time,
+                                  entryPrize: entryPrize,
+                                  difficultyLevel:
+                                      data.difficultyLevel.toString(),
+                                  totalSlots: totalSlots,
+                                  slotsLeft: slots,
                                   data: data,
                                 ),
-                              ),
-                            );
-                          } else {
-                            // 2 played
-
-                          }
+                              ));
+                            }
+                          });
                         }
                       } else {
-                        // bool booked = await reverseSlot(quizId, quizIndex);
-                        Future.delayed(Duration(milliseconds: 500), () async {
-                          if (data.bookingStatus == 1) {
-                            Navigator.of(context).push(
-                              CupertinoPageRoute(
-                                builder: (ctx) => LetsStartOrPlayPracticeQuiz(
-                                  data: data,
-                                ),
-                              ),
-                            );
-                          } else if (data.bookingStatus == 2) {
-                            toast("Already Played..", isError: false);
-                          } else {
-                            // bool booked = await reverseSlot(quizId, quizIndex);
-
-                            Provider.of<MainPro>(context, listen: false)
-                                .saveCurrentQuizId(
-                                    quizId: quizId, quizIndex: quizIndex);
-                            Provider.of<MainPro>(context, listen: false)
-                                .changeServeStatus = false;
-                            Provider.of<MainPro>(context, listen: false)
-                                .notifyListeners();
-                            Navigator.of(context).push(FadeNavigation(
-                              widget: ReserveSlotScreen(
-                                isSlotBooked: false,
-                                category: category,
-                                image: image,
-                                prize: prize,
-                                time: time,
-                                entryPrize: entryPrize,
-                                difficultyLevel:
-                                    data.difficultyLevel.toString(),
-                                totalSlots: totalSlots,
-                                slotsLeft: slots,
-                                data: data,
-                              ),
-                            ));
-                          }
-                        });
+                        toast("Time up!", isError: true);
                       }
                     },
                     child: isAssignedQuiz
@@ -165,7 +177,9 @@ class QuizBox extends StatelessWidget {
                                 : data.bookingStatus == null
                                     ? "AWAITED"
                                     : "PLAY\nNOW")
-                        : data.bookingStatus != 1 && slots == "0"
+                        : data.bookingStatus != 1 &&
+                                data.bookingStatus != 2 &&
+                                slots == "0"
                             ? Container()
                             : data.bookingStatus == 2
                                 ? buildReserveSlot(context, mq.height * 0.055,

@@ -129,7 +129,7 @@ class ReserveSlotScreen extends StatelessWidget {
         ),
         Spacer(),
         Text(
-          '$category QUIZ',
+          '$category',
           style: TextStyle(
               color: kSecondaryColor,
               fontSize: 22,

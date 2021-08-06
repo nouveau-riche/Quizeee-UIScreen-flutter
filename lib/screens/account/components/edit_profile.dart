@@ -560,7 +560,9 @@ class _EditProfileState extends State<EditProfile> {
             children: [
               Consumer<Auth>(builder: (context, auth, _) {
                 return Text(
-                  auth.editedPhone ?? _phoneNumber ?? "",
+                  auth.editedPhone ??
+                      _phoneNumber ??
+                      "Enter valid phone number",
                   style: TextStyle(
                     color: kPrimaryLightColor,
                     fontWeight: FontWeight.bold,

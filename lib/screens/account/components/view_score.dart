@@ -120,8 +120,9 @@ class _ViewScoreScreenState extends State<ViewScoreScreen> {
                                   '${quiz.formatDate(quizData[index].startDateNew.toString())}',
                                   mainPro: quiz,
                                   quiz: quizData[index],
-                                  isAssigned: type.selectedType == 0,
-                                  isPrac: type.selectedType == 2);
+                                  isAssigned: type.selectedType == 0 ||
+                                      type.selectedType == 2,
+                                  isPrac: false);
                             },
                             itemCount: quizData.isEmpty ? 1 : quizCount,
                           ),

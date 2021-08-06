@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -121,6 +123,38 @@ class SolutionScreen extends StatelessWidget {
                               ),
                             ),
                           )
+                        : Container(),
+                    i == 0
+                        ? questions.quesImgUrl != null
+                            ? Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: ClipRRect(
+                                  child: Container(
+                                    child: CachedNetworkImage(
+                                      fit: BoxFit.cover,
+                                      imageUrl: ApiUrls.baseUrlImage +
+                                          questions.quesImgUrl,
+                                      placeholder: (context, url) =>
+                                          Image.asset(
+                                        "assets/images/poster.png",
+                                        fit: BoxFit.cover,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                        "assets/images/poster.png",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    width: mq.width * 0.8,
+                                    height: mq.height * 0.10,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              )
+                            : Container()
                         : Container(),
                     buildOption(
                       '$options',

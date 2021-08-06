@@ -26,6 +26,7 @@ import 'package:com.quizeee.quizeee/provider/initialPro.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:com.quizeee.quizeee/widgets/toast.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class MainPro with ChangeNotifier {
   Auth _auth;
@@ -140,6 +141,11 @@ class MainPro with ChangeNotifier {
     _performaceSubCategory.clear();
   }
 
+  clearHome() {
+    _assignedQuiz.clear();
+    _publicQuiz.clear();
+  }
+
   clearPlayedResult() {
     _userPlayedFree.clear();
     _userPlayedAssigned.clear();
@@ -149,6 +155,9 @@ class MainPro with ChangeNotifier {
 
   Future<Map<String, dynamic>> getDashBoardData() async {
     try {
+      var status = await OneSignal.shared.getPermissionSubscriptionState();
+
+      print(status.subscriptionStatus.userId);
       final userId = await ConstFun.getKeyValue("userId", _auth.storage);
       var body = {
         "userId": _auth.userModel[0].userId,
@@ -642,6 +651,20 @@ class MainPro with ChangeNotifier {
     }
   }
 
+  bool isQuizEnded(dynamic endDate) {
+    try {
+      DateTime end = DateTime.fromMillisecondsSinceEpoch(int.parse(endDate));
+
+      if (end.isBefore(DateTime.now())) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
   String formatDateTime(dynamic date) {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
     return format.format(dateTime);
@@ -794,6 +817,7 @@ class MainPro with ChangeNotifier {
   Future<void> intializeAnswersList() async {
     answerSelections.clear();
     _perQuestionAnswerSeconds = 0;
+    responseTime = 0;
     score = 0;
     _time_remain_provider = selectedData.timePerQues;
 
@@ -809,18 +833,26 @@ class MainPro with ChangeNotifier {
   }
 
   Future<void> makeSelections(int index) async {
-    answerSelections[_currentQuestionIndex]['quesId'] =
-        selectedData.questions[_currentQuestionIndex].questionId;
-    answerSelections[_currentQuestionIndex]['answer'] =
-        selectedData.questions[_currentQuestionIndex].options[index];
-    answerSelections[_currentQuestionIndex]['second'] =
-        _perQuestionAnswerSeconds;
-    answerSelections[_currentQuestionIndex]['answerIndex'] = index;
-    answerSelections[_currentQuestionIndex]['rightAnswer'] =
-        selectedData.questions[_currentQuestionIndex].rightOption.toString() ==
-            index.toString();
+    try {
+      answerSelections[_currentQuestionIndex]['quesId'] =
+          selectedData.questions[_currentQuestionIndex].questionId;
+      answerSelections[_currentQuestionIndex]['answer'] =
+          selectedData.questions[_currentQuestionIndex].options[index];
+      answerSelections[_currentQuestionIndex]['second'] =
+          _perQuestionAnswerSeconds;
+      answerSelections[_currentQuestionIndex]['answerIndex'] = index;
+      if (selectedData.questions[_currentQuestionIndex].rightOption
+              .toString() ==
+          index.toString()) {
+        answerSelections[_currentQuestionIndex]['rightAnswer'] = true;
+      } else {
+        answerSelections[_currentQuestionIndex]['rightAnswer'] = false;
+      }
 
-    notifyListeners();
+      notifyListeners();
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   int _time_remain_provider = 11;
@@ -900,15 +932,19 @@ class MainPro with ChangeNotifier {
     }
   }
 
-  Future<void> makeSelectionsPrac(int index) async {
+  Future<void> makeSelectionsPrac(dynamic index) async {
     answerSelections[currentPracQuestion]['quesId'] =
         selectedPracQuizData[currentPracQuestion].practiceQuesId;
     answerSelections[currentPracQuestion]['answer'] =
         selectedPracQuizData[currentPracQuestion].options[index];
     answerSelections[currentPracQuestion]['second'] = pracSeconds;
     answerSelections[currentPracQuestion]['answerIndex'] = index;
-    answerSelections[currentPracQuestion]['rightAnswer'] =
-        selectedPracQuizData[currentPracQuestion].rightOption == index;
+    if (selectedPracQuizData[currentPracQuestion].rightOption.toString() ==
+        index.toString()) {
+      answerSelections[currentPracQuestion]['rightAnswer'] = true;
+    } else {
+      answerSelections[currentPracQuestion]['rightAnswer'] = false;
+    }
     notifyListeners();
 
     // print(answerSelections);
