@@ -357,7 +357,7 @@ class _OTPScreenState extends State<OTPScreen> {
       builder: (con, auth, _) => auth.isLoading
           ? SpinKitPouringHourglass(color: kSecondaryColor)
           : ConstrainedBox(
-              constraints: BoxConstraints.tightFor(width: 68, height: 55),
+              constraints: BoxConstraints.tightFor(width: 80, height: 60),
               child: ElevatedButton(
                 onPressed: () {
                   submitOtp();
@@ -367,7 +367,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   primary: kTextColor,
                 ),
                 child: const Text(
-                  'NEXT',
+                  'SUBMIT',
                   style: TextStyle(
                       fontSize: 12.8,
                       fontWeight: FontWeight.w600,

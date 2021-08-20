@@ -153,7 +153,7 @@ class _TabsScreenState extends State<TabsScreen> {
                         fit: BoxFit.cover,
                       ),
               ),
-              label: 'Private'),
+              label: 'Quizzer'),
           BottomNavigationBarItem(
               icon: Container(
                 height: 28,

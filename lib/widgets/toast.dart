@@ -6,7 +6,7 @@ Future<bool> toast(String message, {bool isError}) {
     msg: message,
     toastLength: Toast.LENGTH_SHORT,
     gravity: ToastGravity.BOTTOM,
-    timeInSecForIosWeb: 1,
+    timeInSecForIosWeb: 5,
     backgroundColor: isError ? Colors.redAccent : Colors.green,
     textColor: Colors.black,
     fontSize: 15.0,
