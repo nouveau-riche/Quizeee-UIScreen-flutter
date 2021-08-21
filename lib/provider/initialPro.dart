@@ -36,6 +36,7 @@ class Auth with ChangeNotifier {
       String actionurl = isLogin
           ? ApiUrls.sendVerificationOtp
           : ApiUrls.sendVerificationRegistration;
+
       final result = await http.post(ApiUrls.baseUrl + actionurl,
           headers: ApiUrls.headers, body: json.encode(body));
       final response = json.decode(result.body);

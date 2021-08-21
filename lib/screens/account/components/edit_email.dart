@@ -57,7 +57,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
     resp = await intialPro.sendVerificationOtp(body, false, true);
     setLoading(false);
 
-    toast(resp['message'], isError: !resp['status']);
+    toast(resp['msg'], isError: !resp['status']);
     if (resp['status']) {
       isOtpSent = true;
       setState(() {

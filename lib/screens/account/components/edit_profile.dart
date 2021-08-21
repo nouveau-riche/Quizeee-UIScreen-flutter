@@ -268,7 +268,7 @@ class _EditProfileState extends State<EditProfile> {
               radius: 47,
               backgroundColor: Colors.grey,
               backgroundImage: profileUrl != null
-                  ? NetworkImage(ApiUrls.baseUrl + profileUrl)
+                  ? NetworkImage(ApiUrls.baseUrlImage + profileUrl)
                   : image == null
                       ? AssetImage('assets/images/profile.png')
                       : FileImage(image),

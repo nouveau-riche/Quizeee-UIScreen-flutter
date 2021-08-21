@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:com.quizeee.quizeee/navigatorAnimation/navigatorParent.dart';
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:com.quizeee.quizeee/provider/mainPro.dart';
 import 'package:com.quizeee.quizeee/screens/account/components/view_score.dart';
 import 'package:com.quizeee.quizeee/widgets/toast.dart';
@@ -24,6 +26,7 @@ class _AccountScreenState extends State<AccountScreen> {
     final mainPro = Provider.of<MainPro>(context, listen: false);
     if (mainPro.assignedPerformace.isEmpty) {
       final resp = await mainPro.getUserPerformance();
+      await mainPro.getUserWalletData();
       await mainPro.getUserWalletData();
       // if (!resp['status']) {
       //   toast(resp['msg'], isError: true);
@@ -73,10 +76,8 @@ class _AccountScreenState extends State<AccountScreen> {
                         buildSelectImage(),
                         TextButton.icon(
                           onPressed: () {
-                            Navigator.of(context).push(
-                              CupertinoPageRoute(
-                                  builder: (ctx) => EditProfile()),
-                            );
+                            Navigator.of(context)
+                                .push(FadeNavigation(widget: EditProfile()));
                           },
                           icon: const Icon(
                             Icons.edit,
@@ -173,17 +174,19 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget buildSelectImage() {
-    return CircleAvatar(
-      radius: 50,
-      backgroundColor: kSecondaryColor,
-      child: CircleAvatar(
-        radius: 46,
-        backgroundColor: Colors.grey,
-        backgroundImage: image == null
-            ? AssetImage('assets/images/profile.png')
-            : FileImage(image),
-      ),
-    );
+    return Consumer<MainPro>(builder: (context, mainPro, _) {
+      String userProfile = mainPro.getUserDetail.profilePic;
+      return CircleAvatar(
+        radius: 50,
+        backgroundColor: kSecondaryColor,
+        child: CircleAvatar(
+            radius: 46,
+            backgroundColor: Colors.grey,
+            backgroundImage: userProfile == null
+                ? AssetImage('assets/images/profile.png')
+                : NetworkImage(ApiUrls.baseUrlImage + userProfile)),
+      );
+    });
   }
 
   Widget buildTransactionHistory(Size mq, BuildContext context) {

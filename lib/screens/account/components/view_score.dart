@@ -38,9 +38,6 @@ class _ViewScoreScreenState extends State<ViewScoreScreen> {
           return Consumer<MainPro>(builder: (context, quiz, _) {
             return Column(
               children: [
-                // SizedBox(
-                //   height: mq.height * 0.045,
-                // ),
                 buildAppBar(context, mq),
                 SizedBox(
                   height: mq.height * 0.05,
