@@ -34,16 +34,24 @@ const String kLocationNullError = "Please Enter your location";
 const String oneSignalKey = "300d9f0e-1975-4739-bc25-ca0f1dce1c1b";
 
 List<String> states = [
+  'Andaman and Nicobar Islands',
   'Andhra Pradesh',
   'Arunachal Pradesh',
   'Assam',
   'Bihar',
+  'Chandigarh',
   'Chhattisgarh',
+  'Dadra and Nagar Haveli',
+  'Daman and Diu',
+  'Delhi',
   'Goa',
   'Gujarat',
   'Haryana',
   'Himachal Pradesh',
+  'Jammu and Kashmir',
   'Jharkhand',
+  'Ladakh',
+  'Lakshadweep',
   'Karnataka',
   'Kerala',
   'Madhya Pradesh',
@@ -53,6 +61,7 @@ List<String> states = [
   'Mizoram',
   'Nagaland',
   'Odisha',
+  'Puducherry',
   'Punjab',
   'Rajasthan',
   'Sikkim',
@@ -67,7 +76,7 @@ List<String> states = [
 List<DropdownMenuItem> stateDropDownList = [
   DropdownMenuItem(
     child: const Text(
-      'Andhra Pradesh',
+      'Andaman and Nicobar Islands',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -78,7 +87,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Arunachal Pradesh',
+      'Andhra Pradesh',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -89,7 +98,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Assam',
+      'Arunachal Pradesh',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -100,7 +109,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Bihar',
+      'Assam',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -111,7 +120,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Chhattisgarh',
+      'Bihar',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -122,7 +131,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Goa',
+      'Chandigarh',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -133,7 +142,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Gujarat',
+      'Chhattisgarh',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -144,7 +153,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Haryana',
+      'Dadra and Nagar Haveli',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -155,7 +164,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Himachal Pradesh',
+      'Daman and Diu',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -166,7 +175,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Jharkhand',
+      'Delhi',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -177,7 +186,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Karnataka',
+      'Goa',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -188,7 +197,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Kerala',
+      'Gujarat',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -199,7 +208,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Madhya Pradesh',
+      'Haryana',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -210,7 +219,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Maharashtra',
+      'Himachal Pradesh',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -221,7 +230,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Manipur',
+      'Jammu and Kashmir',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -232,7 +241,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Meghalaya',
+      'Jharkhand',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -243,7 +252,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Mizoram',
+      'Ladakh',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -254,7 +263,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Nagaland',
+      'Lakshadweep',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -265,7 +274,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Odisha',
+      'Karnataka',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -276,7 +285,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Punjab',
+      'Kerala',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -287,7 +296,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Rajasthan',
+      'Madhya Pradesh',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -298,7 +307,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Sikkim',
+      'Maharashtra',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -309,7 +318,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Tamil Nadu',
+      'Manipur',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -320,7 +329,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Telangana',
+      'Meghalaya',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -331,7 +340,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Tripura',
+      'Mizoram',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -342,7 +351,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Uttar Pradesh',
+      'Nagaland',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -353,7 +362,7 @@ List<DropdownMenuItem> stateDropDownList = [
   ),
   DropdownMenuItem(
     child: const Text(
-      'Uttarakhand',
+      'Odisha',
       style: const TextStyle(
           fontFamily: 'Nunito',
           fontSize: 16,
@@ -361,6 +370,94 @@ List<DropdownMenuItem> stateDropDownList = [
           color: Colors.black),
     ),
     value: 26,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Punjab',
+      style: const TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black),
+    ),
+    value: 27,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Rajasthan',
+      style: const TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black),
+    ),
+    value: 28,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Sikkim',
+      style: const TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black),
+    ),
+    value: 29,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Tamil Nadu',
+      style: const TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black),
+    ),
+    value: 20,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Telangana',
+      style: const TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black),
+    ),
+    value: 31,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Tripura',
+      style: const TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black),
+    ),
+    value: 32,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Uttar Pradesh',
+      style: const TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black),
+    ),
+    value: 33,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Uttarakhand',
+      style: const TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black),
+    ),
+    value: 34,
   ),
   DropdownMenuItem(
     child: const Text(
@@ -368,289 +465,405 @@ List<DropdownMenuItem> stateDropDownList = [
       style: const TextStyle(
           fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
     ),
-    value: 27,
+    value: 35,
   ),
 ];
 
 List<DropdownMenuItem> stateDropDownListForEditProfile = [
   DropdownMenuItem(
     child: const Text(
-      'Andhra Pradesh',
+      'Andaman and Nicobar Islands',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 0,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Arunachal Pradesh',
+      'Andhra Pradesh',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 1,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Assam',
+      'Arunachal Pradesh',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 2,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Bihar',
+      'Assam',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 3,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Chhattisgarh',
+      'Bihar',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 4,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Goa',
+      'Chandigarh',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 5,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Gujarat',
+      'Chhattisgarh',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 6,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Haryana',
+      'Dadra and Nagar Haveli',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 7,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Himachal Pradesh',
+      'Daman and Diu',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 8,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Jharkhand',
+      'Delhi',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 9,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Karnataka',
+      'Goa',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 10,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Kerala',
+      'Gujarat',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 11,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Madhya Pradesh',
+      'Haryana',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 12,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Maharashtra',
+      'Himachal Pradesh',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 13,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Manipur',
+      'Jammu and Kashmir',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 14,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Meghalaya',
+      'Jharkhand',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 15,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Mizoram',
+      'Ladakh',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 16,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Nagaland',
+      'Lakshadweep',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 17,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Odisha',
+      'Karnataka',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 18,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Punjab',
+      'Kerala',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 19,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Rajasthan',
+      'Madhya Pradesh',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 20,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Sikkim',
+      'Maharashtra',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 21,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Tamil Nadu',
+      'Manipur',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 22,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Telangana',
+      'Meghalaya',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 23,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Tripura',
+      'Mizoram',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 24,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Uttar Pradesh',
+      'Nagaland',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 25,
   ),
   DropdownMenuItem(
     child: const Text(
-      'Uttarakhand',
+      'Odisha',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 26,
   ),
   DropdownMenuItem(
     child: const Text(
-      'West Bengal',
+      'Punjab',
       style: TextStyle(
-          color: kPrimaryLightColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 12.5),
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
     ),
     value: 27,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Rajasthan',
+      style: TextStyle(
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
+    ),
+    value: 28,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Sikkim',
+      style: TextStyle(
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
+    ),
+    value: 29,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Tamil Nadu',
+      style: TextStyle(
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
+    ),
+    value: 20,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Telangana',
+      style: TextStyle(
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
+    ),
+    value: 31,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Tripura',
+      style: TextStyle(
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
+    ),
+    value: 32,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Uttar Pradesh',
+      style: TextStyle(
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
+    ),
+    value: 33,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'Uttarakhand',
+      style: TextStyle(
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
+    ),
+    value: 34,
+  ),
+  DropdownMenuItem(
+    child: const Text(
+      'West Bengal',
+      style: TextStyle(
+        color: kPrimaryLightColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12.5,
+      ),
+    ),
+    value: 35,
   ),
 ];

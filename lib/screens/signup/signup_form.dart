@@ -60,6 +60,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
         if(_phoneNumber.length == 0 && _email.length == 0){
           toast('Either Phone or Email is mandatory', isError: true);
+          return;
         }
 
         bool phoneValidation = _phoneNumber.length == 10;
