@@ -404,6 +404,7 @@ class SolutionScreen extends StatelessWidget {
         forceWebView: false,
       );
     } else {
+      toast("Solution not available!", isError: true);
       throw 'Could not launch $url';
     }
   }

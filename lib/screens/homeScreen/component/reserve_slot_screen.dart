@@ -316,7 +316,7 @@ class ReserveSlotScreen extends StatelessWidget {
               children: [
                 buildRankList('#${prizes.rankNo} rank'),
                 Spacer(),
-                buildMoney(int.parse(prizes.prize))
+                buildMoney(prizes.prize.toString())
               ],
             ),
           );
@@ -325,7 +325,7 @@ class ReserveSlotScreen extends StatelessWidget {
     );
   }
 
-  Widget buildMoney(int money) {
+  Widget buildMoney(String money) {
     return Container(
       height: 35,
       child: Center(

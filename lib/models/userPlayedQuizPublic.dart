@@ -125,7 +125,7 @@ class PrizePool {
 
   PrizePool.fromJson(Map<String, dynamic> json) {
     rankNo = json['rankNo'].toString();
-    prize = json['prize'];
+    prize = json['prize'].toString();
   }
 
   Map<String, dynamic> toJson() {

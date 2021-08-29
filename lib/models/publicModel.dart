@@ -120,13 +120,13 @@ class PublicQuizes {
 
 class PrizePool {
   dynamic rankNo;
-  String prize;
+  dynamic prize;
 
   PrizePool({this.rankNo, this.prize});
 
   PrizePool.fromJson(Map<String, dynamic> json) {
     rankNo = json['rankNo'];
-    prize = json['prize'];
+    prize = json['prize'].toString();
   }
 
   Map<String, dynamic> toJson() {

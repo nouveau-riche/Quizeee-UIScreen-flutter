@@ -357,7 +357,7 @@ class _OTPScreenState extends State<OTPScreen> {
       builder: (con, auth, _) => auth.isLoading
           ? SpinKitPouringHourglass(color: kSecondaryColor)
           : ConstrainedBox(
-              constraints: BoxConstraints.tightFor(width: 80, height: 60),
+              constraints: BoxConstraints.tightFor(width: 90, height: 70),
               child: ElevatedButton(
                 onPressed: () {
                   submitOtp();

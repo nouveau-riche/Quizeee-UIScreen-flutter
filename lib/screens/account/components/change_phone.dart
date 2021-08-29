@@ -46,9 +46,6 @@ class _ChangePhoneState extends State<ChangePhone> {
   }
 
   void getBack() async {
-    final intialPro = Provider.of<Auth>(context, listen: false);
-    intialPro.editedPhone = _phoneNumber ?? widget.phoneNumber;
-    intialPro.notifyListeners();
     Navigator.pop(context);
   }
 
@@ -61,7 +58,7 @@ class _ChangePhoneState extends State<ChangePhone> {
     final resp = await intialPro.sendVerificationOtp(body, false);
     setLoading(false);
 
-    toast(resp['msg'], isError: !resp['status']);
+    toast(resp['msg'] ?? resp['message'], isError: !resp['status']);
     if (resp['status']) {
       isOtpSent = true;
       setState(() => verifySub = "Submit");
@@ -76,7 +73,10 @@ class _ChangePhoneState extends State<ChangePhone> {
 
   Future<void> saveOtp() async {
     final intialPro = Provider.of<Auth>(context, listen: false);
-    var body = {"phone": _phoneNumber, "otpCode": _pinPutController.text};
+    var body = {
+      "phone": "+91" + _phoneNumber,
+      "otpCode": _pinPutController.text
+    };
     setLoading(true);
     final resp = await intialPro.verifyUserPhone(body);
     setLoading(false);
@@ -84,6 +84,8 @@ class _ChangePhoneState extends State<ChangePhone> {
       toast("Phone number verified!", isError: false);
       Future.delayed(Duration(milliseconds: 400), () {
         intialPro.phoneOtp = _pinPutController.text;
+        intialPro.editedPhone = _phoneNumber ?? widget.phoneNumber;
+        intialPro.notifyListeners();
         getBack();
       });
     } else {

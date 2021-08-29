@@ -75,8 +75,17 @@ class _EditProfileState extends State<EditProfile> {
     initialUserData();
   }
 
-  initialUserData() {
+  isLoading(bool val) {
+    setState(() => loading = val);
+  }
+
+  bool loading = false;
+  initialUserData() async {
     final userEdit = Provider.of<Auth>(context, listen: false);
+    isLoading(true);
+    await userEdit.getUserDetails();
+    isLoading(false);
+
     final mainPro = Provider.of<MainPro>(context, listen: false);
     _username = userEdit.userModel[0].username;
     _location = userEdit.userModel[0].location;
@@ -146,42 +155,46 @@ class _EditProfileState extends State<EditProfile> {
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              buildAppBar(context, mq),
-              buildSelectImage(),
-              SizedBox(
-                height: mq.height * 0.05,
-              ),
-              Form(
-                key: _formKey,
+        child: loading
+            ? Center(
+                child: SpinKitPouringHourglass(color: kSecondaryColor),
+              )
+            : SingleChildScrollView(
                 child: Column(
                   children: [
-                    buildNameTextFieldField(mq),
-                    buildLocationTextFieldField(mq),
-                    buildEmailTextFieldField(mq),
-                    buildPhoneTextFieldField(mq),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    buildAppBar(context, mq),
+                    buildSelectImage(),
+                    SizedBox(
+                      height: mq.height * 0.05,
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          buildNameTextFieldField(mq),
+                          buildLocationTextFieldField(mq),
+                          buildEmailTextFieldField(mq),
+                          buildPhoneTextFieldField(mq),
+                        ],
+                      ),
+                    ),
+                    Selector<Auth, bool>(
+                        selector: (con, auth) => auth.isLoading,
+                        builder: (context, state, _) {
+                          return state
+                              ? SpinKitPouringHourglass(color: kSecondaryColor)
+                              : GestureDetector(
+                                  onTap: () {
+                                    submit(context);
+                                  },
+                                  child: buildSaveButton(mq));
+                        }),
                   ],
                 ),
               ),
-              Selector<Auth, bool>(
-                  selector: (con, auth) => auth.isLoading,
-                  builder: (context, state, _) {
-                    return state
-                        ? SpinKitPouringHourglass(color: kSecondaryColor)
-                        : GestureDetector(
-                            onTap: () {
-                              submit(context);
-                            },
-                            child: buildSaveButton(mq));
-                  }),
-            ],
-          ),
-        ),
       ),
     );
   }
