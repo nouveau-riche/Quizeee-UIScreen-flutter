@@ -5,6 +5,7 @@ class UserRank {
   dynamic responseTime;
   List<ReviewSolutions> reviewSolutions;
   dynamic rank;
+  dynamic prize;
 
   UserRank(
       {this.resultId,
@@ -12,10 +13,12 @@ class UserRank {
       this.score,
       this.responseTime,
       this.reviewSolutions,
+      this.prize,
       this.rank});
 
   UserRank.fromJson(Map<String, dynamic> json) {
     resultId = json['resultId'];
+    prize = json['prize'];
     userId = json['userId'];
     score = json['score'];
     responseTime = json['responseTime'];
@@ -31,6 +34,7 @@ class UserRank {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['resultId'] = this.resultId;
+    data['prize'] = this.prize;
     data['userId'] = this.userId;
     data['score'] = this.score;
     data['responseTime'] = this.responseTime;

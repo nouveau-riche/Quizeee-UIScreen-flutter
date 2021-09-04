@@ -24,14 +24,14 @@ class _AccountScreenState extends State<AccountScreen> {
 
   Future<void> getUserPerformance() async {
     final mainPro = Provider.of<MainPro>(context, listen: false);
-    if (mainPro.assignedPerformace.isEmpty) {
-      final resp = await mainPro.getUserPerformance();
-      await mainPro.getUserWalletData();
-      await mainPro.getUserWalletData();
-      // if (!resp['status']) {
-      //   toast(resp['msg'], isError: true);
-      // }
-    }
+    // if (mainPro.assignedPerformace.isEmpty) {
+    final resp = await mainPro.getUserPerformance();
+    await mainPro.getUserWalletData();
+    await mainPro.getUserWalletData();
+    // if (!resp['status']) {
+    //   toast(resp['msg'], isError: true);
+    // }
+    // }
   }
 
   @override

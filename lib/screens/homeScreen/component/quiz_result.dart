@@ -296,7 +296,7 @@ class QuizResult extends StatelessWidget {
                           isPracticeQuiz
                               ? Container()
                               : Text(
-                                  '#${rankDetails.rank}rd',
+                                  '#${rankDetails.rank}',
                                   style: TextStyle(
                                       color: kResultColor,
                                       fontSize: 26,
@@ -396,7 +396,7 @@ class QuizResult extends StatelessWidget {
                                   false
                               ? Container()
                               : Text(
-                                  '₹ ${mainPro.selectedData.winningPrize}/ -',
+                                  '₹ ${mainPro.userRank[0].prize}/ -',
                                   style: TextStyle(
                                       color: kResultColor,
                                       fontSize: 24,
@@ -550,6 +550,11 @@ class QuizResult extends StatelessWidget {
         ),
         onPressed: () {
           Provider.of<MainPro>(context, listen: false).clearQuizData();
+          final main = Provider.of<MainPro>(context, listen: false);
+          main.userRank[0].reviewSolutions.sort((a, b) =>
+              a.questionId.toString().compareTo(b.questionId.toString()));
+          main.selectedData.questions.sort((a, b) =>
+              a.questionId.toString().compareTo(b.questionId.toString()));
           Navigator.of(context).push(
             CupertinoPageRoute(
               builder: (ctx) => SolutionScreen(),

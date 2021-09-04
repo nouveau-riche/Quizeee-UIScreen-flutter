@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:com.quizeee.quizeee/provider/mainPro.dart';
 import 'package:com.quizeee.quizeee/widgets/toast.dart';
@@ -178,7 +179,7 @@ class SolutionScreen extends StatelessWidget {
             SizedBox(
               height: mq.height * 0.04,
             ),
-            buildCheckSolution(mq, mainPro),
+            buildCheckSolution(mq, mainPro, context),
             SizedBox(
               height: mq.height * 0.05,
             ),
@@ -305,7 +306,7 @@ class SolutionScreen extends StatelessWidget {
     );
   }
 
-  Widget buildCheckSolution(Size mq, MainPro main) {
+  Widget buildCheckSolution(Size mq, MainPro main, BuildContext context) {
     return Container(
       height: mq.height * 0.1,
       width: mq.width * 0.25,
@@ -378,8 +379,39 @@ class SolutionScreen extends StatelessWidget {
             Align(
               child: GestureDetector(
                 onTap: () {
-                  launchInBrowser(main.selectedData
-                      .questions[main.currentQuestionIndex].solution);
+                  showDialog(
+                    context: context,
+                    builder: (context) => CupertinoAlertDialog(
+                      content: Text(
+                        main.selectedData.questions[main.currentQuestionIndex]
+                            .solution
+                            .toString(),
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Clipboard.setData(new ClipboardData(
+                                text: main
+                                    .selectedData
+                                    .questions[main.currentQuestionIndex]
+                                    .solution
+                                    .toString()));
+                            toast("Copied to clipboard", isError: false);
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'Copy to clipboard',
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  // launchInBrowser(main.selectedData
+                  //     .questions[main.currentQuestionIndex].solution);
                 },
                 child: Text(
                   ' Check\nSolution ',
