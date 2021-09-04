@@ -354,6 +354,7 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
   Container optionsContainer(Size mq, MainPro main, int i, options) {
     return Container(
       height: mq.height * 0.07,
+      padding: EdgeInsets.all(4),
       margin: EdgeInsets.symmetric(
           vertical: mq.height * 0.015, horizontal: mq.width * 0.08),
       decoration: BoxDecoration(
@@ -376,20 +377,21 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Center(
-          child: Text(
-        options,
-        style: TextStyle(
-          fontSize: 26,
+      child: SingleChildScrollView(
+        child: Center(
+            child: Text(
+          options,
+          style: TextStyle(
+            fontSize: 14,
 
-          // if selected change this color to kPrimaryLightColor
+            // if selected change this color to kPrimaryLightColor
 
-          color: main.selectedOptionPrac == i
-              ? kPrimaryLightColor
-              : kSecondaryColor,
-          fontFamily: 'DebugFreeTrial',
-        ),
-      )),
+            color: main.selectedOptionPrac == i
+                ? kPrimaryLightColor
+                : kSecondaryColor,
+          ),
+        )),
+      ),
     );
   }
 

@@ -24,8 +24,12 @@ class MyDrawer extends StatelessWidget {
             buildListTile(mq, CupertinoIcons.person_circle_fill, 'About Us'),
             buildReportListTile(context, mq),
             buildSupportListTile(context, mq),
-            buildPrivacyPolicyListTile(context,mq),
+            buildPrivacyPolicyListTile(context, mq),
             buildLogoutListTile(context, mq),
+            SizedBox(
+              height: mq.height * 0.14,
+            ),
+            buildShareListTile(context, mq),
           ],
         ),
       ),
@@ -178,6 +182,26 @@ class MyDrawer extends StatelessWidget {
           style: const TextStyle(
               color: kSecondaryColor, fontWeight: FontWeight.bold),
         ),
+      ),
+    );
+  }
+
+  Widget buildShareListTile(BuildContext context, Size mq) {
+    return ListTile(
+      onTap: () {},
+      dense: true,
+      leading: Container(
+        margin: EdgeInsets.only(left: mq.width * 0.04),
+        child: Icon(
+          Icons.share,
+          size: 21,
+          color: kSecondaryColor,
+        ),
+      ),
+      title: Text(
+        'Liked the app? Share',
+        style: const TextStyle(
+            color: kSecondaryColor, fontWeight: FontWeight.bold),
       ),
     );
   }

@@ -32,11 +32,11 @@ class LoginScreen extends StatelessWidget {
                 height: mq.height * 0.07,
               ),
               Container(
-                height: mq.height * 0.15,
-                width: mq.width * 0.3,
+                height: mq.height * 0.12,
+                width: mq.width * 0.2,
                 child: Image.asset(
-                  'assets/images/logo.png',
-                  fit: BoxFit.cover,
+                  'assets/images/Please_Wait.png',
+                  fit: BoxFit.fill,
                 ),
               ),
               const Text(
@@ -48,17 +48,8 @@ class LoginScreen extends StatelessWidget {
                     fontFamily: 'MajorLeagueDuty',
                     decoration: TextDecoration.underline),
               ),
-              const Text(
-                'LOGIN',
-                style: TextStyle(
-                  color: kTextColor,
-                  fontFamily: 'DebugFreeTrial',
-                  fontSize: 27,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
               SizedBox(
-                height: mq.height * 0.07,
+                height: mq.height * 0.08,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -69,6 +60,10 @@ class LoginScreen extends StatelessWidget {
               ),
               SizedBox(
                 height: mq.height * 0.05,
+              ),
+              buildNextButton(context),
+              SizedBox(
+                height: mq.height * 0.15,
               ),
               const Text(
                 'IF YOU ARE NEW PLAYER',
@@ -98,10 +93,6 @@ class LoginScreen extends StatelessWidget {
                   );
                 },
               ),
-              SizedBox(
-                height: mq.height * 0.18,
-              ),
-              buildNextButton(context),
             ],
           ),
         ),
@@ -168,7 +159,7 @@ class LoginScreen extends StatelessWidget {
       builder: (con, auth, _) => auth.isLoading
           ? SpinKitPouringHourglass(color: kSecondaryColor)
           : ConstrainedBox(
-              constraints: const BoxConstraints.tightFor(width: 68, height: 55),
+              constraints: const BoxConstraints.tightFor(width: 72, height: 60),
               child: ElevatedButton(
                 onPressed: () {
                   login(context);
@@ -178,10 +169,10 @@ class LoginScreen extends StatelessWidget {
                   primary: kTextColor,
                 ),
                 child: const Text(
-                  'NEXT',
+                  'Login',
                   style: const TextStyle(
                       fontSize: 12.8,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.bold,
                       color: Colors.black),
                 ),
               ),

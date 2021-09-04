@@ -240,6 +240,7 @@ class SolutionScreen extends StatelessWidget {
 
     return Container(
       height: mq.height * 0.07,
+      padding: EdgeInsets.all(4),
       margin: EdgeInsets.symmetric(
           vertical: mq.height * 0.015, horizontal: mq.width * 0.08),
       decoration: BoxDecoration(
@@ -271,18 +272,19 @@ class SolutionScreen extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Center(
-          child: Text(
-        option.toString(),
-        style: TextStyle(
-          fontSize: 26,
+      child: SingleChildScrollView(
+        child: Center(
+            child: Text(
+          option.toString(),
+          style: TextStyle(
+            fontSize: 14,
 
-          // if selected change this color to kPrimaryLightColor
+            // if selected change this color to kPrimaryLightColor
 
-          color: isCorrect ? Colors.green : kPrimaryLightColor,
-          fontFamily: 'DebugFreeTrial',
-        ),
-      )),
+            color: isCorrect ? Colors.green : kPrimaryLightColor,
+          ),
+        )),
+      ),
     );
   }
 

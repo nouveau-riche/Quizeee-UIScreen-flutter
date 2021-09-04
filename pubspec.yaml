@@ -91,6 +91,7 @@ flutter:
     - assets/images/cartoon.png
     - assets/images/rules.png
     - assets/images/stars.png
+    - assets/images/Please_Wait.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

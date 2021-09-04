@@ -68,7 +68,7 @@ class ReserveSlotScreen extends StatelessWidget {
                   height: mq.height * 0.015,
                 ),
                 buildRankWisePrizeRow(),
-                Spacer(),
+                // Spacer(),
                 buildDivider(mq),
                 buildEntryFeeAndLevel(),
                 buildDivider(mq),
@@ -303,10 +303,10 @@ class ReserveSlotScreen extends StatelessWidget {
   }
 
   Widget buildRankWisePrizeRow() {
-    return Column(
-      children: List.generate(
-        data.prizePool.length,
-        (index) {
+    return Expanded(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (ctx, index) {
           var prizes = data.prizePool[index];
           return Container(
             margin: EdgeInsets.symmetric(horizontal: 50),
@@ -316,13 +316,35 @@ class ReserveSlotScreen extends StatelessWidget {
               children: [
                 buildRankList('#${prizes.rankNo} rank'),
                 Spacer(),
-                buildMoney(prizes.prize.toString())
+                buildMoney(prizes.prize.toString()),
               ],
             ),
           );
         },
+        itemCount: data.prizePool.length,
       ),
     );
+
+    // return Column(
+    //   children: List.generate(
+    //     data.prizePool.length,
+    //     (index) {
+    //       var prizes = data.prizePool[index];
+    //       return Container(
+    //         margin: EdgeInsets.symmetric(horizontal: 50),
+    //         alignment: Alignment.center,
+    //         child: Row(
+    //           mainAxisAlignment: MainAxisAlignment.start,
+    //           children: [
+    //             buildRankList('#${prizes.rankNo} rank'),
+    //             Spacer(),
+    //             buildMoney(prizes.prize.toString())
+    //           ],
+    //         ),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 
   Widget buildMoney(String money) {
@@ -552,6 +574,7 @@ class ReserveSlotScreen extends StatelessWidget {
 
 class ConfirmBooking extends StatefulWidget {
   dynamic data;
+
   ConfirmBooking({
     this.data,
     Key key,

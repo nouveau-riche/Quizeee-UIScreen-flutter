@@ -49,7 +49,8 @@ class _ChangeEmailState extends State<ChangeEmail> {
 
   bool isOtpSent = false;
   var resp;
-  String verifySub = "Verify";
+  String verifySub = "Send Otp";
+
   Future<void> sendOtp() async {
     final intialPro = Provider.of<Auth>(context, listen: false);
     var body = {"email": _email};
@@ -96,7 +97,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
             ),
             SafeArea(child: buildAppBar(context, mq)),
             SizedBox(
-              height: mq.height * 0.05,
+              height: mq.height * 0.035,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -125,6 +126,25 @@ class _ChangeEmailState extends State<ChangeEmail> {
               key: _formKey,
               child: buildEmailTextFieldField(mq),
             ),
+            SizedBox(
+              height: mq.height * 0.025,
+            ),
+            Text(
+              'Please enter the otp to validate',
+              style: TextStyle(
+                fontSize: 18,
+                color: kPrimaryLightColor,
+                fontFamily: 'DebugFreeTrial',
+              ),
+            ),
+            Text(
+              'your email',
+              style: TextStyle(
+                fontSize: 18,
+                color: kPrimaryLightColor,
+                fontFamily: 'DebugFreeTrial',
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(30.0),
               child: PinPut(
@@ -148,7 +168,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
               ),
             ),
             SizedBox(
-              height: mq.height * 0.1,
+              height: mq.height * 0.12,
             ),
             isLoading
                 ? SpinKitPouringHourglass(color: kSecondaryColor)
@@ -240,7 +260,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
   Widget buildVerifyButton(Size mq) {
     return ConstrainedBox(
       constraints: BoxConstraints.tightFor(
-          width: mq.width * 0.20, height: mq.height * 0.20),
+          width: mq.width * 0.22, height: mq.height * 0.20),
       child: ElevatedButton(
         onPressed: () {
           save();

@@ -45,7 +45,8 @@ class SolutionScreen extends StatelessWidget {
         ),
         title: Consumer<MainPro>(
           builder: (con, mainPro, _) => Text(
-            'Solution ${mainPro.currentQuestionIndex + 1}', // change count dynamically
+            'Solution ${mainPro.currentQuestionIndex + 1}',
+            // change count dynamically
             style: TextStyle(
               color: kSecondaryColor,
               fontFamily: 'DebugFreeTrial',
@@ -291,18 +292,19 @@ class SolutionScreen extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Center(
-          child: Text(
-        option.toString(),
-        style: TextStyle(
-          fontSize: 26,
+      child: SingleChildScrollView(
+        child: Center(
+            child: Text(
+          option.toString(),
+          style: TextStyle(
+            fontSize: 14,
 
-          // if selected change this color to kPrimaryLightColor
+            // if selected change this color to kPrimaryLightColor
 
-          color: isCorrect ? Colors.green : kPrimaryLightColor,
-          fontFamily: 'DebugFreeTrial',
-        ),
-      )),
+            color: isCorrect ? Colors.green : kPrimaryLightColor,
+          ),
+        )),
+      ),
     );
   }
 
