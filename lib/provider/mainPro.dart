@@ -34,6 +34,12 @@ class MainPro with ChangeNotifier {
   //Global Loader for MainPro
   bool isLoading = false;
 
+  // Flag to check if we are in Quiz screen;
+  bool isQuizScreen = false;
+  visitingQuizScreen() {
+    isQuizScreen = true;
+  }
+
   Future<void> changeLoadingState(bool val) {
     isLoading = val;
     notifyListeners();
@@ -139,11 +145,13 @@ class MainPro with ChangeNotifier {
     _performaceAreaOfInterest.clear();
     _performaceCategory.clear();
     _performaceSubCategory.clear();
+    isQuizScreen = false;
   }
 
   clearHome() {
     _assignedQuiz.clear();
     _publicQuiz.clear();
+    isQuizScreen = false;
   }
 
   clearPlayedResult() {
@@ -151,6 +159,7 @@ class MainPro with ChangeNotifier {
     _userPlayedAssigned.clear();
     _userPlayedPublic.clear();
     isLoadedOnce = false;
+    isQuizScreen = false;
   }
 
   Future<Map<String, dynamic>> getDashBoardData() async {
@@ -205,7 +214,8 @@ class MainPro with ChangeNotifier {
       if (ConstFun.checkStatus(result)) {
         if (response['status']) {
           _dashboardBanner.clear();
-          _dashboardBanner.add(DashboardBanner.fromJson(response['banner']));
+          _dashboardBanner
+              .add(DashboardBanner.fromJson(response['banners'][0]));
           return ConstFun.reponseData(true, response['message']);
         } else {
           return ConstFun.reponseData(false, response['message']);

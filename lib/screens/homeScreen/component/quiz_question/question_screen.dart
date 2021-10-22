@@ -49,6 +49,7 @@ class _QuizQuestionState extends State<QuizQuestion>
 
   void startRolling() {
     final main = Provider.of<MainPro>(context, listen: false);
+    main.visitingQuizScreen();
     seconds = main.selectedData.timePerQues;
     _controller = AnimationController(
       duration: Duration(seconds: seconds),

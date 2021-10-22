@@ -51,6 +51,8 @@ class Auth with ChangeNotifier {
         return ConstFun.reponseData(false, response['message']);
       }
     } catch (e) {
+      print(e.toString());
+
       return ConstFun.reponseData(
           true, "Something went wrong please try again!!");
     }
@@ -79,6 +81,7 @@ class Auth with ChangeNotifier {
         return ConstFun.reponseData(true, response['message']);
       }
     } catch (e) {
+      print(e.toString());
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
     }
@@ -109,6 +112,8 @@ class Auth with ChangeNotifier {
     } on DioError catch (e) {
       return ConstFun.reponseData(false, e.response.data['message']);
     } catch (e) {
+      print(e.toString());
+
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
     }
@@ -137,6 +142,8 @@ class Auth with ChangeNotifier {
         return ConstFun.reponseData(false, response['message']);
       }
     } catch (e) {
+      print(e.toString());
+
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
     }
@@ -160,6 +167,8 @@ class Auth with ChangeNotifier {
         return ConstFun.reponseData(false, response['message']);
       }
     } catch (e) {
+      print(e.toString());
+
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
     }
@@ -181,6 +190,8 @@ class Auth with ChangeNotifier {
     } on DioError catch (e) {
       return ConstFun.reponseData(false, e.response.data['message']);
     } catch (e) {
+      print(e.toString());
+
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
     }
@@ -203,6 +214,8 @@ class Auth with ChangeNotifier {
     } on DioError catch (e) {
       return ConstFun.reponseData(false, e.response.data['message']);
     } catch (e) {
+      print(e.toString());
+
       return ConstFun.reponseData(
           false, "Something went wrong please try again!!");
     }

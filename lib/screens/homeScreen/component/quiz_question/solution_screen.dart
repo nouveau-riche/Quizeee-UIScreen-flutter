@@ -381,36 +381,43 @@ class SolutionScreen extends StatelessWidget {
             Align(
               child: GestureDetector(
                 onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => CupertinoAlertDialog(
-                      content: Text(
-                        main.selectedData.questions[main.currentQuestionIndex]
-                            .solution
-                            .toString(),
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Clipboard.setData(new ClipboardData(
-                                text: main
-                                    .selectedData
-                                    .questions[main.currentQuestionIndex]
-                                    .solution
-                                    .toString()));
-                            toast("Copied to clipboard", isError: false);
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            'Copy to clipboard',
-                            style: TextStyle(color: Colors.black54),
-                          ),
+                  if (main.selectedData.questions[main.currentQuestionIndex]
+                          .solution
+                          .toString() !=
+                      "") {
+                    showDialog(
+                      context: context,
+                      builder: (context) => CupertinoAlertDialog(
+                        content: Text(
+                          main.selectedData.questions[main.currentQuestionIndex]
+                              .solution
+                              .toString(),
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
-                  );
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Clipboard.setData(new ClipboardData(
+                                  text: main
+                                      .selectedData
+                                      .questions[main.currentQuestionIndex]
+                                      .solution
+                                      .toString()));
+                              toast("Copied to clipboard", isError: false);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'Copy to clipboard',
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    toast("Solution Not available!", isError: true);
+                  }
 
                   // launchInBrowser(main.selectedData
                   //     .questions[main.currentQuestionIndex].solution);

@@ -111,12 +111,14 @@ class _ViewScoreScreenState extends State<ViewScoreScreen> {
                                       ),
                                     ));
                               }
-                              var quizDate = quiz.formatDate(
-                                  quizData[index].startDateNew.toString());
+                              var quizDate = "Quiz Starts At " +
+                                  quiz.formatDate(
+                                      quizData[index].startDateNew.toString());
                               if (quizData[index].endDate != "" &&
                                   quizData[index].endDate != "null") {
-                                quizDate = quiz.formatDate(
-                                    quizData[index].endDate.toString());
+                                quizDate = "Quiz Ends At " +
+                                    quiz.formatDate(
+                                        quizData[index].endDateNew.toString());
                               }
                               return buildResultListTile(mq,
                                   '${quizData[index].quizTitle}', '$quizDate',

@@ -454,7 +454,8 @@ class _WalletScreenState extends State<WalletScreen>
     );
   }
 
-  Widget buildRecentTransactionGradientBar(Size mq, int money, String date) {
+  Widget buildRecentTransactionGradientBar(
+      Size mq, dynamic money, String date) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: mq.width * 0.025),
       child: Column(
@@ -480,7 +481,7 @@ class _WalletScreenState extends State<WalletScreen>
                     color: Colors.white),
               ),
               Text(
-                'Rs. ${money.toInt()}',
+                '${money}',
                 style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,

@@ -22,6 +22,7 @@ class UserPlayedQuizAssigned {
   Age age;
   String creationTimeStamp;
   dynamic startDateNew;
+  dynamic endDateNew;
   UserPlayedQuizAssigned(
       {this.sId,
       this.quizId,
@@ -30,6 +31,7 @@ class UserPlayedQuizAssigned {
       this.quizCategory,
       this.quizSubCategory,
       this.areaOfInterest,
+      this.endDateNew,
       this.startDate,
       this.startTime,
       this.endDate,
@@ -52,6 +54,7 @@ class UserPlayedQuizAssigned {
     quizId = json['quizId'];
     quizMasterId = json['quizMasterId'];
     quizTitle = json['quizTitle'];
+    endDateNew = json['endDate_new'];
     startDateNew = json['startDate_new'];
     quizCategory = json['quizCategory'];
     quizSubCategory = json['quizSubCategory'];
@@ -97,6 +100,7 @@ class UserPlayedQuizAssigned {
     data['endDate'] = this.endDate;
     data['endTime'] = this.endTime;
     data['slots'] = this.slots;
+    data['endDateNew'] = this.endDateNew;
     data['availableSlots'] = this.availableSlots;
     data['noOfQuestions'] = this.noOfQuestions;
     data['difficultyLevel'] = this.difficultyLevel;

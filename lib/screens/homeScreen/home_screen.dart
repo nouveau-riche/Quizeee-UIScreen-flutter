@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:com.quizeee.quizeee/provider/mainPro.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/my_drawer.dart';
 import '../../widgets/shimmer_effect.dart';
@@ -45,6 +46,22 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       toast(resp['message'], isError: true);
       return resp['status'];
+    }
+  }
+
+  Future<void> launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        enableJavaScript: true,
+        enableDomStorage: true,
+      ).whenComplete(() {
+        print("DONE");
+      });
+    } else {
+      throw 'Could not launch $url';
     }
   }
 
@@ -134,8 +151,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       mainPro.dashboardBanner.isNotEmpty
-                          ? buildPoster(
-                              mq, mainPro.dashboardBanner[0].bannerImg)
+                          ? mainPro.dashboardBanner[0].bannerStatus != 0
+                              ? GestureDetector(
+                                  onTap: () {
+                                    launchInBrowser(
+                                        mainPro.dashboardBanner[0].bannerURL);
+                                  },
+                                  child: buildPoster(
+                                      mq, mainPro.dashboardBanner[0].bannerImg),
+                                )
+                              : Container()
                           : Container(),
                       SizedBox(
                         height: mq.height * 0.010,

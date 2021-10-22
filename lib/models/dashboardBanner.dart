@@ -3,14 +3,23 @@ class DashboardBanner {
   int bannerId;
   String bannerName;
   String bannerImg;
-
-  DashboardBanner({this.sId, this.bannerId, this.bannerName, this.bannerImg});
+  String bannerURL;
+  int bannerStatus;
+  DashboardBanner(
+      {this.sId,
+      this.bannerId,
+      this.bannerName,
+      this.bannerImg,
+      this.bannerStatus,
+      this.bannerURL});
 
   DashboardBanner.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     bannerId = json['bannerId'];
     bannerName = json['bannerName'];
     bannerImg = json['bannerImg'];
+    bannerStatus = json['bannerStatus'] ?? 0;
+    bannerURL = json['bannerURL'];
   }
 
   Map<String, dynamic> toJson() {

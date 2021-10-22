@@ -39,7 +39,8 @@ class TransactionHistoryScreen extends StatelessWidget {
                       mq,
                       mainPro.format.format(
                           DateTime.parse(data[index].transactionDateTimestamp)),
-                      "${data[index].amount}"),
+                      "${data[index].amount}",
+                      data[index].amountType),
                   itemCount: data.length,
                 ),
               );
@@ -97,7 +98,8 @@ class TransactionHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget buildNotificationMessage(Size mq, String message, String amt) {
+  Widget buildNotificationMessage(
+      Size mq, String message, String amt, bool amtType) {
     return Container(
       margin: EdgeInsets.only(top: mq.height * 0.01),
       child: Row(
@@ -128,15 +130,15 @@ class TransactionHistoryScreen extends StatelessWidget {
             margin: EdgeInsets.only(right: mq.width * 0.02),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color.fromRGBO(52, 94, 103, 1),
+              color: amtType ? Colors.green : Colors.red,
             ),
             child: Center(
               child: Text(
-                'Rs. $amt',
+                '$amt',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 11,
-                    color: kSecondaryColor),
+                    color: Colors.black),
               ),
             ),
           ),

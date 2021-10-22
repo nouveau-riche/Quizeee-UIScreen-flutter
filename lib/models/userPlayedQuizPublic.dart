@@ -22,6 +22,7 @@ class UserPlayedQuizPublic {
   Age age;
   String creationTimeStamp;
   dynamic startDateNew;
+  dynamic endDateNew;
   UserPlayedQuizPublic(
       {this.sId,
       this.quizId,
@@ -45,6 +46,7 @@ class UserPlayedQuizPublic {
       this.prizePool,
       this.questions,
       this.age,
+      this.endDateNew,
       this.creationTimeStamp});
 
   UserPlayedQuizPublic.fromJson(Map<String, dynamic> json) {
@@ -58,6 +60,7 @@ class UserPlayedQuizPublic {
     areaOfInterest = json['areaOfInterest'];
     startDate = json['startDate'].toString();
     startTime = json['startTime'];
+    endDateNew = json['endDate_new'];
     endDate = json['endDate'].toString();
     endTime = json['endTime'];
     slots = json['slots'];
@@ -94,6 +97,7 @@ class UserPlayedQuizPublic {
     data['areaOfInterest'] = this.areaOfInterest;
     data['startDate'] = this.startDate;
     data['startTime'] = this.startTime;
+    data['endDateNew'] = this.endDateNew;
     data['endDate'] = this.endDate;
     data['endTime'] = this.endTime;
     data['slots'] = this.slots;

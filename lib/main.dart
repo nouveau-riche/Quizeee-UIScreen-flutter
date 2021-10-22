@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:com.quizeee.quizeee/provider/apiUrl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -14,12 +17,17 @@ import './screens/login/login_screen.dart';
 import './screens/tabs_screen.dart';
 import './widgets/centerLoader.dart';
 
-void main() {
-  runApp(MyApp());
+final LocalStorage storage = new LocalStorage(ApiUrls.localStorageKey);
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await storage.ready;
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -86,6 +94,7 @@ class NavigateScreen extends StatefulWidget {
 
 class _NavigateScreenState extends State<NavigateScreen> {
   Future<bool> checkLogin() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE); 
     final auth = Provider.of<Auth>(context, listen: false);
     final userExist = await auth.checkKeyExist("userId");
     if (userExist != null) {

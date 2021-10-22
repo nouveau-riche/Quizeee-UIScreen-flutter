@@ -66,13 +66,14 @@ class UserWalletModel {
 }
 
 class Transactions {
-  int amount;
+  dynamic amount;
   String transactionDateTimestamp;
-
-  Transactions({this.amount, this.transactionDateTimestamp});
+  bool amountType; // CR=true | DB=false
+  Transactions({this.amount, this.transactionDateTimestamp, this.amountType});
 
   Transactions.fromJson(Map<String, dynamic> json) {
     amount = json['amount'];
+    amountType = json['amount_type'].toString().toUpperCase() == "CR" ?? true;
     transactionDateTimestamp = json['transactionDateTimestamp'];
   }
 

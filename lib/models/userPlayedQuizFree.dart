@@ -22,6 +22,7 @@ class UserPlayedQuizFree {
   Age age;
   String creationTimeStamp;
   dynamic startDateNew;
+  dynamic endDateNew;
 
   UserPlayedQuizFree(
       {this.sId,
@@ -36,6 +37,7 @@ class UserPlayedQuizFree {
       this.endDate,
       this.endTime,
       this.slots,
+      this.endDateNew,
       this.availableSlots,
       this.noOfQuestions,
       this.difficultyLevel,
@@ -52,6 +54,7 @@ class UserPlayedQuizFree {
     sId = json['_id'];
     quizId = json['quizId'];
     quizMasterId = json['quizMasterId'];
+    endDateNew = json['endDate_new'];
     quizTitle = json['quizTitle'];
     quizCategory = json['quizCategory'];
     quizSubCategory = json['quizSubCategory'];
@@ -87,6 +90,7 @@ class UserPlayedQuizFree {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
+    data['endDateNew'] = this.endDateNew;
     data['quizId'] = this.quizId;
     data['quizMasterId'] = this.quizMasterId;
     data['quizTitle'] = this.quizTitle;
