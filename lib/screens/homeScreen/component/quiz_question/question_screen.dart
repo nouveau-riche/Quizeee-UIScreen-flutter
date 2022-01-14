@@ -26,7 +26,7 @@ class QuizQuestion extends StatefulWidget {
 }
 
 class _QuizQuestionState extends State<QuizQuestion>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   void userExitsQuiz() {
     final main = Provider.of<MainPro>(context, listen: false);
     toast("We are taking you out of the quiz!", isError: true);
@@ -38,11 +38,12 @@ class _QuizQuestionState extends State<QuizQuestion>
 
   AnimationController _controller;
   Animation _animation;
-
+  AppLifecycleState state;
   int seconds = 5 + 1; // change this duration according to api and + 1
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     startRolling();
     startTimmer();
   }
@@ -226,6 +227,15 @@ class _QuizQuestionState extends State<QuizQuestion>
     super.dispose();
     _controller.dispose();
     _timer.cancel();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState appLifecycleState) {
+    super.didChangeAppLifecycleState(state);
+    state = appLifecycleState;
+    if (state == AppLifecycleState.resumed) {
+      enableButton();
+    }
   }
 
   Future<bool> willPop(BuildContext context) async {

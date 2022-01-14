@@ -26,7 +26,7 @@ class PracticeQuizQuestion extends StatefulWidget {
 }
 
 class _QuizQuestionState extends State<PracticeQuizQuestion>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   void userExitsQuiz() {
     final main = Provider.of<MainPro>(context, listen: false);
     toast("We are taking you out of the quiz!", isError: true);
@@ -40,6 +40,7 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
   Animation _animation;
 
   int seconds = 5 + 1; // change this duration according to api and + 1
+  AppLifecycleState state;
 
   @override
   void didChangeDependencies() {
@@ -50,8 +51,29 @@ class _QuizQuestionState extends State<PracticeQuizQuestion>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     startRolling();
     startTimmer();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState appLifecycleState) {
+    super.didChangeAppLifecycleState(state);
+    state = appLifecycleState;
+    if (state == AppLifecycleState.paused) {}
+
+    if (state == AppLifecycleState.resumed) {
+      final main = Provider.of<MainPro>(context, listen: false);
+      main.calculateTotalScore();
+      // toast("Good job...", isError: false);
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.of(context).pushReplacement(CupertinoPageRoute(
+          builder: (ctx) => QuizResult(
+            isPracticeQuiz: true,
+          ),
+        ));
+      });
+    }
   }
 
   void startTimmer() {
